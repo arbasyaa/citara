@@ -1,0 +1,1000 @@
+@extends('layouts.public')
+
+@section('title', 'Beranda')
+
+@push('styles')
+<style>
+    @keyframes zoom {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.1); }
+    }
+    
+    .animate-zoom {
+        animation: zoom 20s ease-in-out infinite alternate;
+    }
+    
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+        100% { transform: translateY(0px); }
+    }
+    
+    .slide-up {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    
+    .slide-up.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    .fade-in {
+        animation: fadeIn 1.5s ease-out forwards;
+    }
+    
+    .delay-300 { 
+        animation-delay: 300ms;
+        transition-delay: 300ms; 
+    }
+    .delay-600 { 
+        animation-delay: 600ms;
+        transition-delay: 600ms; 
+    }
+    .delay-900 { 
+        animation-delay: 900ms;
+        transition-delay: 900ms; 
+    }
+    
+    .backdrop-blur { backdrop-filter: blur(8px); }
+    
+    .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .card-hover {
+        transition: all 0.3s ease;
+    }
+    
+    .card-hover:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.slide-up').forEach(element => {
+        observer.observe(element);
+    });
+});
+</script>
+@endpush
+
+@section('content')
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center">
+        <div class="absolute inset-0">
+            @if($featuredDestinations->isNotEmpty() && $featuredDestinations->first()->foto->where('apakah_slider_utama', true)->isNotEmpty())
+                <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/70 z-10"></div>
+                <img 
+                    src="{{ Storage::url($featuredDestinations->first()->foto->where('apakah_slider_utama', true)->first()->url) }}"
+                    alt="{{ $featuredDestinations->first()->nama }}"
+                    class="w-full h-full object-cover animate-zoom"
+                >
+            @endif
+        </div>
+
+        <!-- Hero Content -->
+        <div class="container mx-auto px-6 relative z-20">
+            <div class="max-w-4xl mx-auto text-center text-white">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6 slide-up text-shadow">
+                    Jelajahi Keindahan Cilacap
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 slide-up delay-300 text-shadow">
+                    Temukan destinasi wisata menarik, akomodasi nyaman, dan informasi transportasi lengkap untuk perjalanan Anda
+                </p>
+                <div class="slide-up delay-600">
+                    <form action="{{ route('destinasi.index') }}" method="GET" class="flex flex-col md:flex-row gap-4 justify-center mb-8">
+                        <input 
+                            type="text" 
+                            name="search" 
+                            placeholder="Cari destinasi wisata..."
+                            class="flex-1 max-w-xl px-6 py-4 rounded-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
+                        >
+                        <button type="submit" class="md:w-auto w-full px-12 py-4 bg-blue-600 text-white rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg font-medium transition-transform hover:scale-105">
+                            Mulai Menjelajah
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-float">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Featured Destinations Section -->
+    <section class="py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 slide-up">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Destinasi Unggulan dan Populer</h2>
+                <p class="text-xl text-gray-600">Temukan tempat-tempat menarik yang wajib Anda kunjungi di Cilacap</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                @foreach($featuredDestinations->merge($popularDestinasi)->unique('id')->take(8) as $destinasi)
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden group card-hover">
+                        <div class="relative h-64 overflow-hidden">
+                            @if($destinasi->foto->isNotEmpty())
+                                <img 
+                                    src="{{ Storage::url($destinasi->foto->first()->url) }}"
+                                    alt="{{ $destinasi->nama }}"
+                                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                >
+                            @endif
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div class="absolute bottom-4 left-4">
+                                    <span class="inline-block px-3 py-1 bg-blue-600/80 backdrop-blur text-white text-sm font-medium rounded-full">
+                                        {{ $destinasi->wilayah->nama }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                                {{ $destinasi->nama }}
+                            </h3>
+                            <p class="mt-2 text-sm text-gray-600 line-clamp-2">
+                                {{ Str::limit($destinasi->deskripsi, 100) }}
+                            </p>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section with Parallax -->
+    <section class="py-24 bg-gray-900 relative">
+        <div class="absolute inset-0 bg-fixed" style="background-image: url('{{ Storage::url($featuredDestinations->first()->foto->first()->url) }}'); background-size: cover; background-position: center; filter: brightness(0.2);"></div>
+        <div class="container mx-auto px-6 relative">
+            <div class="text-center mb-16 slide-up">
+                <h2 class="text-4xl font-bold text-white mb-4">Layanan Kami</h2>
+                <p class="text-xl text-gray-300">Temukan berbagai fasilitas dan layanan untuk perjalanan Anda</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <!-- Panduan Wisata -->
+                <div class="slide-up delay-300">
+                    <div class="text-center group">
+                        <div class="w-20 h-20 mx-auto mb-6 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center group-hover:bg-blue-600 transition-colors">
+                            <svg class="w-10 h-10 text-blue-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4">Panduan Wisata</h3>
+                        <p class="text-gray-300">Informasi lengkap tentang destinasi wisata, rute, dan tips perjalanan yang bermanfaat</p>
+                    </div>
+                </div>
+
+                <!-- Akomodasi -->
+                <div class="slide-up delay-600">
+                    <div class="text-center group">
+                        <div class="w-20 h-20 mx-auto mb-6 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center group-hover:bg-blue-600 transition-colors">
+                            <svg class="w-10 h-10 text-blue-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4">Akomodasi</h3>
+                        <p class="text-gray-300">Pilihan akomodasi nyaman untuk setiap budget, dari hotel berbintang hingga homestay</p>
+                    </div>
+                </div>
+
+                <!-- Transportasi -->
+                <div class="slide-up delay-900">
+                    <div class="text-center group">
+                        <div class="w-20 h-20 mx-auto mb-6 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center group-hover:bg-blue-600 transition-colors">
+                            <svg class="w-10 h-10 text-blue-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4">Transportasi</h3>
+                        <p class="text-gray-300">Informasi transportasi lengkap untuk memudahkan perjalanan Anda ke setiap destinasi</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-20 bg-blue-600">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold text-white mb-8 slide-up">Mulai Petualangan Anda</h2>
+            <p class="text-xl text-blue-100 mb-12 max-w-3xl mx-auto slide-up delay-300">
+                Jelajahi keindahan Cilacap dan temukan pengalaman tak terlupakan bersama kami
+            </p>
+            <a 
+                href="{{ route('destinasi.index') }}"
+                class="inline-block px-8 py-4 bg-white text-blue-600 rounded-full font-bold text-lg hover:bg-blue-50 transition-colors transform hover:scale-105 slide-up delay-600"
+            >
+                Mulai Menjelajah
+            </a>
+        </div>
+    </section>
+@endsection
+
+    <!-- Featured Destinations Section -->
+    <section class="py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 slide-up">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Destinasi Unggulan dan Populer</h2>
+                <p class="text-xl text-gray-600">Temukan tempat-tempat menarik yang wajib Anda kunjungi di Cilacap</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                @foreach($featuredDestinations->merge($popularDestinasi)->unique('id')->take(8) as $destinasi)
+                    <div class="slide-up delay-{{ $loop->index * 100 }}">
+                        <a href="{{ route('destinasi.show', $destinasi->slug) }}" class="block group">
+                            <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:-translate-y-2">
+                                <div class="relative h-64 overflow-hidden">
+                                    @if($destinasi->foto->isNotEmpty())
+                                        <img 
+                                            src="{{ Storage::url($destinasi->foto->first()->url) }}"
+                                            alt="{{ $destinasi->nama }}"
+                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                        >
+                                    @endif
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        <div class="absolute bottom-4 left-4">
+                                            <span class="inline-block px-3 py-1 bg-blue-600/80 backdrop-blur text-white text-sm font-medium rounded-full">
+                                                {{ $destinasi->wilayah->nama }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                                        {{ $destinasi->nama }}
+                                    </h3>
+                                    <p class="mt-2 text-sm text-gray-600 line-clamp-2">
+                                        {{ Str::limit($destinasi->deskripsi, 100) }}
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- Tourism Areas Section -->
+    <section class="py-24 bg-gray-50 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent"></div>
+        <div class="container mx-auto px-6 relative">
+            <div class="text-center mb-16 slide-up">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Wilayah Wisata</h2>
+                <p class="text-xl text-gray-600">Jelajahi berbagai wilayah wisata di Cilacap</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                @foreach($wilayah as $area)
+                    <div class="slide-up delay-{{ $loop->index * 100 }}">
+                        <a href="{{ route('wilayah.show', $area->slug) }}" class="block group">
+                            <div class="bg-white rounded-xl p-8 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                                <div class="w-16 h-16 mb-6 bg-blue-100 rounded-xl flex items-center justify-center transition-colors group-hover:bg-blue-600">
+                                    <svg class="w-8 h-8 text-blue-600 transition-colors group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-3">
+                                    {{ $area->nama }}
+                                </h3>
+                                <p class="text-gray-600 mb-6 line-clamp-3">{{ $area->deskripsi }}</p>
+                                <div class="flex items-center text-blue-600">
+                                    <span class="font-medium">{{ $area->destinasi_count }} Destinasi</span>
+                                    <svg class="w-5 h-5 ml-2 transform transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section with Parallax -->
+    <section class="py-24 bg-gray-900 relative">
+        <div class="absolute inset-0 bg-fixed" style="background-image: url('{{ Storage::url($featuredDestinations->first()->foto->first()->url) }}'); background-size: cover; background-position: center; filter: brightness(0.2);"></div>
+        <div class="container mx-auto px-6 relative">
+            <div class="text-center mb-16 slide-up">
+                <h2 class="text-4xl font-bold text-white mb-4">Layanan Kami</h2>
+                <p class="text-xl text-gray-300">Temukan berbagai fasilitas dan layanan untuk perjalanan Anda</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <!-- Panduan Wisata -->
+                <div class="slide-up delay-300">
+                    <div class="text-center group">
+                        <div class="w-20 h-20 mx-auto mb-6 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center group-hover:bg-blue-600 transition-colors">
+                            <svg class="w-10 h-10 text-blue-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4">Panduan Wisata</h3>
+                        <p class="text-gray-300">Informasi lengkap tentang destinasi wisata, rute, dan tips perjalanan yang bermanfaat</p>
+                    </div>
+                </div>
+
+                <!-- Akomodasi -->
+                <div class="slide-up delay-600">
+                    <div class="text-center group">
+                        <div class="w-20 h-20 mx-auto mb-6 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center group-hover:bg-blue-600 transition-colors">
+                            <svg class="w-10 h-10 text-blue-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4">Akomodasi</h3>
+                        <p class="text-gray-300">Pilihan akomodasi nyaman untuk setiap budget, dari hotel berbintang hingga homestay</p>
+                    </div>
+                </div>
+
+                <!-- Transportasi -->
+                <div class="slide-up delay-900">
+                    <div class="text-center group">
+                        <div class="w-20 h-20 mx-auto mb-6 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center group-hover:bg-blue-600 transition-colors">
+                            <svg class="w-10 h-10 text-blue-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4">Transportasi</h3>
+                        <p class="text-gray-300">Informasi transportasi lengkap untuk memudahkan perjalanan Anda ke setiap destinasi</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-20 bg-blue-600">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold text-white mb-8 slide-up">Mulai Petualangan Anda</h2>
+            <p class="text-xl text-blue-100 mb-12 max-w-3xl mx-auto slide-up delay-300">
+                Jelajahi keindahan Cilacap dan temukan pengalaman tak terlupakan bersama kami
+            </p>
+            <a 
+                href="{{ route('destinasi.index') }}"
+                class="inline-block px-8 py-4 bg-white text-blue-600 rounded-full font-bold text-lg hover:bg-blue-50 transition-colors transform hover:scale-105 slide-up delay-600"
+            >
+                Mulai Menjelajah
+            </a>
+        </div>
+    </section>
+@endsection
+    <!-- Hero Section -->
+    <section class="relative h-screen">
+        <!-- Background with Overlay -->
+        <div class="absolute inset-0">
+            @if($featuredDestinations->isNotEmpty() && $featuredDestinations->first()->foto->where('apakah_slider_utama', true)->isNotEmpty())
+                <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70 z-10"></div>
+                <div class="absolute inset-0 overflow-hidden">
+                    <img 
+                        src="{{ Storage::url($featuredDestinations->first()->foto->where('apakah_slider_utama', true)->first()->url) }}"
+                        alt="{{ $featuredDestinations->first()->nama }}"
+                        class="w-full h-full object-cover animate-zoom"
+                    >
+                </div>
+            @endif
+        </div>
+
+        <!-- Hero Content -->
+        <div class="relative h-full flex items-center justify-center">
+            <div class="text-center text-white max-w-4xl px-4 fade-in">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6">
+                    Jelajahi Keindahan Cilacap
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 delay-300 fade-in">
+                    Temukan pengalaman tak terlupakan di setiap sudut Cilacap
+                </p>
+                <a 
+                    href="{{ route('destinasi.index') }}"
+                    class="inline-block px-8 py-4 bg-blue-600 text-white rounded-full font-bold text-lg hover:bg-blue-700 transition-all transform hover:scale-105 delay-600 fade-in"
+                >
+                    Mulai Petualangan
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Destinasi Unggulan dan Populer -->
+    <section class="py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Destinasi Unggulan dan Populer</h2>
+                <p class="text-xl text-gray-600">Temukan tempat-tempat menarik yang wajib Anda kunjungi di Cilacap</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                @foreach($featuredDestinations->merge($popularDestinasi)->unique('id')->take(8) as $destinasi)
+                    <a href="{{ route('destinasi.show', $destinasi->slug) }}" class="group">
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:-translate-y-2">
+                            <div class="relative h-56 overflow-hidden">
+                                @if($destinasi->foto->isNotEmpty())
+                                    <img 
+                                        src="{{ Storage::url($destinasi->foto->first()->url) }}"
+                                        alt="{{ $destinasi->nama }}"
+                                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                    >
+                                @endif
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                                    {{ $destinasi->nama }}
+                                </h3>
+                                <p class="mt-2 text-sm text-gray-600">{{ $destinasi->wilayah->nama }}</p>
+                            </div>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- Wilayah Wisata -->
+    <section class="py-24 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Wilayah Wisata</h2>
+                <p class="text-xl text-gray-600">Jelajahi berbagai wilayah wisata di Cilacap</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                @foreach($wilayah as $area)
+                    <a href="{{ route('wilayah.show', $area->slug) }}" class="group">
+                        <div class="bg-white rounded-xl p-8 shadow-lg transition-all duration-300 hover:-translate-y-2">
+                            <div class="w-16 h-16 mb-6 bg-blue-100 rounded-xl flex items-center justify-center transition-colors group-hover:bg-blue-600">
+                                <svg class="w-8 h-8 text-blue-600 transition-colors group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">
+                                {{ $area->nama }}
+                            </h3>
+                            <p class="text-gray-600 mb-4">{{ Str::limit($area->deskripsi, 100) }}</p>
+                            <span class="inline-flex items-center text-blue-600">
+                                <span class="font-medium">{{ $area->destinasi_count }} Destinasi</span>
+                                <svg class="w-5 h-5 ml-2 transform transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </span>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- Akomodasi dan Transportasi -->
+    <section class="py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Akomodasi dan Transportasi</h2>
+                <p class="text-xl text-gray-600">Temukan kemudahan dalam perjalanan Anda</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Akomodasi Card -->
+                <div class="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div class="flex items-start">
+                        <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                            </svg>
+                        </div>
+                        <div class="ml-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-4">Akomodasi</h3>
+                            <p class="text-gray-600 mb-4">Pilihan akomodasi nyaman untuk setiap budget, dari hotel berbintang hingga homestay</p>
+                            <a href="#" class="inline-flex items-center text-blue-600 font-medium hover:text-blue-700">
+                                <span>Temukan Akomodasi</span>
+                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transportasi Card -->
+                <div class="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div class="flex items-start">
+                        <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                            </svg>
+                        </div>
+                        <div class="ml-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-4">Transportasi</h3>
+                            <p class="text-gray-600 mb-4">Informasi transportasi lengkap untuk memudahkan perjalanan Anda ke setiap destinasi</p>
+                            <a href="#" class="inline-flex items-center text-blue-600 font-medium hover:text-blue-700">
+                                <span>Lihat Transportasi</span>
+                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Layanan Kami -->
+    <section class="py-24 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Layanan Kami</h2>
+                <p class="text-xl text-gray-600">Temukan berbagai fasilitas dan layanan untuk perjalanan Anda</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <!-- Layanan Items -->
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-white rounded-2xl shadow-lg flex items-center justify-center">
+                        <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Panduan Wisata</h3>
+                    <p class="text-gray-600">Informasi lengkap tentang destinasi wisata, rute, dan tips perjalanan</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-white rounded-2xl shadow-lg flex items-center justify-center">
+                        <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Pembayaran Mudah</h3>
+                    <p class="text-gray-600">Berbagai metode pembayaran yang aman dan terpercaya</p>
+                </div>
+
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-white rounded-2xl shadow-lg flex items-center justify-center">
+                        <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Dukungan 24/7</h3>
+                    <p class="text-gray-600">Layanan pelanggan siap membantu Anda kapan saja</p>
+                </div>
+            </div>
+        </div>
+    </section>
+@endsection
+    <!-- Fullscreen Hero Section -->
+    <section class="relative min-h-screen flex items-center">
+        <!-- Background with Overlay -->
+        <div class="absolute inset-0 overflow-hidden">
+            @if($featuredDestinations->isNotEmpty() && $featuredDestinations->first()->foto->where('apakah_slider_utama', true)->isNotEmpty())
+                <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/70 z-10"></div>
+                <img 
+                    src="{{ Storage::url($featuredDestinations->first()->foto->where('apakah_slider_utama', true)->first()->url) }}"
+                    alt="{{ $featuredDestinations->first()->nama }}"
+                    class="w-full h-full object-cover animate-zoom"
+                >
+            @endif
+            <!-- Hero Content with CTA -->
+            <div class="absolute inset-0 flex items-center justify-center">
+                <div class="text-center text-white max-w-4xl px-4">
+                    <h1 class="text-5xl md:text-7xl font-bold mb-6 text-shadow animate-fade-in">
+                        Mulai Petualangan Anda
+                    </h1>
+                    <p class="text-xl md:text-2xl mb-8 text-shadow animate-fade-in delay-300">
+                        Jelajahi keindahan Cilacap dan temukan pengalaman tak terlupakan bersama kami
+                    </p>
+                    <a 
+                        href="{{ route('destinasi.index') }}"
+                        class="inline-block px-8 py-4 bg-white text-blue-600 rounded-full font-bold text-lg hover:bg-blue-50 transition-all transform hover:scale-105 animate-fade-in delay-600"
+                    >
+                        Mulai Menjelajah
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="relative min-h-screen flex items-center">
+            <div class="container mx-auto px-6 py-32">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h1 class="text-5xl md:text-7xl font-bold text-white mb-8 opacity-0 translate-y-8 animate-fade-in-up">
+                        Jelajahi Keindahan Cilacap
+                    </h1>
+                    <p class="text-xl md:text-2xl text-gray-200 mb-12 opacity-0 translate-y-8 animate-fade-in-up animation-delay-300">
+                        Temukan destinasi wisata menarik, akomodasi nyaman, dan informasi transportasi lengkap untuk perjalanan Anda di Cilacap.
+                    </p>
+                    <form action="{{ route('destinasi.index') }}" method="GET" class="flex flex-col md:flex-row gap-4 justify-center opacity-0 translate-y-8 animate-fade-in-up animation-delay-600">
+                        <input 
+                            type="text" 
+                            name="search" 
+                            placeholder="Cari destinasi wisata..."
+                            class="flex-1 max-w-xl px-6 py-4 rounded-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
+                        >
+                        <button type="submit" class="md:w-auto w-full px-12 py-4 bg-blue-600 text-white rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg font-medium transition-transform hover:scale-105">
+                            Mulai Menjelajah
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <!-- Scroll Down Indicator -->
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Destinations with Parallax -->
+            </div>
+    </section>
+
+    <!-- Destinasi Unggulan dan Populer -->
+    <section class="py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Destinasi Unggulan dan Populer</h2>
+                <p class="text-xl text-gray-600">Temukan tempat-tempat menarik yang wajib Anda kunjungi di Cilacap</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                @foreach($featuredDestinations->merge($popularDestinasi)->unique('id')->take(8) as $destinasi)
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden group hover:-translate-y-2 transition-all duration-300">
+                        <div class="relative h-64 overflow-hidden">
+                            @if($destinasi->foto->isNotEmpty())
+                                <img 
+                                    src="{{ Storage::url($destinasi->foto->first()->url) }}"
+                                    alt="{{ $destinasi->nama }}"
+                                    class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
+                                >
+                            @endif
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div class="absolute bottom-4 left-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <span class="inline-block px-3 py-1 bg-blue-600/80 backdrop-blur-sm text-sm font-medium rounded-full">
+                                    {{ $destinasi->wilayah->nama }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                                {{ $destinasi->nama }}
+                            </h3>
+                            <p class="mt-2 text-sm text-gray-600 line-clamp-2">
+                                {{ Str::limit($destinasi->deskripsi, 100) }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wilayah Wisata -->
+    <section class="py-24 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Wilayah Wisata</h2>
+                <p class="text-xl text-gray-600">Jelajahi berbagai wilayah wisata di Cilacap</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                @foreach($wilayah as $area)
+                    <a href="{{ route('wilayah.show', $area->slug) }}" 
+                       class="group bg-white rounded-xl p-8 shadow-lg hover:-translate-y-2 transition-all duration-300">
+                        <div class="w-16 h-16 mb-6 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-600 transition-colors">
+                            <svg class="w-8 h-8 text-blue-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">{{ $area->nama }}</h3>
+                        <p class="text-gray-600 mb-4">{{ Str::limit($area->deskripsi, 100) }}</p>
+                        <div class="flex items-center text-blue-600">
+                            <span class="font-medium">{{ $area->destinasi_count }} Destinasi</span>
+                            <svg class="w-5 h-5 ml-2 transform transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- Akomodasi dan Transportasi -->
+    <section class="py-24 bg-white relative overflow-hidden">
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Akomodasi dan Transportasi</h2>
+                <p class="text-xl text-gray-600">Temukan kemudahan dalam perjalanan Anda</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Akomodasi -->
+                <div class="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow border border-gray-100">
+                    <div class="flex items-start space-x-6">
+                        <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-4">Akomodasi</h3>
+                            <p class="text-gray-600 mb-6">Pilihan akomodasi nyaman untuk setiap budget, dari hotel berbintang hingga homestay yang nyaman.</p>
+                            <a href="#" class="inline-flex items-center text-blue-600 font-medium hover:text-blue-700">
+                                <span>Temukan Akomodasi</span>
+                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transportasi -->
+                <div class="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow border border-gray-100">
+                    <div class="flex items-start space-x-6">
+                        <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-4">Transportasi</h3>
+                            <p class="text-gray-600 mb-6">Informasi transportasi lengkap untuk memudahkan perjalanan Anda ke setiap destinasi.</p>
+                            <a href="#" class="inline-flex items-center text-blue-600 font-medium hover:text-blue-700">
+                                <span>Lihat Transportasi</span>
+                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Layanan Kami -->
+    <section class="py-24 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Layanan Kami</h2>
+                <p class="text-xl text-gray-600">
+                    Temukan berbagai fasilitas dan layanan untuk perjalanan Anda
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <!-- Destinasi Wisata -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="w-16 h-16 mb-6 bg-blue-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Destinasi Wisata</h3>
+                    <p class="text-gray-600">
+                        Temukan berbagai destinasi wisata menarik di Cilacap, dari pantai hingga pegunungan
+                    </p>
+                </div>
+
+                <!-- Akomodasi -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="w-16 h-16 mb-6 bg-blue-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Akomodasi</h3>
+                    <p class="text-gray-600">
+                        Pilihan akomodasi nyaman untuk setiap budget, dari hotel berbintang hingga homestay
+                    </p>
+                </div>
+
+                <!-- Transportasi -->
+                <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="w-16 h-16 mb-6 bg-blue-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Transportasi</h3>
+                    <p class="text-gray-600">
+                        Informasi transportasi lengkap untuk memudahkan perjalanan Anda ke setiap destinasi
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tourism Areas with Interactive Map -->
+    <section class="py-20 bg-gray-50 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent"></div>
+        <div class="container mx-auto px-6 relative">
+            <h2 class="text-4xl font-bold text-gray-900 mb-12 text-center">Wilayah Wisata</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                @foreach($wilayah as $area)
+                    <div class="group cursor-pointer">
+                        <div class="bg-white rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-2">
+                            <div class="w-16 h-16 mb-6 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-600 transition-colors">
+                                <svg class="w-8 h-8 text-blue-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">
+                                {{ $area->nama }}
+                            </h3>
+                            <p class="text-gray-600 mb-4">
+                                {{ Str::limit($area->deskripsi, 80) }}
+                            </p>
+                            <div class="flex items-center text-blue-600">
+                                <span class="font-medium">{{ $area->destinasi_count }} Destinasi</span>
+                                <svg class="w-5 h-5 ml-2 transform transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Destinations Carousel -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-gray-900 mb-12 text-center">Destinasi Populer</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                @foreach($popularDestinasi as $destinasi)
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden group">
+                        <div class="relative h-48">
+                            @if($destinasi->foto->isNotEmpty())
+                                <img 
+                                    src="{{ Storage::url($destinasi->foto->first()->url) }}"
+                                    alt="{{ $destinasi->nama }}"
+                                    class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                                >
+                            @endif
+                            <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                <a 
+                                    href="{{ route('destinasi.show', $destinasi->slug) }}"
+                                    class="px-6 py-2 bg-white text-gray-900 rounded-full font-medium transform hover:scale-105 transition-transform"
+                                >
+                                    Lihat Detail
+                                </a>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-bold text-gray-900">{{ $destinasi->nama }}</h3>
+                            <p class="text-sm text-gray-600">{{ $destinasi->wilayah->nama }}</p>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section with Parallax -->
+    <section class="py-20 bg-gray-900 relative">
+        <div class="absolute inset-0 bg-fixed" style="background-image: url('{{ Storage::url($featuredDestinations->first()->foto->first()->url) }}'); background-size: cover; background-position: center; filter: brightness(0.2);"></div>
+        <div class="container mx-auto px-6 relative">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-white mb-4">Layanan Kami</h2>
+                <p class="text-gray-300 text-lg">Temukan berbagai fasilitas dan layanan untuk perjalanan Anda</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center">
+                        <svg class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Destinasi Wisata</h3>
+                    <p class="text-gray-300">Temukan berbagai destinasi wisata menarik di Cilacap, dari pantai hingga pegunungan</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center">
+                        <svg class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Akomodasi</h3>
+                    <p class="text-gray-300">Pilihan akomodasi nyaman untuk setiap budget, dari hotel berbintang hingga homestay</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center">
+                        <svg class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Transportasi</h3>
+                    <p class="text-gray-300">Informasi transportasi lengkap untuk memudahkan perjalanan Anda ke setiap destinasi</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Updates Section -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-900">Destinasi Terbaru</h2>
+                <p class="text-gray-600 mt-4 md:mt-0 md:ml-8">Jelajahi tempat-tempat baru yang ditambahkan ke koleksi kami</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                @foreach($recentDestinasi as $destinasi)
+                    <a href="{{ route('destinasi.show', $destinasi->slug) }}" class="group">
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                            <div class="relative h-48 overflow-hidden rounded-t-xl">
+                                @if($destinasi->foto->isNotEmpty())
+                                    <img 
+                                        src="{{ Storage::url($destinasi->foto->first()->url) }}"
+                                        alt="{{ $destinasi->nama }}"
+                                        class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                                    >
+                                @endif
+                                <div class="absolute top-0 right-0 m-4">
+                                    <span class="inline-block px-3 py-1 bg-green-500 text-white text-sm font-medium rounded-full">
+                                        Baru
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                                    {{ $destinasi->nama }}
+                                </h3>
+                                <p class="text-sm text-gray-600">{{ $destinasi->wilayah->nama }}</p>
+                            </div>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-20 bg-blue-600">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold text-white mb-8">Mulai Petualangan Anda</h2>
+            <p class="text-xl text-blue-100 mb-12 max-w-3xl mx-auto">
+                Jelajahi keindahan Cilacap dan temukan pengalaman tak terlupakan bersama kami
+            </p>
+            <a 
+                href="{{ route('destinasi.index') }}"
+                class="inline-block px-8 py-4 bg-white text-blue-600 rounded-full font-bold text-lg hover:bg-blue-50 transition-colors transform hover:scale-105"
+            >
+                Mulai Menjelajah
+            </a>
+        </div>
+    </section>
+@endsection
+
