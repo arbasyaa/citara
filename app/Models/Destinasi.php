@@ -18,6 +18,8 @@ class Destinasi extends Model
         'deskripsi',
         'alamat_lokasi',
         'url_gmaps',
+        'is_popular',
+        'is_featured',
         // timestamps handled by created_at / updated_at
     ];
 

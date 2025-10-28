@@ -1,16 +1,14 @@
-// DUPLICATE MIGRATION MOVED: 2025_10_15_000003_add_image_to_services_table.php
-// Neutralized to prevent duplicate column creation during tests.
-return;
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class AddImageToServicesTable extends Migration
 {
     public function up()
     {
-        if (!Schema::hasColumn('services', 'image')) {
+        if (! Schema::hasColumn('services', 'image')) {
             Schema::table('services', function (Blueprint $table) {
                 $table->string('image')->nullable()->after('link');
             });
@@ -25,4 +23,4 @@ return new class extends Migration
             });
         }
     }
-};
+}

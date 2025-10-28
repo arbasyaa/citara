@@ -4,58 +4,7 @@
     <div class="bg-white rounded-lg shadow p-6">
         <h2 class="text-2xl font-bold mb-6">Edit Wilayah</h2>
 
-        <!-- Kalendar Kegiatan Section -->
-        <div class="mb-8">
-            <div class="relative transform transition-transform duration-500 hover:translate-x-4">
-                <!-- Main Calendar Card -->
-                <div class="bg-white rounded-xl shadow-lg p-6 relative overflow-visible cursor-pointer group">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Kalendar Kegiatan</h3>
-                    
-                    <!-- Hover Detail (Small popup) -->
-                    <div class="opacity-0 group-hover:opacity-100 absolute -right-48 top-0 bg-white p-4 rounded-lg shadow-xl transition-opacity duration-300 w-44 z-10">
-                        <p class="text-sm text-gray-600">Quick Preview</p>
-                        <p class="text-xs text-gray-500 mt-1">Click to see full details</p>
-                    </div>
-
-                    <!-- Calendar Navigation -->
-                    <div class="flex items-center justify-between mb-4">
-                        <button type="button" id="prevMonths" class="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-full transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                            </svg>
-                        </button>
-                        <div id="monthRange" class="text-gray-600 font-medium"></div>
-                        <button type="button" id="nextMonths" class="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-full transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    <!-- Calendar Grid -->
-                    <div class="grid grid-cols-3 gap-4" id="monthsContainer">
-                        <!-- Months will be populated by JavaScript -->
-                    </div>
-                </div>
-
-                <!-- Expandable Details Section (Hidden by default) -->
-                <div class="hidden mt-4 bg-white rounded-xl shadow-lg p-6 transition-all duration-300" id="calendarDetails">
-                    <div class="border-b pb-4 mb-4">
-                        <h4 class="text-lg font-semibold text-gray-800">Detail Kegiatan</h4>
-                    </div>
-                    <div class="space-y-4">
-                        <!-- Sample events - replace with actual data -->
-                        <div class="flex items-start space-x-4">
-                            <div class="w-24 text-sm text-gray-600">Jan 15, 2026</div>
-                            <div class="flex-1">
-                                <h5 class="font-medium text-gray-800">Meeting dengan Stakeholder</h5>
-                                <p class="text-sm text-gray-600">Diskusi pengembangan wilayah baru</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- Calendar removed from wilayah edit to avoid confusion. Calendar events managed separately under 'Kalender' -->
 
     <form action="{{ route('panel.wilayah.update', $wilayah) }}" method="POST">
             @csrf

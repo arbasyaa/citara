@@ -9,17 +9,34 @@ use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\DestinasiController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\SetLocale;
 
 // Provide a named `login` route so middleware that redirects to route('login') works.
 Route::get('/login', function () {
     return redirect()->route('panel.login');
 })->name('login');
 
-// Public Routes
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/destinasi', [DestinasiController::class, 'index'])->name('destinasi.index');
-Route::get('/destinasi/{destinasi:slug}', [DestinasiController::class, 'show'])->name('destinasi.show');
-Route::get('/wilayah/{wilayah:slug}', [DestinasiController::class, 'byWilayah'])->name('wilayah.show');
+// Public Routes (apply locale middleware to set app locale from session)
+Route::middleware([SetLocale::class])->group(function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/destinasi', [DestinasiController::class, 'index'])->name('destinasi.index');
+    Route::get('/destinasi/{destinasi:slug}', [DestinasiController::class, 'show'])->name('destinasi.show');
+    Route::get('/wilayah/{wilayah:slug}', [DestinasiController::class, 'byWilayah'])->name('wilayah.show');
+});
+
+// Language switch route
+Route::get('/lang/{locale}', function ($locale) {
+    $available = ['en', 'id'];
+    if (! in_array($locale, $available)) {
+        abort(404);
+    }
+    session(['locale' => $locale]);
+    
+    // Force session to save immediately
+    session()->save();
+    
+    return redirect()->back();
+})->name('lang.switch');
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {

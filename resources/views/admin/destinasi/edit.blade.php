@@ -23,7 +23,21 @@
             </div>
             <div class="mb-4">
                 <label class="block text-sm">Deskripsi</label>
-                <textarea name="deskripsi" class="mt-1 block w-full rounded border-gray-300">{{ $destinasi->deskripsi }}</textarea>
+                <textarea name="deskripsi" class="mt-1 block w-full rounded border-gray-300" rows="4">{{ $destinasi->deskripsi }}</textarea>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm">Alamat Lokasi (opsional)</label>
+                <input name="alamat_lokasi" value="{{ $destinasi->alamat_lokasi }}" class="mt-1 block w-full rounded border-gray-300" placeholder="Alamat / deskripsi lokasi">
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm">Google Maps URL (opsional)</label>
+                <input name="url_gmaps" value="{{ $destinasi->url_gmaps }}" class="mt-1 block w-full rounded border-gray-300" placeholder="https://maps.google.com/...">
+            </div>
+            <div class="mb-4 flex gap-6 items-center">
+                <label class="inline-flex items-center">
+                    <input type="checkbox" name="is_highlight" value="1" class="form-checkbox" {{ ($destinasi->is_popular || $destinasi->is_featured) ? 'checked' : '' }}>
+                    <span class="ml-2 text-sm">Tandai sebagai Unggulan & Populer</span>
+                </label>
             </div>
             <div class="mb-4">
                 <label class="block text-sm">Gambar</label>

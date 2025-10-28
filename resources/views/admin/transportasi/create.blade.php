@@ -19,6 +19,10 @@
                 <label class="block text-sm">Rute</label>
                 <input name="rute" class="mt-1 block w-full rounded border-gray-300">
             </div>
+            <div class="mb-4">
+                <label class="block text-sm">Deskripsi</label>
+                <textarea name="deskripsi" class="mt-1 block w-full rounded border-gray-300" rows="4"></textarea>
+            </div>
             <div class="flex justify-end">
                 <button class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Create</button>
             </div>

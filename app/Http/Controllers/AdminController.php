@@ -118,9 +118,23 @@ class AdminController extends Controller
     {
         $data = $request->validate([
             'nama' => 'required|string',
-            'slug' => 'nullable|string'
+            'slug' => 'nullable|string',
+            'deskripsi' => 'nullable|string'
         ]);
-        Wilayah::create($data);
+        $wilayah = Wilayah::create($data);
+
+        // Create a placeholder destinasi so the wilayah appears in homepage lists
+        // which may filter/display based on destinasi count in some views.
+        try {
+            Destinasi::create([
+                'nama' => 'Destinasi Awal untuk ' . ($wilayah->nama ?? 'Wilayah'),
+                'id_wilayah' => $wilayah->id,
+                'deskripsi' => $wilayah->deskripsi ?? 'Placeholder destinasi dibuat otomatis saat wilayah dibuat.'
+            ]);
+        } catch (\Throwable $e) {
+            // Non-fatal: if destinasi table or schema isn't present, ignore and continue.
+        }
+
     return redirect()->route('panel.wilayah.index')->with('success', 'Wilayah created');
     }
 
@@ -133,7 +147,8 @@ class AdminController extends Controller
     {
         $data = $request->validate([
             'nama' => 'required|string',
-            'slug' => 'nullable|string'
+            'slug' => 'nullable|string',
+            'deskripsi' => 'nullable|string'
         ]);
         $wilayah->update($data);
     return redirect()->route('panel.wilayah.index')->with('success', 'Wilayah updated');
@@ -163,15 +178,35 @@ class AdminController extends Controller
             'nama' => 'required|string',
             'id_wilayah' => 'nullable|exists:wilayah,id',
             'deskripsi' => 'nullable|string',
+            'alamat_lokasi' => 'nullable|string',
+            'url_gmaps' => 'nullable|url',
+            'is_highlight' => 'nullable|boolean',
             'image' => 'nullable|image|max:4096'
         ]);
 
         // Create destinasi first
-        $dest = Destinasi::create([
+        $highlight = !empty($data['is_highlight']);
+
+        $payload = [
             'nama' => $data['nama'],
             'id_wilayah' => $data['id_wilayah'] ?? null,
             'deskripsi' => $data['deskripsi'] ?? null,
-        ]);
+            'alamat_lokasi' => $data['alamat_lokasi'] ?? null,
+            'url_gmaps' => $data['url_gmaps'] ?? null,
+        ];
+
+        try {
+            if (Schema::hasColumn((new Destinasi())->getTable(), 'is_popular')) {
+                $payload['is_popular'] = $highlight ? 1 : 0;
+            }
+            if (Schema::hasColumn((new Destinasi())->getTable(), 'is_featured')) {
+                $payload['is_featured'] = $highlight ? 1 : 0;
+            }
+        } catch (\Exception $e) {
+            // If Schema check fails, avoid setting the columns and continue.
+        }
+
+        $dest = Destinasi::create($payload);
 
         // If image uploaded, store it as FotoDestinasi
         if ($request->hasFile('image')) {
@@ -198,14 +233,34 @@ class AdminController extends Controller
             'nama' => 'required|string',
             'id_wilayah' => 'nullable|exists:wilayah,id',
             'deskripsi' => 'nullable|string',
+            'alamat_lokasi' => 'nullable|string',
+            'url_gmaps' => 'nullable|url',
+            'is_highlight' => 'nullable|boolean',
             'image' => 'nullable|image|max:4096'
         ]);
 
-        $destinasi->update([
+        $highlight = !empty($data['is_highlight']);
+
+        $payload = [
             'nama' => $data['nama'],
             'id_wilayah' => $data['id_wilayah'] ?? null,
             'deskripsi' => $data['deskripsi'] ?? null,
-        ]);
+            'alamat_lokasi' => $data['alamat_lokasi'] ?? null,
+            'url_gmaps' => $data['url_gmaps'] ?? null,
+        ];
+
+        try {
+            if (Schema::hasColumn((new Destinasi())->getTable(), 'is_popular')) {
+                $payload['is_popular'] = $highlight ? 1 : 0;
+            }
+            if (Schema::hasColumn((new Destinasi())->getTable(), 'is_featured')) {
+                $payload['is_featured'] = $highlight ? 1 : 0;
+            }
+        } catch (\Exception $e) {
+            // ignore and continue
+        }
+
+        $destinasi->update($payload);
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('uploads', 'public');
@@ -249,7 +304,8 @@ class AdminController extends Controller
         $data = $request->validate([
             'nama' => 'required|string',
             'tipe' => 'nullable|string',
-            'lokasi' => 'nullable|string'
+            'lokasi' => 'nullable|string',
+            'deskripsi' => 'nullable|string'
         ]);
         Akomodasi::create($data);
     return redirect()->route('panel.akomodasi.index')->with('success', 'Akomodasi created');
@@ -265,7 +321,8 @@ class AdminController extends Controller
         $data = $request->validate([
             'nama' => 'required|string',
             'tipe' => 'nullable|string',
-            'lokasi' => 'nullable|string'
+            'lokasi' => 'nullable|string',
+            'deskripsi' => 'nullable|string'
         ]);
         $akomodasi->update($data);
     return redirect()->route('panel.akomodasi.index')->with('success', 'Akomodasi updated');
@@ -300,7 +357,8 @@ class AdminController extends Controller
         $data = $request->validate([
             'nama' => 'required|string',
             'tipe' => 'nullable|string',
-            'rute' => 'nullable|string'
+            'rute' => 'nullable|string',
+            'deskripsi' => 'nullable|string'
         ]);
         Transportasi::create($data);
     return redirect()->route('panel.transportasi.index')->with('success', 'Transportasi created');
@@ -316,7 +374,8 @@ class AdminController extends Controller
         $data = $request->validate([
             'nama' => 'required|string',
             'tipe' => 'nullable|string',
-            'rute' => 'nullable|string'
+            'rute' => 'nullable|string',
+            'deskripsi' => 'nullable|string'
         ]);
         $transportasi->update($data);
     return redirect()->route('panel.transportasi.index')->with('success', 'Transportasi updated');

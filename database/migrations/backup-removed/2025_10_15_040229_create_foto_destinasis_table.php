@@ -4,14 +4,14 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFotoDestinasisTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-                if (! Schema::hasTable('foto_destinasi')) {
+        if (! Schema::hasTable('foto_destinasi')) {
             Schema::create('foto_destinasi', function (Blueprint $table) {
                 $table->id();
                 // the application uses the singular `destinasi` table and the SQL dump references `destinasi`.
@@ -31,4 +31,4 @@ class CreateFotoDestinasisTable extends Migration
     {
         Schema::dropIfExists('foto_destinasi');
     }
-}
+};

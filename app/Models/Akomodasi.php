@@ -11,6 +11,7 @@ class Akomodasi extends Model
     protected $fillable = [
         'nama',
         'tipe',
+        'deskripsi',
         'lokasi',
         'nomor_telepon',
         'url_situs_web'
