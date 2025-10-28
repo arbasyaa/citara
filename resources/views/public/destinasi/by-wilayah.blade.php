@@ -105,7 +105,6 @@
 
     {{-- Destinations Grid --}}
     <section class="container mx-auto px-6 py-16 section-parallax section-reveal">
-        <div class="parallax-bg pattern-dots" data-speed="0.15" style="opacity:.35"></div>
         @if($destinasi->isEmpty())
             <div class="text-center py-20">
                 <div class="w-32 h-32 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
