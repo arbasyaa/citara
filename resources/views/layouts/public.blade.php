@@ -127,9 +127,15 @@
             margin-top: 0 !important;
             padding-top: 0 !important;
         }
+        /* When reduced motion is enabled via session, disable most transitions */
+        .reduce-motion *, .reduce-motion .parallax-card .parallax-target, .reduce-motion .news-card, .reduce-motion .section-reveal, .reduce-motion .slide-up {
+            animation: none !important;
+            transition: none !important;
+        }
     </style>
 </head>
-<body class="bg-gray-100 overflow-x-hidden">
+@php $reduce = session('reduced_motion', false); @endphp
+<body class="bg-gray-100 overflow-x-hidden {{ $reduce ? 'reduce-motion' : '' }}">
     <!-- Header/Navbar -->
     <header class="fixed w-full z-50 transition-all duration-300 bg-transparent" id="navbar">
         <nav class="container mx-auto px-4 py-3">
@@ -142,8 +148,16 @@
                 <div class="flex items-center space-x-3">
                     <a href="{{ route('home') }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-1 rounded-md hover:bg-white/10 transition">{{ __('site.home') }}</a>
                     <a href="{{ route('destinasi.index') }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-1 rounded-md hover:bg-white/10 transition">{{ __('site.destinations') }}</a>
-                    <a href="#" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-1 rounded-md hover:bg-white/10 transition">{{ __('site.accommodation') }}</a>
-                    <a href="#" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-1 rounded-md hover:bg-white/10 transition">{{ __('site.transport') }}</a>
+                    <a href="{{ route('akomodasi.index') }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-1 rounded-md hover:bg-white/10 transition">{{ __('site.accommodation') }}</a>
+                    <a href="{{ route('transportasi.index') }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-1 rounded-md hover:bg-white/10 transition">{{ __('site.transport') }}</a>
+
+                    <!-- Reduced motion toggle -->
+                    <div class="flex items-center space-x-1 mr-2 border-l border-white/30 pl-3">
+                        @php $reduce = session('reduced_motion', false); @endphp
+                        <a href="{{ route('a11y.motion', $reduce ? 'auto' : 'reduce') }}" class="text-white font-medium px-2 py-1 rounded transition hover:bg-white/10">
+                            {{ $reduce ? 'Motion: Off' : 'Motion: On' }}
+                        </a>
+                    </div>
 
                     <!-- Language switcher -->
                     <div class="flex items-center space-x-1 ml-2 border-l border-white/30 pl-3">

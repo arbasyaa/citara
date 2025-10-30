@@ -7,6 +7,8 @@ use App\Models\Destinasi;
 use Illuminate\Support\Facades\Schema;
 use App\Models\Wilayah;
 use App\Models\CalendarEvent;
+use App\Models\Akomodasi;
+use App\Models\Transportasi;
 use Illuminate\View\View;
 
 class HomeController extends Controller
@@ -106,6 +108,19 @@ class HomeController extends Controller
         // Get calendar events
         $events = CalendarEvent::orderByRaw("FIELD(month, 'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember')")->get();
 
-        return view('public.home', compact('featuredDestinations', 'wilayah', 'popularDestinasi', 'recentDestinasi', 'destinasiCount', 'events'));
+        // Akomodasi and Transportasi for homepage cards
+        try {
+            $akomodasiHome = Akomodasi::orderByDesc('id')->take(6)->get();
+        } catch (\Exception $e) {
+            $akomodasiHome = collect();
+        }
+
+        try {
+            $transportasiHome = Transportasi::orderByDesc('id')->take(6)->get();
+        } catch (\Exception $e) {
+            $transportasiHome = collect();
+        }
+
+        return view('public.home', compact('featuredDestinations', 'wilayah', 'popularDestinasi', 'recentDestinasi', 'destinasiCount', 'events', 'akomodasiHome', 'transportasiHome'));
     }
 }

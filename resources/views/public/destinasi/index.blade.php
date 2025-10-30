@@ -81,7 +81,6 @@
 @section('content')
     <!-- Professional Hero Section -->
     <section class="dest-hero -mt-24 py-32 relative section-parallax section-reveal">
-        <div class="parallax-bg pattern-waves" data-speed="0.12" style="opacity:.35"></div>
         <div class="container mx-auto px-6 relative z-10">
             <div class="max-w-4xl mx-auto text-center text-white">
                 <div class="inline-block px-4 py-2 bg-white/20 backdrop-blur-md rounded-full mb-6">
@@ -124,7 +123,6 @@
 
     <!-- Destinations Grid -->
     <section class="container mx-auto px-6 py-16 section-parallax section-reveal">
-        <div class="parallax-bg pattern-dots" data-speed="0.15" style="opacity:.35"></div>
         @if($destinasi->isEmpty())
             <div class="text-center py-20">
                 <div class="w-32 h-32 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">

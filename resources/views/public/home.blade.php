@@ -178,6 +178,15 @@
         background-size: cover;
     }
 
+    /* Respect user reduced motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+        .news-card, .parallax-card, .parallax-bg, .month-card, .slide-up, .section-reveal {
+            transition: none !important;
+            animation: none !important;
+        }
+        .parallax-card .parallax-target { transform: none !important; }
+    }
+
     .floating {
         animation: floating 3s ease-in-out infinite;
     }
@@ -398,13 +407,12 @@
 
     {{-- Magazine Style Featured Section --}}
     <section class="bg-gray-50 section-parallax section-reveal">
-        <div class="parallax-bg pattern-dots" data-speed="0.15" style="opacity:.4"></div>
         <div class="container mx-auto px-6">
             {{-- Section Header --}}
             <div class="text-center mb-10">
                 <span class="text-blue-600 font-semibold uppercase tracking-wide text-sm">{{ __('site.featured_popular') }}</span>
                 <h2 class="text-4xl md:text-5xl font-black text-gray-900 mt-4 mb-4">
-                    {{ __('site.editor_picks') }}
+                    {{ __('site.popular_highlight') }}
                 </h2>
                 <div class="section-divider"></div>
                 <p class="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
@@ -415,8 +423,20 @@
             {{-- Magazine Grid Layout --}}
             <div class="magazine-grid">
                 {{-- Large Featured Card --}}
-                @if($featuredDestinations->first())
-                    @php $featured = $featuredDestinations->first(); @endphp
+                @php
+                    // Merge and filter to only admin-flagged destinations (is_featured or is_popular)
+                    $adminPicks = $featuredDestinations->merge($popularDestinasi)->unique('id')->filter(function($d){
+                        return (isset($d->is_featured) && $d->is_featured) || (isset($d->is_popular) && $d->is_popular);
+                    })->values();
+
+                    // Fallback: if admin picks are empty, show popularDestinasi so the section never appears blank
+                    if ($adminPicks->isEmpty()) {
+                        $adminPicks = $popularDestinasi->values();
+                    }
+                @endphp
+
+                @if($adminPicks->first())
+                    @php $featured = $adminPicks->first(); @endphp
                     <a href="{{ route('destinasi.show', $featured->slug) }}" class="grid-span-6 news-card rounded-2xl overflow-hidden shadow-xl group parallax-card">
                         <div class="featured-large relative">
                             @if($featured->foto->isNotEmpty())
@@ -449,7 +469,7 @@
 
                 {{-- Right Column - 2 Medium Cards --}}
                 <div class="grid-span-6 space-y-6">
-                    @foreach($featuredDestinations->skip(1)->take(2) as $dest)
+                    @foreach($adminPicks->skip(1)->take(2) as $dest)
                         <a href="{{ route('destinasi.show', $dest->slug) }}" class="news-card rounded-2xl overflow-hidden shadow-lg group block parallax-card">
                             <div class="featured-small relative">
                                 @if($dest->foto->isNotEmpty())
@@ -477,7 +497,7 @@
                 </div>
 
                 {{-- Bottom Row - 4 Small Cards --}}
-                @foreach($popularDestinasi->take(4) as $dest)
+                @foreach($adminPicks->skip(3)->take(4) as $dest)
                     <div class="grid-span-3">
                         <a href="{{ route('destinasi.show', $dest->slug) }}" class="news-card rounded-xl overflow-hidden shadow-lg group block h-full parallax-card">
                             <div class="relative h-48">
@@ -639,7 +659,7 @@
                                     <div class="text-sm text-gray-500">Belum ada acara di bulan ini.</div>
                                 @endforelse
                                 @if($list->count() > 3)
-                                    <a href="#" class="text-blue-600 text-sm font-semibold inline-flex items-center gap-1">Lihat semua <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+                                    <a href="{{ route('events.index', ['month' => $m]) }}" class="text-blue-600 text-sm font-semibold inline-flex items-center gap-1">{{ __('site.view_all') }} <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
                                 @endif
                             </div>
                         </div>
@@ -650,7 +670,100 @@
     </section>
 
     {{-- Call to Action Section --}}
-    <section class="parallax-section relative cta-section" style="background-image: url('{{ $featuredDestinations->first() && $featuredDestinations->first()->foto->isNotEmpty() ? Storage::url($featuredDestinations->first()->foto->first()->url) : '' }}');">
+    {{-- Akomodasi & Transportasi Section --}}
+    <section class="bg-white section-parallax section-reveal py-16">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-10">
+                <h2 class="text-4xl font-black text-gray-900">{{ __('site.accommodation_transport') }}</h2>
+                <p class="text-gray-600 mt-3">{{ __('site.accommodation_transport_subtitle') }}</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {{-- Akomodasi Column --}}
+                <div>
+                    <div class="mb-6 flex items-center justify-between">
+                        <h3 class="text-2xl font-semibold">{{ __('site.accommodation') }}</h3>
+                        @if(Route::has('akomodasi.index'))
+                            <a href="{{ route('akomodasi.index') }}" class="text-blue-600 text-sm font-medium">{{ __('site.view_all') }}</a>
+                        @else
+                            <a href="/akomodasi" class="text-blue-600 text-sm font-medium">{{ __('site.view_all') }}</a>
+                        @endif
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        @foreach($akomodasiHome as $a)
+                            @php
+                                $akomodasiUrl = '/akomodasi/' . ($a->slug ?? $a->id);
+                            @endphp
+                            @if(Route::has('akomodasi.show'))
+                                <a href="{{ route('akomodasi.show', $a->id ?? $a->slug ?? $a->id) }}" class="group block rounded-xl overflow-hidden shadow-sm parallax-card bg-white">
+                            @else
+                                <a href="{{ $akomodasiUrl }}" class="group block rounded-xl overflow-hidden shadow-sm parallax-card bg-white">
+                            @endif
+                                <div class="flex items-start p-4 gap-4">
+                                    <div class="w-16 h-16 rounded-lg bg-gray-100 flex-shrink-0 flex items-center justify-center text-blue-600 overflow-hidden">
+                                        @if(!empty($a->thumbnail))
+                                            <img src="{{ Storage::url($a->thumbnail) }}" alt="{{ $a->nama }}" class="w-full h-full object-cover" loading="lazy">
+                                        @else
+                                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v4a1 1 0 001 1h3l2 3 3-6 3 6 2-3h3a1 1 0 001-1V7a1 1 0 00-1 1z"/></svg>
+                                        @endif
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="text-sm text-gray-500 mb-2">{{ $a->tipe ?? '-' }}</div>
+                                        <h4 class="font-bold text-gray-900 mb-1 group-hover:text-blue-600">{{ Str::limit($a->nama, 48) }}</h4>
+                                        <p class="text-gray-600 text-sm line-clamp-2">{{ Str::limit($a->deskripsi, 80) }}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- Transportasi Column --}}
+                <div>
+                    <div class="mb-6 flex items-center justify-between">
+                        <h3 class="text-2xl font-semibold">{{ __('site.transport') }}</h3>
+                        @if(Route::has('transportasi.index'))
+                            <a href="{{ route('transportasi.index') }}" class="text-blue-600 text-sm font-medium">{{ __('site.view_all') }}</a>
+                        @else
+                            <a href="/transportasi" class="text-blue-600 text-sm font-medium">{{ __('site.view_all') }}</a>
+                        @endif
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        @foreach($transportasiHome as $t)
+                            @php $transportasiUrl = '/transportasi/' . ($t->slug ?? $t->id); @endphp
+                            @if(Route::has('transportasi.show'))
+                                <a href="{{ route('transportasi.show', $t->id ?? $t->slug ?? $t->id) }}" class="group block rounded-xl overflow-hidden shadow-sm parallax-card bg-white">
+                            @else
+                                <a href="{{ $transportasiUrl }}" class="group block rounded-xl overflow-hidden shadow-sm parallax-card bg-white">
+                            @endif
+                                <div class="flex items-start p-4 gap-4">
+                                    <div class="w-16 h-16 rounded-lg bg-gray-100 flex-shrink-0 flex items-center justify-center text-blue-600 overflow-hidden">
+                                        @if(!empty($t->thumbnail))
+                                            <img src="{{ Storage::url($t->thumbnail) }}" alt="{{ $t->nama }}" class="w-full h-full object-cover" loading="lazy">
+                                        @else
+                                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h4l3 7h4l3-7h4"/></svg>
+                                        @endif
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="text-sm text-gray-500 mb-2">{{ $t->tipe ?? '-' }}</div>
+                                        <h4 class="font-bold text-gray-900 mb-1 group-hover:text-blue-600">{{ Str::limit($t->nama, 48) }}</h4>
+                                        <p class="text-gray-600 text-sm line-clamp-2">{{ Str::limit($t->deskripsi, 80) }}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    @php
+        $ctaBackgroundUrl = '';
+        if ($featuredDestinations->first() && $featuredDestinations->first()->foto->isNotEmpty()) {
+            $ctaBackgroundUrl = Storage::url($featuredDestinations->first()->foto->first()->url);
+        }
+    @endphp
+    <section class="parallax-section relative cta-section" {!! $ctaBackgroundUrl ? 'style="background-image: url(' . e($ctaBackgroundUrl) . ');"' : '' !!}>
         <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-purple-900/90"></div>
         <div class="container mx-auto px-6 relative z-10 text-center">
             <h2 class="text-4xl md:text-6xl font-black text-white mb-8 leading-tight">

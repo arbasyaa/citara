@@ -24,6 +24,10 @@ return [
 
     'accommodation' => 'Akomodasi',
     'transport' => 'Transportasi',
+    'accommodation_transport' => 'Akomodasi dan Transportasi',
+    'accommodation_transport_subtitle' => 'Temukan stasiun, terminal, penginapan, dan moda transportasi untuk merencanakan perjalanan Anda.',
+    'accommodation_subtitle' => 'Temukan penginapan dan layanan akomodasi di Cilacap.',
+    'transport_subtitle' => 'Moda transportasi yang menghubungkan Cilacap dan sekitarnya.',
     
     // Hero section
     'hero_title' => 'Jelajahi Keindahan Cilacap',
@@ -43,13 +47,12 @@ return [
         // Home sections
     'featured_popular' => 'Destinasi Unggulan dan Populer',
     'featured_popular_subtitle' => 'Temukan destinasi terindah dan menarik di Cilacap',
+    'popular_highlight' => 'Wisata Populer dan Unggulan',
     'tourism_areas' => 'Wilayah Wisata',
     'tourism_areas_subtitle' => 'Jelajahi berbagai wilayah wisata di Cilacap',
-    'event_calendar' => 'Kalendar Kegiatan 2026',
-    'event_calendar_subtitle' => 'Jelajahi berbagai acara dan kegiatan wisata di Cilacap sepanjang tahun',
-    'destinations_count' => ':count Destinasi',
     'event_calendar' => 'Kalender Kegiatan',
     'event_calendar_subtitle' => 'Event dan kegiatan tahunan di Cilacap',
+    'destinations_count' => ':count Destinasi',
     'recent_destinations' => 'Destinasi Terbaru',
     'recent_destinations_subtitle' => 'Destinasi yang baru ditambahkan',
     'view_all' => 'Lihat Semua',
@@ -60,6 +63,9 @@ return [
     'cta_subtitle' => 'Jelajahi keindahan Cilacap, dari pantai hingga pegunungan. Temukan destinasi impian Anda!',
     'explore_destinations' => 'Jelajahi Destinasi',
     'download_guide' => 'Download Panduan',
+    'no_accommodation' => 'Tidak ada akomodasi ditemukan',
+    'no_transport' => 'Tidak ada data transportasi ditemukan',
+    'try_other_keywords' => 'Coba kata kunci lain',
     
     // Footer
     'about_us' => 'Tentang Kami',

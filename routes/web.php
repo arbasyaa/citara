@@ -22,6 +22,11 @@ Route::middleware([SetLocale::class])->group(function () {
     Route::get('/destinasi', [DestinasiController::class, 'index'])->name('destinasi.index');
     Route::get('/destinasi/{destinasi:slug}', [DestinasiController::class, 'show'])->name('destinasi.show');
     Route::get('/wilayah/{wilayah:slug}', [DestinasiController::class, 'byWilayah'])->name('wilayah.show');
+    // Public Akomodasi & Transportasi pages (lightweight)
+    Route::get('/akomodasi', [\App\Http\Controllers\Public\AkomodasiController::class, 'index'])->name('akomodasi.index');
+    Route::get('/akomodasi/{akomodasi}', [\App\Http\Controllers\Public\AkomodasiController::class, 'show'])->name('akomodasi.show');
+    Route::get('/transportasi', [\App\Http\Controllers\Public\TransportasiController::class, 'index'])->name('transportasi.index');
+    Route::get('/transportasi/{transportasi}', [\App\Http\Controllers\Public\TransportasiController::class, 'show'])->name('transportasi.show');
 });
 
 // Language switch route
@@ -37,6 +42,17 @@ Route::get('/lang/{locale}', function ($locale) {
     
     return redirect()->back();
 })->name('lang.switch');
+
+// Accessibility: Reduced motion toggle (session-based)
+Route::get('/a11y/motion/{pref}', function (string $pref) {
+    $pref = strtolower($pref);
+    if (!in_array($pref, ['reduce', 'auto'])) {
+        abort(400);
+    }
+    session(['reduced_motion' => $pref === 'reduce']);
+    session()->save();
+    return redirect()->back();
+})->name('a11y.motion');
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {

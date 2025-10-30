@@ -12,7 +12,8 @@ class Transportasi extends Model
         'nama',
         'tipe',
         'deskripsi',
-        'rute'
+        'rute',
+        'thumbnail'
     ];
 
 

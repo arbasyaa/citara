@@ -305,8 +305,13 @@ class AdminController extends Controller
             'nama' => 'required|string',
             'tipe' => 'nullable|string',
             'lokasi' => 'nullable|string',
-            'deskripsi' => 'nullable|string'
+            'deskripsi' => 'nullable|string',
+            'thumbnail' => 'nullable|image|max:4096'
         ]);
+        if ($request->hasFile('thumbnail')) {
+            $path = $request->file('thumbnail')->store('uploads/akomodasi', 'public');
+            $data['thumbnail'] = $path;
+        }
         Akomodasi::create($data);
     return redirect()->route('panel.akomodasi.index')->with('success', 'Akomodasi created');
     }
@@ -322,8 +327,13 @@ class AdminController extends Controller
             'nama' => 'required|string',
             'tipe' => 'nullable|string',
             'lokasi' => 'nullable|string',
-            'deskripsi' => 'nullable|string'
+            'deskripsi' => 'nullable|string',
+            'thumbnail' => 'nullable|image|max:4096'
         ]);
+        if ($request->hasFile('thumbnail')) {
+            $path = $request->file('thumbnail')->store('uploads/akomodasi', 'public');
+            $data['thumbnail'] = $path;
+        }
         $akomodasi->update($data);
     return redirect()->route('panel.akomodasi.index')->with('success', 'Akomodasi updated');
     }
@@ -358,8 +368,13 @@ class AdminController extends Controller
             'nama' => 'required|string',
             'tipe' => 'nullable|string',
             'rute' => 'nullable|string',
-            'deskripsi' => 'nullable|string'
+            'deskripsi' => 'nullable|string',
+            'thumbnail' => 'nullable|image|max:4096'
         ]);
+        if ($request->hasFile('thumbnail')) {
+            $path = $request->file('thumbnail')->store('uploads/transportasi', 'public');
+            $data['thumbnail'] = $path;
+        }
         Transportasi::create($data);
     return redirect()->route('panel.transportasi.index')->with('success', 'Transportasi created');
     }
@@ -375,8 +390,13 @@ class AdminController extends Controller
             'nama' => 'required|string',
             'tipe' => 'nullable|string',
             'rute' => 'nullable|string',
-            'deskripsi' => 'nullable|string'
+            'deskripsi' => 'nullable|string',
+            'thumbnail' => 'nullable|image|max:4096'
         ]);
+        if ($request->hasFile('thumbnail')) {
+            $path = $request->file('thumbnail')->store('uploads/transportasi', 'public');
+            $data['thumbnail'] = $path;
+        }
         $transportasi->update($data);
     return redirect()->route('panel.transportasi.index')->with('success', 'Transportasi updated');
     }

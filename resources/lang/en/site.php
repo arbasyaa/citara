@@ -24,6 +24,10 @@ return [
 
     'accommodation' => 'Accommodation',
     'transport' => 'Transportation',
+    'accommodation_transport' => 'Accommodation and Transportation',
+    'accommodation_transport_subtitle' => 'Find stations, terminals, lodging, and transport options to plan your trip.',
+    'accommodation_subtitle' => 'Find lodging and accommodation services in Cilacap.',
+    'transport_subtitle' => 'Transport modes connecting Cilacap and surrounding areas.',
     
     // Hero section
     'hero_title' => 'Explore the Beauty of Cilacap',
@@ -43,13 +47,12 @@ return [
         // Home sections
     'featured_popular' => 'Featured and Popular Destinations',
     'featured_popular_subtitle' => 'Discover the most beautiful and interesting destinations in Cilacap',
+    'popular_highlight' => 'Popular & Highlighted Destinations',
     'tourism_areas' => 'Tourism Areas',
     'tourism_areas_subtitle' => 'Explore various tourism areas in Cilacap',
-    'event_calendar' => '2026 Event Calendar',
-    'event_calendar_subtitle' => 'Explore various events and tourism activities in Cilacap throughout the year',
-    'destinations_count' => ':count Destinations',
     'event_calendar' => 'Event Calendar',
     'event_calendar_subtitle' => 'Annual events and activities in Cilacap',
+    'destinations_count' => ':count Destinations',
     'recent_destinations' => 'Latest Destinations',
     'recent_destinations_subtitle' => 'Newly added destinations',
     'view_all' => 'View All',
@@ -60,6 +63,9 @@ return [
     'cta_subtitle' => 'Explore the beauty of Cilacap, from beaches to mountains. Find your dream destination!',
     'explore_destinations' => 'Explore Destinations',
     'download_guide' => 'Download Guide',
+    'no_accommodation' => 'No accommodations found',
+    'no_transport' => 'No transport entries found',
+    'try_other_keywords' => 'Try other keywords',
     
     // Footer
     'about_us' => 'About Us',

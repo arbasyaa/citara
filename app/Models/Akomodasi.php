@@ -14,7 +14,8 @@ class Akomodasi extends Model
         'deskripsi',
         'lokasi',
         'nomor_telepon',
-        'url_situs_web'
+        'url_situs_web',
+        'thumbnail'
     ];
 
 
