@@ -10,6 +10,9 @@ use App\Models\Akomodasi;
 use App\Models\Transportasi;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -70,6 +73,13 @@ class AdminController extends Controller
             $data['image'] = $path;
         }
         CalendarEvent::create($data);
+        // Invalidate home caches for all locales
+        foreach (config('app.locales', [app()->getLocale()]) as $loc) {
+            Cache::forget("home.events.{$loc}");
+            Cache::forget("home.featured.{$loc}");
+            Cache::forget("home.popular.{$loc}");
+            Cache::forget("home.recent.{$loc}");
+        }
     return redirect()->route('panel.events.index')->with('success', 'Event created');
     }
 
@@ -93,20 +103,43 @@ class AdminController extends Controller
             $data['image'] = $path;
         }
         $event->update($data);
+        foreach (config('app.locales', [app()->getLocale()]) as $loc) {
+            Cache::forget("home.events.{$loc}");
+            Cache::forget("home.featured.{$loc}");
+            Cache::forget("home.popular.{$loc}");
+            Cache::forget("home.recent.{$loc}");
+        }
     return redirect()->route('panel.events.index')->with('success', 'Event updated');
     }
 
     public function eventsDestroy(CalendarEvent $event)
     {
         $event->delete();
+        foreach (config('app.locales', [app()->getLocale()]) as $loc) {
+            Cache::forget("home.events.{$loc}");
+            Cache::forget("home.featured.{$loc}");
+            Cache::forget("home.popular.{$loc}");
+            Cache::forget("home.recent.{$loc}");
+        }
     return redirect()->route('panel.events.index')->with('success', 'Event deleted');
     }
 
     // Wilayah CRUD for panel
-    public function wilayahIndex()
+    public function wilayahIndex(Request $request)
     {
-        $wilayah = Wilayah::withCount('destinasi')->paginate(15);
-    return view('admin.wilayah.index', compact('wilayah'));
+        $q = trim((string) $request->query('q', ''));
+        $per = (int) $request->query('per_page', 15);
+        $per = $per > 0 && $per <= 200 ? $per : 15;
+
+        $query = Wilayah::withCount('destinasi');
+        if ($q !== '') {
+            $query->where(function ($b) use ($q) {
+                $b->where('nama', 'like', "%{$q}%")->orWhere('slug', 'like', "%{$q}%");
+            });
+        }
+
+        $wilayah = $query->orderBy('nama')->paginate($per)->appends($request->except('page'));
+        return view('admin.wilayah.index', compact('wilayah', 'q'));
     }
 
     public function wilayahCreate()
@@ -118,9 +151,27 @@ class AdminController extends Controller
     {
         $data = $request->validate([
             'nama' => 'required|string',
-            'slug' => 'nullable|string'
+            'slug' => 'nullable|string',
+            'deskripsi' => 'nullable|string'
         ]);
-        Wilayah::create($data);
+        $wilayah = Wilayah::create($data);
+
+        // Create a placeholder destinasi so the wilayah appears in homepage lists
+        // which may filter/display based on destinasi count in some views.
+        try {
+            Destinasi::create([
+                'nama' => 'Destinasi Awal untuk ' . ($wilayah->nama ?? 'Wilayah'),
+                'id_wilayah' => $wilayah->id,
+                'deskripsi' => $wilayah->deskripsi ?? 'Placeholder destinasi dibuat otomatis saat wilayah dibuat.'
+            ]);
+        } catch (\Throwable $e) {
+            // Non-fatal: if destinasi table or schema isn't present, ignore and continue.
+        }
+
+        foreach (config('app.locales', [app()->getLocale()]) as $loc) {
+            Cache::forget("home.wilayah.{$loc}");
+            Cache::forget("home.featured.{$loc}");
+        }
     return redirect()->route('panel.wilayah.index')->with('success', 'Wilayah created');
     }
 
@@ -133,23 +184,44 @@ class AdminController extends Controller
     {
         $data = $request->validate([
             'nama' => 'required|string',
-            'slug' => 'nullable|string'
+            'slug' => 'nullable|string',
+            'deskripsi' => 'nullable|string'
         ]);
         $wilayah->update($data);
+        foreach (config('app.locales', [app()->getLocale()]) as $loc) {
+            Cache::forget("home.wilayah.{$loc}");
+            Cache::forget("home.featured.{$loc}");
+        }
     return redirect()->route('panel.wilayah.index')->with('success', 'Wilayah updated');
     }
 
     public function wilayahDestroy(Wilayah $wilayah)
     {
         $wilayah->delete();
+        foreach (config('app.locales', [app()->getLocale()]) as $loc) {
+            Cache::forget("home.wilayah.{$loc}");
+            Cache::forget("home.featured.{$loc}");
+        }
     return redirect()->route('panel.wilayah.index')->with('success', 'Wilayah deleted');
     }
 
     // Destinasi CRUD for panel
-    public function destinasiIndex()
+    public function destinasiIndex(Request $request)
     {
-        $destinasi = Destinasi::with('wilayah')->paginate(15);
-    return view('admin.destinasi.index', compact('destinasi'));
+        $q = trim((string) $request->query('q', ''));
+        $per = (int) $request->query('per_page', 15);
+        $per = $per > 0 && $per <= 200 ? $per : 15;
+
+        $query = Destinasi::with('wilayah');
+        if ($q !== '') {
+            $query->where(function ($b) use ($q) {
+                $b->where('nama', 'like', "%{$q}%")
+                  ->orWhere('slug', 'like', "%{$q}%");
+            });
+        }
+
+        $destinasi = $query->orderBy('nama')->paginate($per)->appends($request->except('page'));
+        return view('admin.destinasi.index', compact('destinasi', 'q'));
     }
 
     public function destinasiCreate()
@@ -163,15 +235,41 @@ class AdminController extends Controller
             'nama' => 'required|string',
             'id_wilayah' => 'nullable|exists:wilayah,id',
             'deskripsi' => 'nullable|string',
+            'alamat_lokasi' => 'nullable|string',
+            'url_gmaps' => 'nullable|url',
+            'is_highlight' => 'nullable|boolean',
             'image' => 'nullable|image|max:4096'
         ]);
 
         // Create destinasi first
-        $dest = Destinasi::create([
+        $highlight = !empty($data['is_highlight']);
+
+        $payload = [
             'nama' => $data['nama'],
             'id_wilayah' => $data['id_wilayah'] ?? null,
             'deskripsi' => $data['deskripsi'] ?? null,
-        ]);
+            'alamat_lokasi' => $data['alamat_lokasi'] ?? null,
+            'url_gmaps' => $data['url_gmaps'] ?? null,
+        ];
+
+        try {
+            if (Schema::hasColumn((new Destinasi())->getTable(), 'is_popular')) {
+                $payload['is_popular'] = $highlight ? 1 : 0;
+            }
+            if (Schema::hasColumn((new Destinasi())->getTable(), 'is_featured')) {
+                $payload['is_featured'] = $highlight ? 1 : 0;
+            }
+        } catch (\Exception $e) {
+            // If Schema check fails, avoid setting the columns and continue.
+        }
+
+        $dest = Destinasi::create($payload);
+        foreach (config('app.locales', [app()->getLocale()]) as $loc) {
+            Cache::forget("home.featured.{$loc}");
+            Cache::forget("home.popular.{$loc}");
+            Cache::forget("home.recent.{$loc}");
+            Cache::forget("home.destinasi_count.{$loc}");
+        }
 
         // If image uploaded, store it as FotoDestinasi
         if ($request->hasFile('image')) {
@@ -198,14 +296,40 @@ class AdminController extends Controller
             'nama' => 'required|string',
             'id_wilayah' => 'nullable|exists:wilayah,id',
             'deskripsi' => 'nullable|string',
+            'alamat_lokasi' => 'nullable|string',
+            'url_gmaps' => 'nullable|url',
+            'is_highlight' => 'nullable|boolean',
             'image' => 'nullable|image|max:4096'
         ]);
 
-        $destinasi->update([
+        $highlight = !empty($data['is_highlight']);
+
+        $payload = [
             'nama' => $data['nama'],
             'id_wilayah' => $data['id_wilayah'] ?? null,
             'deskripsi' => $data['deskripsi'] ?? null,
-        ]);
+            'alamat_lokasi' => $data['alamat_lokasi'] ?? null,
+            'url_gmaps' => $data['url_gmaps'] ?? null,
+        ];
+
+        try {
+            if (Schema::hasColumn((new Destinasi())->getTable(), 'is_popular')) {
+                $payload['is_popular'] = $highlight ? 1 : 0;
+            }
+            if (Schema::hasColumn((new Destinasi())->getTable(), 'is_featured')) {
+                $payload['is_featured'] = $highlight ? 1 : 0;
+            }
+        } catch (\Exception $e) {
+            // ignore and continue
+        }
+
+        $destinasi->update($payload);
+        foreach (config('app.locales', [app()->getLocale()]) as $loc) {
+            Cache::forget("home.featured.{$loc}");
+            Cache::forget("home.popular.{$loc}");
+            Cache::forget("home.recent.{$loc}");
+            Cache::forget("home.destinasi_count.{$loc}");
+        }
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('uploads', 'public');
@@ -222,7 +346,59 @@ class AdminController extends Controller
     public function destinasiDestroy(Destinasi $destinasi)
     {
         $destinasi->delete();
+        foreach (config('app.locales', [app()->getLocale()]) as $loc) {
+            Cache::forget("home.featured.{$loc}");
+            Cache::forget("home.popular.{$loc}");
+            Cache::forget("home.recent.{$loc}");
+            Cache::forget("home.destinasi_count.{$loc}");
+        }
     return redirect()->route('panel.destinasi.index')->with('success', 'Destinasi deleted');
+    }
+
+    /**
+     * Remove a photo attached to a destinasi from the panel edit screen.
+     * IMPORTANT: This ONLY deletes the photo, NOT the destinasi record.
+     */
+    public function destinasiPhotoDestroy(Destinasi $destinasi, \App\Models\FotoDestinasi $foto)
+    {
+        // ensure photo belongs to destinasi
+        if ($foto->id_destinasi != $destinasi->id) {
+            abort(404);
+        }
+
+        // Store destinasi ID to verify it still exists after photo deletion
+        $destinasiId = $destinasi->id;
+        $remainingPhotos = $destinasi->foto()->count() - 1; // Count after this deletion
+
+        try {
+            if (!empty($foto->url) && Storage::disk('public')->exists($foto->url)) {
+                Storage::disk('public')->delete($foto->url);
+            }
+        } catch (\Exception $e) {
+            // ignore storage deletion errors, continue with DB deletion
+        }
+
+        // Delete ONLY the foto record, not the destinasi
+        $foto->delete();
+
+        // Verify destinasi still exists (safety check)
+        $destinasiStillExists = Destinasi::where('id', $destinasiId)->exists();
+        if (!$destinasiStillExists) {
+            Log::error("CRITICAL: Destinasi #{$destinasiId} was deleted after removing photo #{$foto->id}. This should NOT happen!");
+            return redirect()->route('panel.destinasi.index')->with('error', 'Warning: Destinasi was unexpectedly deleted.');
+        }
+
+        foreach (config('app.locales', [app()->getLocale()]) as $loc) {
+            Cache::forget("home.featured.{$loc}");
+            Cache::forget("home.popular.{$loc}");
+            Cache::forget("home.recent.{$loc}");
+        }
+
+        $message = $remainingPhotos > 0 
+            ? "Foto dihapus. {$remainingPhotos} foto tersisa." 
+            : "Foto terakhir dihapus. Destinasi tetap ada tanpa foto.";
+
+        return redirect()->route('panel.destinasi.edit', $destinasiId)->with('success', $message);
     }
 
     // Akomodasi CRUD for panel
@@ -249,9 +425,42 @@ class AdminController extends Controller
         $data = $request->validate([
             'nama' => 'required|string',
             'tipe' => 'nullable|string',
-            'lokasi' => 'nullable|string'
+            'lokasi' => 'nullable|string',
+            'deskripsi' => 'nullable|string',
+            'thumbnail' => 'nullable|image|max:4096',
+            'slug' => 'nullable|string|max:191'
         ]);
+
+        if ($request->hasFile('thumbnail')) {
+            $file = $request->file('thumbnail');
+            try {
+                if (class_exists('Intervention\\Image\\ImageManagerStatic')) {
+                    $img = app('image')->make($file->getRealPath());
+                    // create optimized thumb
+                    $imgThumb = $img->fit(400, 300, function ($constraint) { $constraint->upsize(); });
+                    $thumbPath = 'uploads/akomodasi/thumb-' . time() . '-' . $file->getClientOriginalName();
+                    Storage::disk('public')->put($thumbPath, (string) $imgThumb->encode('jpg', 80));
+                    $data['thumbnail'] = $thumbPath;
+                } else {
+                    $path = $file->store('uploads/akomodasi', 'public');
+                    $data['thumbnail'] = $path;
+                }
+            } catch (\Exception $e) {
+                $path = $file->store('uploads/akomodasi', 'public');
+                $data['thumbnail'] = $path;
+            }
+        }
+
+        // slug will be generated by model if empty; allow manual override
+        if ($request->filled('slug')) {
+            $data['slug'] = $request->input('slug');
+        }
+
         Akomodasi::create($data);
+        foreach (config('app.locales', [app()->getLocale()]) as $loc) {
+            Cache::forget("home.akomodasi.{$loc}");
+            Cache::forget("home.featured.{$loc}");
+        }
     return redirect()->route('panel.akomodasi.index')->with('success', 'Akomodasi created');
     }
 
@@ -265,15 +474,47 @@ class AdminController extends Controller
         $data = $request->validate([
             'nama' => 'required|string',
             'tipe' => 'nullable|string',
-            'lokasi' => 'nullable|string'
+            'lokasi' => 'nullable|string',
+            'deskripsi' => 'nullable|string',
+            'thumbnail' => 'nullable|image|max:4096',
+            'slug' => 'nullable|string|max:191'
         ]);
+        if ($request->hasFile('thumbnail')) {
+            $file = $request->file('thumbnail');
+            try {
+                if (class_exists('Intervention\\Image\\ImageManagerStatic')) {
+                    $img = app('image')->make($file->getRealPath());
+                    $imgThumb = $img->fit(400, 300, function ($constraint) { $constraint->upsize(); });
+                    $thumbPath = 'uploads/akomodasi/thumb-' . time() . '-' . $file->getClientOriginalName();
+                    Storage::disk('public')->put($thumbPath, (string) $imgThumb->encode('jpg', 80));
+                    $data['thumbnail'] = $thumbPath;
+                } else {
+                    $path = $file->store('uploads/akomodasi', 'public');
+                    $data['thumbnail'] = $path;
+                }
+            } catch (\Exception $e) {
+                $path = $file->store('uploads/akomodasi', 'public');
+                $data['thumbnail'] = $path;
+            }
+        }
+        if ($request->filled('slug')) {
+            $data['slug'] = $request->input('slug');
+        }
         $akomodasi->update($data);
+        foreach (config('app.locales', [app()->getLocale()]) as $loc) {
+            Cache::forget("home.akomodasi.{$loc}");
+            Cache::forget("home.featured.{$loc}");
+        }
     return redirect()->route('panel.akomodasi.index')->with('success', 'Akomodasi updated');
     }
 
     public function akomodasiDestroy(Akomodasi $akomodasi)
     {
         $akomodasi->delete();
+        foreach (config('app.locales', [app()->getLocale()]) as $loc) {
+            Cache::forget("home.akomodasi.{$loc}");
+            Cache::forget("home.featured.{$loc}");
+        }
     return redirect()->route('panel.akomodasi.index')->with('success', 'Akomodasi deleted');
     }
 
@@ -300,9 +541,37 @@ class AdminController extends Controller
         $data = $request->validate([
             'nama' => 'required|string',
             'tipe' => 'nullable|string',
-            'rute' => 'nullable|string'
+            'rute' => 'nullable|string',
+            'deskripsi' => 'nullable|string',
+            'thumbnail' => 'nullable|image|max:4096',
+            'slug' => 'nullable|string|max:191'
         ]);
+        if ($request->hasFile('thumbnail')) {
+            $file = $request->file('thumbnail');
+            try {
+                if (class_exists('Intervention\\Image\\ImageManagerStatic')) {
+                    $img = app('image')->make($file->getRealPath());
+                    $imgThumb = $img->fit(400, 300, function ($constraint) { $constraint->upsize(); });
+                    $thumbPath = 'uploads/transportasi/thumb-' . time() . '-' . $file->getClientOriginalName();
+                    Storage::disk('public')->put($thumbPath, (string) $imgThumb->encode('jpg', 80));
+                    $data['thumbnail'] = $thumbPath;
+                } else {
+                    $path = $file->store('uploads/transportasi', 'public');
+                    $data['thumbnail'] = $path;
+                }
+            } catch (\Exception $e) {
+                $path = $file->store('uploads/transportasi', 'public');
+                $data['thumbnail'] = $path;
+            }
+        }
+        if ($request->filled('slug')) {
+            $data['slug'] = $request->input('slug');
+        }
         Transportasi::create($data);
+        foreach (config('app.locales', [app()->getLocale()]) as $loc) {
+            Cache::forget("home.transportasi.{$loc}");
+            Cache::forget("home.featured.{$loc}");
+        }
     return redirect()->route('panel.transportasi.index')->with('success', 'Transportasi created');
     }
 
@@ -316,15 +585,47 @@ class AdminController extends Controller
         $data = $request->validate([
             'nama' => 'required|string',
             'tipe' => 'nullable|string',
-            'rute' => 'nullable|string'
+            'rute' => 'nullable|string',
+            'deskripsi' => 'nullable|string',
+            'thumbnail' => 'nullable|image|max:4096',
+            'slug' => 'nullable|string|max:191'
         ]);
+        if ($request->hasFile('thumbnail')) {
+            $file = $request->file('thumbnail');
+            try {
+                if (class_exists('Intervention\\Image\\ImageManagerStatic')) {
+                    $img = app('image')->make($file->getRealPath());
+                    $imgThumb = $img->fit(400, 300, function ($constraint) { $constraint->upsize(); });
+                    $thumbPath = 'uploads/transportasi/thumb-' . time() . '-' . $file->getClientOriginalName();
+                    Storage::disk('public')->put($thumbPath, (string) $imgThumb->encode('jpg', 80));
+                    $data['thumbnail'] = $thumbPath;
+                } else {
+                    $path = $file->store('uploads/transportasi', 'public');
+                    $data['thumbnail'] = $path;
+                }
+            } catch (\Exception $e) {
+                $path = $file->store('uploads/transportasi', 'public');
+                $data['thumbnail'] = $path;
+            }
+        }
+        if ($request->filled('slug')) {
+            $data['slug'] = $request->input('slug');
+        }
         $transportasi->update($data);
+        foreach (config('app.locales', [app()->getLocale()]) as $loc) {
+            Cache::forget("home.transportasi.{$loc}");
+            Cache::forget("home.featured.{$loc}");
+        }
     return redirect()->route('panel.transportasi.index')->with('success', 'Transportasi updated');
     }
 
     public function transportasiDestroy(Transportasi $transportasi)
     {
         $transportasi->delete();
+        foreach (config('app.locales', [app()->getLocale()]) as $loc) {
+            Cache::forget("home.transportasi.{$loc}");
+            Cache::forget("home.featured.{$loc}");
+        }
     return redirect()->route('panel.transportasi.index')->with('success', 'Transportasi deleted');
     }
 }

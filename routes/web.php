@@ -9,17 +9,50 @@ use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\DestinasiController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\SetLocale;
 
 // Provide a named `login` route so middleware that redirects to route('login') works.
 Route::get('/login', function () {
     return redirect()->route('panel.login');
 })->name('login');
 
-// Public Routes
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/destinasi', [DestinasiController::class, 'index'])->name('destinasi.index');
-Route::get('/destinasi/{destinasi:slug}', [DestinasiController::class, 'show'])->name('destinasi.show');
-Route::get('/wilayah/{wilayah:slug}', [DestinasiController::class, 'byWilayah'])->name('wilayah.show');
+// Public Routes (apply locale middleware to set app locale from session)
+Route::middleware([SetLocale::class])->group(function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/destinasi', [DestinasiController::class, 'index'])->name('destinasi.index');
+    Route::get('/destinasi/{destinasi:slug}', [DestinasiController::class, 'show'])->name('destinasi.show');
+    Route::get('/wilayah/{wilayah:slug}', [DestinasiController::class, 'byWilayah'])->name('wilayah.show');
+    // Public Akomodasi & Transportasi pages (lightweight)
+    Route::get('/akomodasi', [\App\Http\Controllers\Public\AkomodasiController::class, 'index'])->name('akomodasi.index');
+    Route::get('/akomodasi/{akomodasi}', [\App\Http\Controllers\Public\AkomodasiController::class, 'show'])->name('akomodasi.show');
+    Route::get('/transportasi', [\App\Http\Controllers\Public\TransportasiController::class, 'index'])->name('transportasi.index');
+    Route::get('/transportasi/{transportasi}', [\App\Http\Controllers\Public\TransportasiController::class, 'show'])->name('transportasi.show');
+});
+
+// Language switch route
+Route::get('/lang/{locale}', function ($locale) {
+    $available = ['en', 'id'];
+    if (! in_array($locale, $available)) {
+        abort(404);
+    }
+    session(['locale' => $locale]);
+    
+    // Force session to save immediately
+    session()->save();
+    
+    return redirect()->back();
+})->name('lang.switch');
+
+// Accessibility: Reduced motion toggle (session-based)
+Route::get('/a11y/motion/{pref}', function (string $pref) {
+    $pref = strtolower($pref);
+    if (!in_array($pref, ['reduce', 'auto'])) {
+        abort(400);
+    }
+    session(['reduced_motion' => $pref === 'reduce']);
+    session()->save();
+    return redirect()->back();
+})->name('a11y.motion');
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
@@ -66,6 +99,8 @@ Route::prefix('panel')->name('panel.')->group(function () {
     Route::get('/destinasi/{destinasi}/edit', [AdminController::class, 'destinasiEdit'])->name('destinasi.edit');
     Route::put('/destinasi/{destinasi}', [AdminController::class, 'destinasiUpdate'])->name('destinasi.update');
     Route::delete('/destinasi/{destinasi}', [AdminController::class, 'destinasiDestroy'])->name('destinasi.destroy');
+    // Delete a photo from a destinasi via panel
+    Route::delete('/destinasi/{destinasi}/foto/{foto}', [AdminController::class, 'destinasiPhotoDestroy'])->name('destinasi.photo.destroy');
 
     // Akomodasi (panel)
     Route::get('/akomodasi', [AdminController::class, 'akomodasiIndex'])->name('akomodasi.index');
