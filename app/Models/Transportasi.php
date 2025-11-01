@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transportasi extends Model
 {
+    use \App\Traits\Sluggable;
     protected $table = 'transportasi';
 
     protected $fillable = [
         'nama',
+        'slug',
         'tipe',
         'deskripsi',
         'rute',

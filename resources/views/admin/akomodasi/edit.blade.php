@@ -25,10 +25,20 @@
                 <textarea name="deskripsi" class="mt-1 block w-full rounded border-gray-300" rows="4">{{ $akomodasi->deskripsi }}</textarea>
             </div>
             <div class="mb-4">
+                <label class="block text-sm">Slug (opsional)</label>
+                <input name="slug" value="{{ $akomodasi->slug }}" class="mt-1 block w-full rounded border-gray-300" placeholder="custom-friendly-slug">
+                <p class="text-xs text-gray-500 mt-1">Biarkan kosong untuk menghasilkan otomatis dari nama.</p>
+            </div>
+            <div class="mb-4">
                 <label class="block text-sm">Thumbnail</label>
                 <input type="file" name="thumbnail" accept="image/*" class="mt-1 block w-full rounded border-gray-300">
                 @if($akomodasi->thumbnail)
-                    <img src="{{ Storage::url($akomodasi->thumbnail) }}" alt="Thumbnail" class="mt-2 w-32 h-32 object-cover rounded">
+                    <div class="mt-2 flex items-start gap-4">
+                        <img src="{{ Storage::url($akomodasi->thumbnail) }}" alt="Thumbnail" class="w-32 h-32 object-cover rounded">
+                        <label class="flex items-center gap-2 text-sm text-gray-700">
+                            <input type="checkbox" name="remove_thumbnail" value="1" class="rounded"> Hapus thumbnail saat disimpan
+                        </label>
+                    </div>
                 @endif
                 <p class="text-xs text-gray-500 mt-1">JPG/PNG hingga 4MB. Mengunggah gambar baru akan mengganti thumbnail.</p>
             </div>

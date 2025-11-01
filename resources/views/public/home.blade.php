@@ -332,7 +332,7 @@
                         $foto = $dest->foto->where('apakah_slider_utama', true)->first() ?? $dest->foto->first();
                     @endphp
                     @if($foto)
-                        <div class="absolute inset-0 bg-center bg-cover" style="background-image: url('{{ Storage::url($foto->url) }}');">
+                        <div class="absolute inset-0 bg-center bg-cover" style="background-image: url('{{ \App\Services\ImageUrl::url($foto->url) }}');">
                             <div class="hero-overlay absolute inset-0"></div>
                         </div>
                     @endif
@@ -441,7 +441,7 @@
                         <div class="featured-large relative">
                             @if($featured->foto->isNotEmpty())
                                 <img 
-                                    src="{{ Storage::url($featured->foto->first()->url) }}"
+                                    src="{{ \App\Services\ImageUrl::url($featured->foto->first()->url) }}"
                                     alt="{{ $featured->nama }}"
                                     class="news-image w-full h-full object-cover parallax-target"
                                 >
@@ -474,7 +474,7 @@
                             <div class="featured-small relative">
                                 @if($dest->foto->isNotEmpty())
                                     <img 
-                                        src="{{ Storage::url($dest->foto->first()->url) }}"
+                                        src="{{ \App\Services\ImageUrl::url($dest->foto->first()->url) }}"
                                         alt="{{ $dest->nama }}"
                                         class="news-image w-full h-full object-cover parallax-target"
                                     >
@@ -503,7 +503,7 @@
                             <div class="relative h-48">
                                 @if($dest->foto->isNotEmpty())
                                     <img 
-                                        src="{{ Storage::url($dest->foto->first()->url) }}"
+                                        src="{{ \App\Services\ImageUrl::url($dest->foto->first()->url) }}"
                                         alt="{{ $dest->nama }}"
                                         class="news-image w-full h-full object-cover parallax-target"
                                     >
@@ -695,7 +695,7 @@
                                 $akomodasiUrl = '/akomodasi/' . ($a->slug ?? $a->id);
                             @endphp
                             @if(Route::has('akomodasi.show'))
-                                <a href="{{ route('akomodasi.show', $a->id ?? $a->slug ?? $a->id) }}" class="group block rounded-xl overflow-hidden shadow-sm parallax-card bg-white">
+                                <a href="{{ route('akomodasi.show', $a->slug ?? $a->id) }}" class="group block rounded-xl overflow-hidden shadow-sm parallax-card bg-white">
                             @else
                                 <a href="{{ $akomodasiUrl }}" class="group block rounded-xl overflow-hidden shadow-sm parallax-card bg-white">
                             @endif
@@ -732,7 +732,7 @@
                         @foreach($transportasiHome as $t)
                             @php $transportasiUrl = '/transportasi/' . ($t->slug ?? $t->id); @endphp
                             @if(Route::has('transportasi.show'))
-                                <a href="{{ route('transportasi.show', $t->id ?? $t->slug ?? $t->id) }}" class="group block rounded-xl overflow-hidden shadow-sm parallax-card bg-white">
+                                <a href="{{ route('transportasi.show', $t->slug ?? $t->id) }}" class="group block rounded-xl overflow-hidden shadow-sm parallax-card bg-white">
                             @else
                                 <a href="{{ $transportasiUrl }}" class="group block rounded-xl overflow-hidden shadow-sm parallax-card bg-white">
                             @endif
@@ -763,6 +763,8 @@
             $ctaBackgroundUrl = Storage::url($featuredDestinations->first()->foto->first()->url);
         }
     @endphp
+    <?php use App\Services\ImageUrl; ?>
+    @php $ctaBackgroundUrl = ImageUrl::url($featuredDestinations->first()->foto->first()->url ?? null); @endphp
     <section class="parallax-section relative cta-section" {!! $ctaBackgroundUrl ? 'style="background-image: url(' . e($ctaBackgroundUrl) . ');"' : '' !!}>
         <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-purple-900/90"></div>
         <div class="container mx-auto px-6 relative z-10 text-center">

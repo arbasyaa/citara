@@ -5,7 +5,7 @@
 @section('content')
     <div class="max-w-2xl bg-white p-6 rounded-xl shadow-sm border border-gray-100">
         <h1 class="text-xl font-semibold mb-4">Edit Destinasi</h1>
-    <form method="POST" action="{{ route('panel.destinasi.update', $destinasi) }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('panel.destinasi.update', $destinasi) }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="mb-4">
@@ -42,19 +42,32 @@
             <div class="mb-4">
                 <label class="block text-sm">Gambar</label>
                 <input type="file" name="image" accept="image/*" class="mt-1 block w-full">
-                @if($destinasi->foto && $destinasi->foto->count())
-                    <div class="mt-2 grid grid-cols-3 gap-2">
-                        @foreach($destinasi->foto as $foto)
-                            <div>
-                                <img src="{{ asset('storage/' . $foto->url) }}" class="max-h-40 rounded">
-                            </div>
-                        @endforeach
-                    </div>
-                @endif
             </div>
             <div class="flex justify-end">
-                <button class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Save</button>
+                <button type="submit" class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Save</button>
             </div>
         </form>
+
+        @if($destinasi->foto && $destinasi->foto->count())
+            <div class="mt-6 pt-6 border-t border-gray-200">
+                <label class="block text-sm font-medium mb-3">Foto yang Sudah Diunggah</label>
+                <div class="grid grid-cols-3 gap-2">
+                    @foreach($destinasi->foto as $foto)
+                        <div class="relative group">
+                            <img src="{{ asset('storage/' . $foto->url) }}" class="max-h-40 w-full object-cover rounded">
+                            <form method="POST" action="{{ route('panel.destinasi.photo.destroy', [$destinasi, $foto]) }}" class="absolute top-1 right-1">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="return confirm('Hapus foto ini? Destinasi tidak akan terhapus.')" class="bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-1.5 text-rose-600 hover:text-rose-800 shadow-sm">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
     </div>
 @endsection

@@ -92,10 +92,6 @@
                             <h2 class="text-lg font-semibold text-gray-900">@yield('page-title','Admin Panel')</h2>
                         </div>
                         <div class="hidden md:flex items-center gap-3">
-                            <div class="relative">
-                                <input type="text" placeholder="Search…" class="pl-10 pr-3 py-2 rounded-md border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
-                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"></path></svg>
-                            </div>
                             <button class="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center">
                                 <svg class="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C8.67 6.165 7 8.388 7 11v3.159c0 .538-.214 1.055-.595 1.436L5 17h5"></path></svg>
                             </button>

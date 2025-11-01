@@ -99,6 +99,8 @@ Route::prefix('panel')->name('panel.')->group(function () {
     Route::get('/destinasi/{destinasi}/edit', [AdminController::class, 'destinasiEdit'])->name('destinasi.edit');
     Route::put('/destinasi/{destinasi}', [AdminController::class, 'destinasiUpdate'])->name('destinasi.update');
     Route::delete('/destinasi/{destinasi}', [AdminController::class, 'destinasiDestroy'])->name('destinasi.destroy');
+    // Delete a photo from a destinasi via panel
+    Route::delete('/destinasi/{destinasi}/foto/{foto}', [AdminController::class, 'destinasiPhotoDestroy'])->name('destinasi.photo.destroy');
 
     // Akomodasi (panel)
     Route::get('/akomodasi', [AdminController::class, 'akomodasiIndex'])->name('akomodasi.index');

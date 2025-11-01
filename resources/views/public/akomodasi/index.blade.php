@@ -67,7 +67,7 @@
                     <article class="dest-card bg-white rounded-2xl shadow-lg overflow-hidden group">
                         <div class="relative h-64 overflow-hidden">
                             @if(!empty($a->thumbnail))
-                                <img src="{{ Storage::url($a->thumbnail) }}" alt="{{ $a->nama }}" class="dest-image w-full h-full object-cover">
+                                <img src="{{ \App\Services\ImageUrl::url($a->thumbnail) }}" alt="{{ $a->nama }}" class="dest-image w-full h-full object-cover">
                             @else
                                 <div class="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500"></div>
                             @endif
@@ -85,7 +85,7 @@
                                     <span class="text-sm">{{ Str::limit($a->lokasi, 40) }}</span>
                                 </div>
                             @endif
-                            <a href="{{ route('akomodasi.show', $a) }}" class="btn-view inline-flex items-center gap-2 px-6 py-3 text-white rounded-xl font-semibold shadow-lg">
+                            <a href="{{ route('akomodasi.show', $a->slug) }}" class="btn-view inline-flex items-center gap-2 px-6 py-3 text-white rounded-xl font-semibold shadow-lg">
                                 {{ __('site.read_more') }}
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                             </a>
@@ -93,7 +93,7 @@
                     </article>
                 @endforeach
             </div>
-            <div class="mt-16">{{ $items->links() }}</div>
+            @include('components.pagination', ['paginator' => $items])
         @endif
     </section>
 @endsection

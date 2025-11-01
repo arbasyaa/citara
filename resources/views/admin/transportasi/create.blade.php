@@ -24,6 +24,11 @@
                 <textarea name="deskripsi" class="mt-1 block w-full rounded border-gray-300" rows="4"></textarea>
             </div>
             <div class="mb-4">
+                <label class="block text-sm">Slug (opsional)</label>
+                <input name="slug" class="mt-1 block w-full rounded border-gray-300" placeholder="custom-friendly-slug">
+                <p class="text-xs text-gray-500 mt-1">Leave empty to generate automatically from name.</p>
+            </div>
+            <div class="mb-4">
                 <label class="block text-sm">Thumbnail</label>
                 <input type="file" name="thumbnail" accept="image/*" class="mt-1 block w-full rounded border-gray-300">
                 <p class="text-xs text-gray-500 mt-1">JPG/PNG hingga 4MB. Opsional.</p>

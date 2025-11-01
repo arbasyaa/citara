@@ -151,9 +151,18 @@
                         </div>
                         <h2 class="text-3xl font-black text-gray-900">{{ __('site.about_destination') }}</h2>
                     </div>
-                    <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
-                        {{ $destinasi->deskripsi }}
-                    </div>
+                    @if($destinasi->deskripsi)
+                        <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+                            {{ $destinasi->deskripsi }}
+                        </div>
+                    @else
+                        <div class="text-center py-8 text-gray-400">
+                            <svg class="w-16 h-16 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <p class="text-sm">Deskripsi belum tersedia</p>
+                        </div>
+                    @endif
                 </article>
 
                 {{-- Photo Gallery --}}
@@ -167,17 +176,17 @@
                             </div>
                             <h2 class="text-3xl font-black text-gray-900">{{ __('site.photo_gallery') }}</h2>
                         </div>
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            @foreach($destinasi->foto as $foto)
-                                <div class="gallery-item aspect-w-16 aspect-h-12 bg-gray-100">
-                                    <img 
-                                        src="{{ Storage::url($foto->url) }}"
-                                        alt="{{ $foto->keterangan ?? $destinasi->nama }}"
-                                        class="w-full h-full object-cover"
-                                    >
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    @foreach($destinasi->foto as $foto)
+                                        <div class="gallery-item aspect-w-16 aspect-h-12 bg-gray-100">
+                                            <img 
+                                                src="{{ \App\Services\ImageUrl::url($foto->url) }}"
+                                                alt="{{ $foto->keterangan ?? $destinasi->nama }}"
+                                                class="w-full h-full object-cover"
+                                            >
+                                        </div>
+                                    @endforeach
                                 </div>
-                            @endforeach
-                        </div>
                     </div>
                 @endif
             </div>

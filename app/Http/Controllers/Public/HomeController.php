@@ -10,117 +10,110 @@ use App\Models\CalendarEvent;
 use App\Models\Akomodasi;
 use App\Models\Transportasi;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
     public function index(): View
     {
-        // Prefer explicitly flagged featured destinasi if the column exists.
-        // If the migration hasn't been run (column missing), fall back to the
-        // previous behavior which used the slider foto.
-        // Featured destinasi: strictly use flagged ones when the column exists.
-        // If the migration hasn't been run, fall back to the legacy behavior
-        // that uses slider photos.
-        try {
-            if (Schema::hasColumn((new Destinasi())->getTable(), 'is_featured')) {
-                $featuredDestinations = Destinasi::with(['wilayah', 'foto'])
-                    ->where('is_featured', true)
-                    ->take(6)
-                    ->get();
-            } else {
-                $featuredDestinations = Destinasi::with(['wilayah', 'foto'])
-                    ->whereHas('foto', function ($query) {
-                        $query->where('apakah_slider_utama', true);
-                    })
-                    ->take(6)
-                    ->get();
+        $locale = app()->getLocale();
+
+        // Featured Destinations (prefer admin-flagged if column exists)
+        $featuredDestinations = Cache::remember("home.featured.{$locale}", now()->addMinutes(10), function () {
+            try {
+                $table = (new Destinasi())->getTable();
+                if (Schema::hasColumn($table, 'is_featured')) {
+                    return Destinasi::with(['wilayah', 'foto'])->where('is_featured', true)->take(6)->get();
+                }
+            } catch (\Exception $e) {
+                // fall through to legacy behavior
             }
-        } catch (\Exception $e) {
-            // On any schema check failure, use legacy behavior so site remains functional.
-            $featuredDestinations = Destinasi::with(['wilayah', 'foto'])
-                ->whereHas('foto', function ($query) {
-                    $query->where('apakah_slider_utama', true);
-                })
-                ->take(6)
-                ->get();
-        }
+            // fallback: prefer destinasi that have a utama photo, but include others if not enough
+            $withUtama = Destinasi::with(['wilayah', 'foto'])->whereHas('foto', function ($q) {
+                $q->where('apakah_slider_utama', true);
+            })->take(6)->get();
 
-        // Include all wilayah and order by number of destinasi so newly created
-        // wilayah (with zero destinasi) also appear on the homepage.
-        $wilayah = Wilayah::withCount('destinasi')
-            ->orderByDesc('destinasi_count')
-            ->get();
-            
-        // Prefer explicitly flagged popular destinasi if the column exists;
-        // otherwise pick random ones.
-        // Popular destinasi: strictly show flagged popular ones when column exists.
-        try {
-            if (Schema::hasColumn((new Destinasi())->getTable(), 'is_popular')) {
-                $popularDestinasi = Destinasi::with(['wilayah', 'foto'])
-                    ->where('is_popular', true)
-                    ->take(8)
-                    ->get();
-            } else {
-                $popularDestinasi = Destinasi::with(['wilayah', 'foto'])
-                    ->inRandomOrder()
-                    ->take(8)
-                    ->get();
+            if ($withUtama->count() >= 6) {
+                return $withUtama;
             }
-        } catch (\Exception $e) {
-            // On schema check failure, use legacy randomized behavior.
-            $popularDestinasi = Destinasi::with(['wilayah', 'foto'])
-                ->inRandomOrder()
-                ->take(8)
-                ->get();
-        }
-            
-        // Recent destinasi: strictly show recent highlighted destinasi when
-        // the highlight columns exist. If the columns aren't present, fall
-        // back to showing the latest destinasi.
-        try {
-            $table = (new Destinasi())->getTable();
-            if (Schema::hasColumn($table, 'is_featured') || Schema::hasColumn($table, 'is_popular')) {
-                $recentDestinasi = Destinasi::with(['wilayah', 'foto'])
-                    ->where(function ($q) {
-                        $q->where('is_featured', true)
-                          ->orWhere('is_popular', true);
-                    })
-                    ->latest()
-                    ->take(4)
-                    ->get();
-            } else {
-                $recentDestinasi = Destinasi::with(['wilayah', 'foto'])
-                    ->latest()
-                    ->take(4)
-                    ->get();
+
+            // if fewer than desired, include additional destinasi (without photos) to fill the slots
+            $ids = $withUtama->pluck('id')->toArray();
+            $extra = Destinasi::with(['wilayah', 'foto'])->whereNotIn('id', $ids)->take(6 - count($ids))->get();
+            return $withUtama->merge($extra);
+        });
+
+        // Popular Destinations (prefer is_popular when available)
+        $popularDestinasi = Cache::remember("home.popular.{$locale}", now()->addMinutes(10), function () {
+            try {
+                $table = (new Destinasi())->getTable();
+                if (Schema::hasColumn($table, 'is_popular')) {
+                    return Destinasi::with(['wilayah', 'foto'])->where('is_popular', true)->take(8)->get();
+                }
+            } catch (\Exception $e) {
+                // fall through
             }
-        } catch (\Exception $e) {
-            // On any schema check failure, show latest destinasi
-            $recentDestinasi = Destinasi::with(['wilayah', 'foto'])
-                ->latest()
-                ->take(4)
-                ->get();
-        }
+            return Destinasi::with(['wilayah', 'foto'])->inRandomOrder()->take(8)->get();
+        });
 
-        // Get total destinasi count for stats
-        $destinasiCount = Destinasi::count();
+        // Recent Destinations
+        $recentDestinasi = Cache::remember("home.recent.{$locale}", now()->addMinutes(10), function () {
+            try {
+                $table = (new Destinasi())->getTable();
+                if (Schema::hasColumn($table, 'is_featured') || Schema::hasColumn($table, 'is_popular')) {
+                    return Destinasi::with(['wilayah', 'foto'])->where(function ($q) {
+                        $q->where('is_featured', true)->orWhere('is_popular', true);
+                    })->latest()->take(4)->get();
+                }
+            } catch (\Exception $e) {
+                // fall through
+            }
+            return Destinasi::with(['wilayah', 'foto'])->latest()->take(4)->get();
+        });
 
-        // Get calendar events
-        $events = CalendarEvent::orderByRaw("FIELD(month, 'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember')")->get();
+        // Regions / Wilayah
+        $wilayah = Cache::remember("home.wilayah.{$locale}", now()->addMinutes(10), function () {
+            try {
+                return Wilayah::withCount('destinasi')->get();
+            } catch (\Exception $e) {
+                return collect();
+            }
+        });
 
-        // Akomodasi and Transportasi for homepage cards
-        try {
-            $akomodasiHome = Akomodasi::orderByDesc('id')->take(6)->get();
-        } catch (\Exception $e) {
-            $akomodasiHome = collect();
-        }
+        // Destinasi count (for hero stats)
+        $destinasiCount = Cache::remember("home.destinasi_count.{$locale}", now()->addMinutes(10), function () {
+            try { return Destinasi::count(); } catch (\Exception $e) { return 0; }
+        });
 
-        try {
-            $transportasiHome = Transportasi::orderByDesc('id')->take(6)->get();
-        } catch (\Exception $e) {
-            $transportasiHome = collect();
-        }
+        // Events (ordered by Indonesian month names)
+        $events = Cache::remember("home.events.{$locale}", now()->addMinutes(10), function () {
+            try {
+                return CalendarEvent::orderByRaw("FIELD(month, 'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember')")->get();
+            } catch (\Exception $e) {
+                return collect();
+            }
+        });
 
-        return view('public.home', compact('featuredDestinations', 'wilayah', 'popularDestinasi', 'recentDestinasi', 'destinasiCount', 'events', 'akomodasiHome', 'transportasiHome'));
+        // Akomodasi and Transportasi small home lists
+        $akomodasiHome = Cache::remember("home.akomodasi.{$locale}", now()->addMinutes(10), function () {
+            try { return Akomodasi::orderByDesc('id')->take(6)->get(); } catch (\Exception $e) { return collect(); }
+        });
+
+        $transportasiHome = Cache::remember("home.transportasi.{$locale}", now()->addMinutes(10), function () {
+            try { return Transportasi::orderByDesc('id')->take(6)->get(); } catch (\Exception $e) { return collect(); }
+        });
+
+        return view('public.home', compact(
+            'featuredDestinations',
+            'popularDestinasi',
+            'recentDestinasi',
+            'wilayah',
+            'destinasiCount',
+            'events',
+            'akomodasiHome',
+            'transportasiHome'
+        ));
     }
 }
+
+

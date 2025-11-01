@@ -185,9 +185,7 @@
             </div>
 
             <!-- Pagination -->
-            <div class="mt-16">
-                {{ $destinasi->links() }}
-            </div>
+            @include('components.pagination', ['paginator' => $destinasi])
         @endif
     </section>
 @endsection

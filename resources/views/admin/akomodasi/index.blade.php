@@ -6,10 +6,22 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <div class="flex flex-wrap gap-3 justify-between items-center mb-6">
             <h2 class="text-xl font-semibold text-gray-900">Daftar Akomodasi</h2>
-            <a href="{{ route('panel.akomodasi.create') }}" class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 flex items-center gap-2">
+            <div class="flex items-center gap-3">
+                <form method="GET" action="" class="flex items-center gap-2">
+                    <input name="q" value="{{ $q ?? '' }}" placeholder="Search..." class="px-3 py-2 rounded border border-gray-200">
+                    <select name="per_page" class="px-2 py-2 rounded border border-gray-200">
+                        <option>10</option>
+                        <option selected>15</option>
+                        <option>30</option>
+                        <option>50</option>
+                    </select>
+                    <button class="px-3 py-2 bg-gray-800 text-white rounded">Search</button>
+                </form>
+                <a href="{{ route('panel.akomodasi.create') }}" class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 flex items-center gap-2">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
                 Tambah Akomodasi
             </a>
+            </div>
         </div>
 
         <div class="overflow-x-auto">
@@ -43,7 +55,7 @@
         </div>
 
         <div class="mt-4">
-            {{ $akomodasi->links() }}
+            @include('components.admin-pagination', ['paginator' => $akomodasi])
         </div>
     </div>
 @endsection
