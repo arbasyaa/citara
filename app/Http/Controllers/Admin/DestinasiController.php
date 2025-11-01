@@ -58,30 +58,39 @@ class DestinasiController extends Controller
     }
 
     public function update(Request $request, Destinasi $destinasi): RedirectResponse
-    {
-        $validated = $request->validate([
-            'id_wilayah' => 'required|exists:wilayah,id',
-            'nama' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'alamat_lokasi' => 'required|string',
-            'url_gmaps' => 'nullable|url|max:2048'
-        ]);
+{
+    $validated = $request->validate([
+        'id_wilayah' => 'required|exists:wilayah,id',
+        'nama' => 'required|string|max:255',
+        'deskripsi' => 'required|string',
+        'alamat_lokasi' => 'required|string',
+        'url_gmaps' => 'nullable|url|max:2048',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+    ]);
 
-        $validated['slug'] = Str::slug($validated['nama']);
+    $validated['slug'] = Str::slug($validated['nama']);
 
-        $destinasi->update($validated);
+    // Update data teks
+    $destinasi->update($validated);
 
-        return redirect()
-            ->route('admin.destinasi.index')
-            ->with('success', 'Destinasi wisata berhasil diperbarui');
+    // Upload gambar jika ada
+    if ($request->hasFile('image')) {
+        // pastikan disk public digunakan
+        $file = $request->file('image');
+        $filename = time() . '_' . $file->getClientOriginalName();
+
+        // Simpan ke storage/app/public/destinasi
+        $path = $file->storeAs('destinasi', $filename, 'public');
+
+        // Simpan ke relasi foto_destinasi
+        if (method_exists($destinasi, 'foto')) {
+            $destinasi->foto()->create(['url' => $path]);
+        }
     }
 
-    public function destroy(Destinasi $destinasi): RedirectResponse
-    {
-        $destinasi->delete();
-
-        return redirect()
-            ->route('admin.destinasi.index')
-            ->with('success', 'Destinasi wisata berhasil dihapus');
-    }
+    return redirect()
+        ->route('admin.destinasi.index')
+        ->with('success', 'Destinasi wisata berhasil diperbarui');
+}
+    
 }
