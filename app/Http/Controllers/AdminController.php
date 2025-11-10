@@ -13,6 +13,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -23,19 +24,34 @@ class AdminController extends Controller
 
     public function login(Request $request)
     {
-        $password = $request->input('password');
-        $adminPassword = env('ADMIN_PASSWORD', 'changeme');
-        if ($password === $adminPassword) {
-            session(['is_admin' => true]);
-            return redirect()->route('panel.dashboard');
+        $credentials = $request->validate([
+            'email' => ['required', 'email'], 
+            'password' => ['required'],
+        ]);
+
+        if (Auth::guard('admin')->attempt($credentials)) {
+            $user = Auth::guard('admin')->user();
+            
+            if ($user->role === 'admin') { 
+                $request->session()->regenerate();
+                return redirect()->intended(route('panel.dashboard'));
+            }
+
+            Auth::guard('admin')->logout();
+            return back()->withErrors(['email' => 'Akses ditolak. Anda bukan Administrator.']);
         }
-        return back()->withErrors(['password' => 'Invalid password']);
+
+        return back()->withErrors(['email' => 'Email atau Kata Sandi tidak valid.']);
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        session()->forget('is_admin');
-    return redirect()->route('panel.login');
+        Auth::guard('admin')->logout();
+        
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('panel.login');
     }
 
     public function dashboard()

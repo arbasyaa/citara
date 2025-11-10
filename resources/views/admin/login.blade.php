@@ -8,14 +8,23 @@
                 <p class="text-sm text-gray-500">Masuk untuk mengelola konten</p>
             </div>
 
-            @if(session('error'))
+            @if ($errors->any())
                 <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
-                    {{ session('error') }}
+                    Email atau Kata Sandi tidak valid.
                 </div>
             @endif
 
             <form method="POST" action="{{ route('panel.login.post') }}" class="space-y-4" aria-label="Administrator login">
                 @csrf
+                {{-- REVISI: Tambahkan Field Email --}}
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <div class="mt-1 relative">
+                        <input id="email" name="email" type="email" required class="block w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="Masukkan email admin" value="{{ old('email') }}" autofocus>
+                    </div>
+                </div>
+
+                {{-- Field Password (Disesuaikan posisinya) --}}
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700">Kata Sandi</label>
                     <div class="mt-1 relative">
@@ -28,6 +37,8 @@
                         </button>
                     </div>
                 </div>
+                {{-- END Field Password --}}
+                
                 <button type="submit" class="w-full inline-flex justify-center items-center px-4 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-sm hover:bg-blue-700 transition">Masuk</button>
                 <div class="text-center text-sm">
                     <a href="/" class="text-gray-500 hover:underline">Kembali ke situs</a>
