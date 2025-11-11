@@ -29,9 +29,9 @@ class Destinasi extends Model
         return $this->belongsTo(Wilayah::class, 'id_wilayah');
     }
 
-    public function foto(): HasMany
+    public function foto()
     {
-        return $this->hasMany(FotoDestinasi::class, 'id_destinasi');
+        return $this->hasMany(\App\Models\FotoDestinasi::class, 'id_destinasi');   
     }
 
     protected static function booted()
