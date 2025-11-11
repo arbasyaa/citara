@@ -24,9 +24,9 @@ Route::middleware([SetLocale::class])->group(function () {
     Route::get('/wilayah/{wilayah:slug}', [DestinasiController::class, 'byWilayah'])->name('wilayah.show');
     // Public Akomodasi & Transportasi pages (lightweight)
     Route::get('/akomodasi', [\App\Http\Controllers\Public\AkomodasiController::class, 'index'])->name('akomodasi.index');
-    Route::get('/akomodasi/{akomodasi}', [\App\Http\Controllers\Public\AkomodasiController::class, 'show'])->name('akomodasi.show');
+    Route::get('/akomodasi/{akomodasi:slug}', [\App\Http\Controllers\Public\AkomodasiController::class, 'show'])->name('akomodasi.show');
     Route::get('/transportasi', [\App\Http\Controllers\Public\TransportasiController::class, 'index'])->name('transportasi.index');
-    Route::get('/transportasi/{transportasi}', [\App\Http\Controllers\Public\TransportasiController::class, 'show'])->name('transportasi.show');
+    Route::get('/transportasi/{transportasi:slug}', [\App\Http\Controllers\Public\TransportasiController::class, 'show'])->name('transportasi.show');
 });
 
 // Language switch route

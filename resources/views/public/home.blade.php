@@ -691,14 +691,8 @@
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         @foreach($akomodasiHome as $a)
-                            @php
-                                $akomodasiUrl = '/akomodasi/' . ($a->slug ?? $a->id);
-                            @endphp
                             @if(Route::has('akomodasi.show'))
-                                <a href="{{ route('akomodasi.show', $a->slug ?? $a->id) }}" class="group block rounded-xl overflow-hidden shadow-sm parallax-card bg-white">
-                            @else
-                                <a href="{{ $akomodasiUrl }}" class="group block rounded-xl overflow-hidden shadow-sm parallax-card bg-white">
-                            @endif
+                                <a href="{{ route('akomodasi.show', $a->slug) }}" class="group block rounded-xl overflow-hidden shadow-sm parallax-card bg-white">
                                 <div class="flex items-start p-4 gap-4">
                                     <div class="w-16 h-16 rounded-lg bg-gray-100 flex-shrink-0 flex items-center justify-center text-blue-600 overflow-hidden">
                                         @if(!empty($a->thumbnail))
@@ -714,6 +708,7 @@
                                     </div>
                                 </div>
                             </a>
+                            @endif
                         @endforeach
                     </div>
                 </div>
@@ -730,12 +725,8 @@
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         @foreach($transportasiHome as $t)
-                            @php $transportasiUrl = '/transportasi/' . ($t->slug ?? $t->id); @endphp
                             @if(Route::has('transportasi.show'))
-                                <a href="{{ route('transportasi.show', $t->slug ?? $t->id) }}" class="group block rounded-xl overflow-hidden shadow-sm parallax-card bg-white">
-                            @else
-                                <a href="{{ $transportasiUrl }}" class="group block rounded-xl overflow-hidden shadow-sm parallax-card bg-white">
-                            @endif
+                                <a href="{{ route('transportasi.show', $t->slug) }}" class="group block rounded-xl overflow-hidden shadow-sm parallax-card bg-white">
                                 <div class="flex items-start p-4 gap-4">
                                     <div class="w-16 h-16 rounded-lg bg-gray-100 flex-shrink-0 flex items-center justify-center text-blue-600 overflow-hidden">
                                         @if(!empty($t->thumbnail))
@@ -751,6 +742,7 @@
                                     </div>
                                 </div>
                             </a>
+                            @endif
                         @endforeach
                     </div>
                 </div>
