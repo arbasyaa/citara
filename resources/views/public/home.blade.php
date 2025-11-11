@@ -560,7 +560,7 @@
                     <a href="{{ route('wilayah.show', $area->slug) }}" class="area-card group cursor-pointer parallax-card">
                         @if($area->destinasi->first() && $area->destinasi->first()->foto->isNotEmpty())
                             <img 
-                                src="{{ Storage::url($area->destinasi->first()->foto->first()->url) }}"
+                                src="{{ \App\Services\ImageUrl::url($area->destinasi->first()->foto->first()->url) }}"
                                 alt="{{ $area->nama }}"
                                 class="w-full h-full object-cover parallax-target"
                             >
@@ -641,7 +641,7 @@
                                     <a href="{{ $eventUrl ?: route('destinasi.index') }}" class="group block">
                                         <div class="flex gap-3">
                                             @if($event->image)
-                                                <img src="{{ Storage::url($event->image) }}" alt="{{ $event->judul }}" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 parallax-target">
+                                                <img src="{{ \App\Services\ImageUrl::url($event->image) }}" alt="{{ $event->judul }}" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 parallax-target">
                                             @else
                                                 <div class="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 flex-shrink-0">📅</div>
                                             @endif
@@ -696,7 +696,7 @@
                                 <div class="flex items-start p-4 gap-4">
                                     <div class="w-16 h-16 rounded-lg bg-gray-100 flex-shrink-0 flex items-center justify-center text-blue-600 overflow-hidden">
                                         @if(!empty($a->thumbnail))
-                                            <img src="{{ Storage::url($a->thumbnail) }}" alt="{{ $a->nama }}" class="w-full h-full object-cover" loading="lazy">
+                                            <img src="{{ \App\Services\ImageUrl::url($a->thumbnail) }}" alt="{{ $a->nama }}" class="w-full h-full object-cover" loading="lazy">
                                         @else
                                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v4a1 1 0 001 1h3l2 3 3-6 3 6 2-3h3a1 1 0 001-1V7a1 1 0 00-1 1z"/></svg>
                                         @endif
@@ -730,7 +730,7 @@
                                 <div class="flex items-start p-4 gap-4">
                                     <div class="w-16 h-16 rounded-lg bg-gray-100 flex-shrink-0 flex items-center justify-center text-blue-600 overflow-hidden">
                                         @if(!empty($t->thumbnail))
-                                            <img src="{{ Storage::url($t->thumbnail) }}" alt="{{ $t->nama }}" class="w-full h-full object-cover" loading="lazy">
+                                            <img src="{{ \App\Services\ImageUrl::url($t->thumbnail) }}" alt="{{ $t->nama }}" class="w-full h-full object-cover" loading="lazy">
                                         @else
                                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h4l3 7h4l3-7h4"/></svg>
                                         @endif
@@ -750,13 +750,9 @@
         </div>
     </section>
     @php
-        $ctaBackgroundUrl = '';
-        if ($featuredDestinations->first() && $featuredDestinations->first()->foto->isNotEmpty()) {
-            $ctaBackgroundUrl = Storage::url($featuredDestinations->first()->foto->first()->url);
-        }
+        use App\Services\ImageUrl;
+        $ctaBackgroundUrl = ImageUrl::url($featuredDestinations->first()->foto->first()->url ?? null);
     @endphp
-    <?php use App\Services\ImageUrl; ?>
-    @php $ctaBackgroundUrl = ImageUrl::url($featuredDestinations->first()->foto->first()->url ?? null); @endphp
     <section class="parallax-section relative cta-section" {!! $ctaBackgroundUrl ? 'style="background-image: url(' . e($ctaBackgroundUrl) . ');"' : '' !!}>
         <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-purple-900/90"></div>
         <div class="container mx-auto px-6 relative z-10 text-center">

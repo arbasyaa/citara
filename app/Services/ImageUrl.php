@@ -60,6 +60,11 @@ class ImageUrl
         try {
             $files = Storage::disk('public')->allFiles();
             foreach ($files as $f) {
+                // Skip .gitignore and hidden files
+                if (basename($f) === '.gitignore' || str_starts_with(basename($f), '.')) {
+                    continue;
+                }
+                
                 $fileBase = basename($f);
                 $fileStem = pathinfo($fileBase, PATHINFO_FILENAME);
                 // strip trailing numbers
