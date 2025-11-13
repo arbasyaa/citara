@@ -444,6 +444,8 @@
                                     src="{{ \App\Services\ImageUrl::url($featured->foto->first()->url) }}"
                                     alt="{{ $featured->nama }}"
                                     class="news-image w-full h-full object-cover parallax-target"
+                                    loading="eager"
+                                    decoding="async"
                                 >
                             @endif
                             <div class="gradient-overlay absolute inset-0"></div>
@@ -477,6 +479,8 @@
                                         src="{{ \App\Services\ImageUrl::url($dest->foto->first()->url) }}"
                                         alt="{{ $dest->nama }}"
                                         class="news-image w-full h-full object-cover parallax-target"
+                                        loading="lazy"
+                                        decoding="async"
                                     >
                                 @endif
                                 <div class="gradient-overlay absolute inset-0"></div>
@@ -506,6 +510,8 @@
                                         src="{{ \App\Services\ImageUrl::url($dest->foto->first()->url) }}"
                                         alt="{{ $dest->nama }}"
                                         class="news-image w-full h-full object-cover parallax-target"
+                                        loading="lazy"
+                                        decoding="async"
                                     >
                                 @endif
                                 <div class="gradient-overlay absolute inset-0"></div>
@@ -563,6 +569,8 @@
                                 src="{{ \App\Services\ImageUrl::url($area->destinasi->first()->foto->first()->url) }}"
                                 alt="{{ $area->nama }}"
                                 class="w-full h-full object-cover parallax-target"
+                                loading="lazy"
+                                decoding="async"
                             >
                         @else
                             <div class="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500"></div>
@@ -641,7 +649,7 @@
                                     <a href="{{ $eventUrl ?: route('destinasi.index') }}" class="group block">
                                         <div class="flex gap-3">
                                             @if($event->image)
-                                                <img src="{{ \App\Services\ImageUrl::url($event->image) }}" alt="{{ $event->judul }}" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 parallax-target">
+                                                <img src="{{ \App\Services\ImageUrl::url($event->image) }}" alt="{{ $event->judul }}" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 parallax-target" loading="lazy" decoding="async">
                                             @else
                                                 <div class="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 flex-shrink-0">📅</div>
                                             @endif

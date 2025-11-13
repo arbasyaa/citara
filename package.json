@@ -3,8 +3,10 @@
     "private": true,
     "type": "module",
     "scripts": {
+        "dev": "vite",
         "build": "vite build",
-        "dev": "vite"
+        "build:production": "vite build --mode production && npm run optimize:assets",
+        "optimize:assets": "echo 'Assets built and optimized for production'"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",

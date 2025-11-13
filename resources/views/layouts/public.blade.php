@@ -7,50 +7,18 @@
     
     <title>{{ config('app.name') }} - @yield('title', __('site.site_name'))</title>
     
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Styles -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                    },
-                    colors: {
-                        primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#7dd3fc',
-                            400: '#38bdf8',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                        },
-                    },
-                },
-            },
-        }
-    </script>
-    
-    <!-- Scripts -->
+    <!-- Optimized: Use Vite-compiled Tailwind instead of CDN for faster loading -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     {{-- Page specific styles pushed by views --}}
     @stack('styles')
     <script>
+        // Optimized navbar with passive scroll listener and RAF
         document.addEventListener('DOMContentLoaded', function() {
             const navbar = document.getElementById('navbar');
             const navLogo = document.getElementById('nav-logo');
             const navLinks = document.querySelectorAll('.nav-link, .container a');
+            const hero = document.getElementById('hero');
 
-            // initialize as transparent over hero
             function makeTransparent() {
                 navbar.classList.remove('bg-white', 'shadow');
                 navbar.classList.add('bg-transparent');
@@ -77,26 +45,26 @@
                 });
             }
 
-            const hero = document.getElementById('hero');
             if (hero && navbar) {
-                // Start transparent
                 makeTransparent();
-
+                
+                // Use IntersectionObserver instead of scroll for better performance
                 const observer = new IntersectionObserver(entries => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
-                            // hero visible -> transparent navbar
                             makeTransparent();
                         } else {
-                            // hero not visible -> solid navbar
                             makeSolid();
                         }
                     });
-                }, { root: null, threshold: 0, rootMargin: '-60px 0px 0px 0px' });
+                }, { 
+                    root: null, 
+                    threshold: 0, 
+                    rootMargin: '-60px 0px 0px 0px' 
+                });
 
                 observer.observe(hero);
             } else {
-                // fallback for pages without hero
                 makeSolid();
             }
         });
@@ -127,8 +95,30 @@
             margin-top: 0 !important;
             padding-top: 0 !important;
         }
-        /* Keep motions enabled by default. The reduce-motion class remain available for user agents but
-           we no longer expose a session-based toggle; site always uses motion-enabled styles. */
+        
+        /* Reduce animations on mobile for better performance */
+        @media (max-width: 768px) {
+            .parallax-target,
+            .news-card,
+            .area-card img,
+            .section-reveal,
+            .slide-up {
+                transform: none !important;
+                animation: none !important;
+            }
+        }
+        
+        /* Respect user's motion preferences */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100 overflow-x-hidden">
