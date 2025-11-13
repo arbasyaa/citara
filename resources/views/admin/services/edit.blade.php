@@ -25,7 +25,7 @@
                     <input type="file" name="image" id="serviceImage" accept="image/*" class="mt-1 block w-full">
                     @if($service->image)
                         <div class="mt-2">
-                            <img src="{{ asset('storage/' . $service->image) }}" alt="current" class="max-h-40 rounded">
+                            <img src="{{ \App\Services\ImageUrl::url($service->image) }}" alt="current" class="max-h-40 rounded">
                         </div>
                     @endif
                     <img id="serviceImagePreview" src="" alt="" class="mt-3 max-h-40 hidden rounded">

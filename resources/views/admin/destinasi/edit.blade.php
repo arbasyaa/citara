@@ -54,7 +54,7 @@
                 <div class="grid grid-cols-3 gap-2">
                     @foreach($destinasi->foto as $foto)
                         <div class="relative group">
-                            <img src="{{ asset('storage/' . $foto->url) }}" class="max-h-40 w-full object-cover rounded">
+                            <img src="{{ \App\Services\ImageUrl::url($foto->url) }}" class="max-h-40 w-full object-cover rounded">
                             <form method="POST" action="{{ route('panel.destinasi.photo.destroy', [$destinasi, $foto]) }}" class="absolute top-1 right-1">
                                 @csrf
                                 @method('DELETE')

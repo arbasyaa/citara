@@ -33,7 +33,7 @@
                     <input type="file" name="image" id="eventImage" accept="image/*" class="mt-1 block w-full">
                     @if($event->image)
                         <div class="mt-2">
-                            <img src="{{ asset('storage/' . $event->image) }}" alt="current" class="max-h-40 rounded">
+                            <img src="{{ \App\Services\ImageUrl::url($event->image) }}" alt="current" class="max-h-40 rounded">
                         </div>
                     @endif
                     <img id="eventImagePreview" src="" alt="" class="mt-3 max-h-40 hidden rounded">

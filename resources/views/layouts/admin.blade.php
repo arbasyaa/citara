@@ -17,7 +17,7 @@
 <body class="bg-gray-100">
     <div class="min-h-screen flex">
         <!-- Sidebar -->
-        <aside id="sidebar" class="bg-gray-900 text-gray-200 w-64 min-h-screen flex flex-col shadow-xl">
+    <aside id="sidebar" class="bg-gray-900 text-gray-200 w-64 h-screen flex flex-col shadow-xl">
             <div class="px-6 py-5 border-b border-gray-800 bg-gradient-to-r from-gray-900 to-gray-800">
                 <a href="{{ route('panel.dashboard') }}" class="flex items-center space-x-3">
                     <span class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600 text-white font-bold">{{ strtoupper(substr(config('app.name'),0,1)) }}</span>
@@ -28,7 +28,7 @@
                 </a>
             </div>
 
-            <nav class="flex-1 px-3 py-4 space-y-1">
+            <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
                 <a href="{{ route('panel.dashboard') }}"
                    class="flex items-center gap-3 px-3 py-2 rounded-md {{ request()->routeIs('admin.dashboard') ? 'sidebar-active' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
@@ -64,14 +64,17 @@
 
             <div class="p-4 border-t border-gray-800 mt-auto">
                 <div class="mb-3">
-                    <a href="{{ route('home') }}" class="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm text-gray-300 hover:bg-gray-800 hover:text-white">
-                        <svg class="h-4 w-4 text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l7-9 7 9M12 22V9"></path></svg>
-                        <span>Back to homepage</span>
+                    <a href="{{ route('home') }}" class="w-full inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm text-gray-300 hover:bg-gray-800 hover:text-white" title="Kembali ke beranda" aria-label="Kembali ke beranda">
+                        <svg class="h-4 w-4 text-gray-300" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Straight up arrow -->
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 19V5m0 0l-7 7m7-7l7 7" />
+                        </svg>
+                        <span class="align-middle">Back to homepage</span>
                     </a>
                 </div>
                 <form method="POST" action="{{ route('panel.logout') }}">
                     @csrf
-                    <button type="submit" class="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm text-red-300 hover:bg-red-900/20">
+                    <button type="submit" class="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm text-red-300 hover:bg-red-900/20" title="Keluar" aria-label="Keluar">
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1"></path></svg>
                         Logout
                     </button>
@@ -80,7 +83,7 @@
         </aside>
 
         <!-- Main Content -->
-        <div class="flex-1 min-w-0">
+    <div class="flex-1 min-w-0 flex flex-col">
             <!-- Topbar -->
             <header class="bg-white border-b sticky top-0 z-30">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -101,7 +104,7 @@
                 </div>
             </header>
 
-            <main class="p-6 lg:p-8">
+            <main class="p-6 lg:p-8 flex-1">
                 <div class="max-w-7xl mx-auto">
                     @if(session('success'))
                         <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded mb-4">

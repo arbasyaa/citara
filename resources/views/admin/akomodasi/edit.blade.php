@@ -34,7 +34,7 @@
                 <input type="file" name="thumbnail" accept="image/*" class="mt-1 block w-full rounded border-gray-300">
                 @if($akomodasi->thumbnail)
                     <div class="mt-2 flex items-start gap-4">
-                        <img src="{{ Storage::url($akomodasi->thumbnail) }}" alt="Thumbnail" class="w-32 h-32 object-cover rounded">
+                        <img src="{{ \App\Services\ImageUrl::url($akomodasi->thumbnail) }}" alt="Thumbnail" class="w-32 h-32 object-cover rounded">
                         <label class="flex items-center gap-2 text-sm text-gray-700">
                             <input type="checkbox" name="remove_thumbnail" value="1" class="rounded"> Hapus thumbnail saat disimpan
                         </label>
