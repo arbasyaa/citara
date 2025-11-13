@@ -7,7 +7,35 @@
     
     <title>{{ config('app.name') }} - @yield('title', __('site.site_name'))</title>
     
-    <!-- Optimized: Use Vite-compiled Tailwind instead of CDN for faster loading -->
+    <!-- Styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+    
+    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     {{-- Page specific styles pushed by views --}}
     @stack('styles')
