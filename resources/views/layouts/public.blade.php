@@ -164,6 +164,7 @@
                     <a href="{{ route('destinasi.index') }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-1 rounded-md hover:bg-white/10 transition">{{ __('site.destinations') }}</a>
                     <a href="{{ route('akomodasi.index') }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-1 rounded-md hover:bg-white/10 transition">{{ __('site.accommodation') }}</a>
                     <a href="{{ route('transportasi.index') }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-1 rounded-md hover:bg-white/10 transition">{{ __('site.transport') }}</a>
+                    <a href="{{ route('events.calendar', ['year' => 2025, 'month' => 1]) }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-1 rounded-md hover:bg-white/10 transition">{{ __('site.event_calendar') }}</a>
 
                     <!-- Motion is always enabled (toggle removed) -->
 

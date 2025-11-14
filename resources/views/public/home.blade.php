@@ -635,6 +635,7 @@
                 <div id="month-scroller" class="month-scroller no-scrollbar overflow-x-auto flex gap-4 px-1">
                     @foreach($months as $m)
                         @php $list = $eventsByMonth->get($m, collect()); @endphp
+                        @php $monthIndex = array_search($m, $months) + 1; @endphp
                         <div class="min-w-[280px] md:min-w-[320px] month-card bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden parallax-card">
                             <div class="px-5 py-4 flex items-center justify-between bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-100">
                                 <div class="flex items-center gap-2">
@@ -645,8 +646,8 @@
                             </div>
                             <div class="p-4 space-y-3">
                                 @forelse($list->take(3) as $event)
-                                    @php $eventUrl = $event->url ?? $event->link ?? null; @endphp
-                                    <a href="{{ $eventUrl ?: route('destinasi.index') }}" class="group block">
+                                    {{-- Link to calendar page with year and month params so calendar opens on that month --}}
+                                    <a href="{{ route('events.calendar', ['year' => date('Y'), 'month' => $monthIndex]) }}" class="group block">
                                         <div class="flex gap-3">
                                             @if($event->image)
                                                 <img src="{{ \App\Services\ImageUrl::url($event->image) }}" alt="{{ $event->judul }}" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 parallax-target" loading="lazy" decoding="async">
