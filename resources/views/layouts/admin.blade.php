@@ -17,7 +17,7 @@
 <body class="bg-gray-100">
     <div class="min-h-screen flex">
         <!-- Sidebar -->
-    <aside id="sidebar" class="bg-gray-900 text-gray-200 w-64 h-screen flex flex-col shadow-xl">
+    <aside id="sidebar" class="bg-gray-900 text-gray-200 w-64 min-h-screen flex flex-col shadow-xl">
             <div class="px-6 py-5 border-b border-gray-800 bg-gradient-to-r from-gray-900 to-gray-800">
                 <a href="{{ route('panel.dashboard') }}" class="flex items-center space-x-3">
                     <span class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600 text-white font-bold">{{ strtoupper(substr(config('app.name'),0,1)) }}</span>
@@ -29,34 +29,34 @@
             </div>
 
             <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-                <a href="{{ route('panel.dashboard') }}"
-                   class="flex items-center gap-3 px-3 py-2 rounded-md {{ request()->routeIs('admin.dashboard') ? 'sidebar-active' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}">
+                     <a href="{{ route('panel.dashboard') }}"
+                         class="flex items-center gap-3 px-3 py-2 rounded-md {{ request()->routeIs('panel.dashboard') ? 'sidebar-active' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     <span>Dashboard</span>
                 </a>
-                <a href="{{ route('panel.wilayah.index') }}"
-                   class="flex items-center gap-3 px-3 py-2 rounded-md {{ request()->routeIs('admin.wilayah.*') ? 'sidebar-active' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}">
+                     <a href="{{ route('panel.wilayah.index') }}"
+                         class="flex items-center gap-3 px-3 py-2 rounded-md {{ request()->routeIs('panel.wilayah.*') ? 'sidebar-active' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h7"></path></svg>
                     <span>Wilayah</span>
                 </a>
-                <a href="{{ route('panel.destinasi.index') }}"
-                   class="flex items-center gap-3 px-3 py-2 rounded-md {{ request()->routeIs('admin.destinasi.*') ? 'sidebar-active' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}">
+                     <a href="{{ route('panel.destinasi.index') }}"
+                         class="flex items-center gap-3 px-3 py-2 rounded-md {{ request()->routeIs('panel.destinasi.*') ? 'sidebar-active' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M3 12h18M3 17h18"></path></svg>
                     <span>Destinasi</span>
                 </a>
                 {{-- Layanan (services) panel removed from lightweight panel; use /admin for full services management --}}
-                <a href="{{ route('panel.events.index') }}"
-                   class="flex items-center gap-3 px-3 py-2 rounded-md {{ request()->routeIs('admin.events.*') ? 'sidebar-active' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}">
+                     <a href="{{ route('panel.events.index') }}"
+                         class="flex items-center gap-3 px-3 py-2 rounded-md {{ request()->routeIs('panel.events.*') ? 'sidebar-active' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                     <span>Kalender</span>
                 </a>
-                <a href="{{ route('panel.akomodasi.index') }}"
-                   class="flex items-center gap-3 px-3 py-2 rounded-md {{ request()->routeIs('admin.akomodasi.*') ? 'sidebar-active' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}">
+                     <a href="{{ route('panel.akomodasi.index') }}"
+                         class="flex items-center gap-3 px-3 py-2 rounded-md {{ request()->routeIs('panel.akomodasi.*') ? 'sidebar-active' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M21 16V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8m18 0a2 2 0 01-2 2H5a2 2 0 01-2-2m18 0V8m-18 8V8"></path></svg>
                     <span>Akomodasi</span>
                 </a>
-                <a href="{{ route('panel.transportasi.index') }}"
-                   class="flex items-center gap-3 px-3 py-2 rounded-md {{ request()->routeIs('admin.transportasi.*') ? 'sidebar-active' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}">
+                     <a href="{{ route('panel.transportasi.index') }}"
+                         class="flex items-center gap-3 px-3 py-2 rounded-md {{ request()->routeIs('panel.transportasi.*') ? 'sidebar-active' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13h18M5 7h14a2 2 0 012 2v10h-2a2 2 0 01-2-2v-1H7v1a2 2 0 01-2 2H3V9a2 2 0 012-2z"></path></svg>
                     <span>Transportasi</span>
                 </a>

@@ -77,6 +77,9 @@
                 makeTransparent();
                 
                 // Use IntersectionObserver instead of scroll for better performance
+                // compute rootMargin based on navbar height to avoid hardcoded offsets
+                const navRect = navbar.getBoundingClientRect();
+                const navHeight = Math.ceil(navRect.height) || parseInt(getComputedStyle(document.documentElement).getPropertyValue('--navbar-height')) || 64;
                 const observer = new IntersectionObserver(entries => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -88,7 +91,7 @@
                 }, { 
                     root: null, 
                     threshold: 0, 
-                    rootMargin: '-60px 0px 0px 0px' 
+                    rootMargin: `-${navHeight}px 0px 0px 0px` 
                 });
 
                 observer.observe(hero);
@@ -118,11 +121,9 @@
             padding: 0;
         }
         
-        /* Remove default spacing */
-        main > section:first-child {
-            margin-top: 0 !important;
-            padding-top: 0 !important;
-        }
+        /* Ensure main content sits below fixed navbar. JS will set --navbar-height */
+        :root { --navbar-height: 64px; }
+        main { padding-top: var(--navbar-height); }
         
         /* Reduce animations on mobile for better performance */
         @media (max-width: 768px) {
@@ -200,6 +201,35 @@
     <!-- Footer -->
     <footer class="bg-gray-800 text-white">
         <div class="container mx-auto px-6 py-12">
+        <script>
+            // Measure the navbar and set a CSS variable so content is always
+            // padded below the fixed header. Updates on resize and when fonts load.
+            (function () {
+                const navbar = document.getElementById('navbar');
+                if (!navbar) return;
+
+                function updateNavbarHeight() {
+                    const rect = navbar.getBoundingClientRect();
+                    const height = Math.ceil(rect.height);
+                    document.documentElement.style.setProperty('--navbar-height', height + 'px');
+                    // Also update observer rootMargin if an observer uses a hardcoded value elsewhere
+                    // Some scripts use '-60px 0px 0px 0px' — try to be safe by exposing the value
+                    window.__navbarHeight = height;
+                }
+
+                // Update on load/resize and when fonts render (font loading can change height)
+                window.addEventListener('load', updateNavbarHeight);
+                window.addEventListener('resize', updateNavbarHeight);
+
+                // In case fonts are loaded after load event
+                if (document.fonts && document.fonts.ready) {
+                    document.fonts.ready.then(updateNavbarHeight).catch(() => {});
+                }
+
+                // Initial call
+                updateNavbarHeight();
+            })();
+        </script>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
                     <h3 class="text-lg font-semibold mb-4">{{ __('site.about_us') }}</h3>

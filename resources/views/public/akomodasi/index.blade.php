@@ -8,10 +8,10 @@
     .dest-hero::before { content: ''; position: absolute; inset: 0; background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="1" fill="white" opacity="0.1"/><circle cx="30" cy="25" r="1.5" fill="white" opacity="0.1"/><circle cx="70" cy="15" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="50" r="2" fill="white" opacity="0.1"/><circle cx="85" cy="75" r="1" fill="white" opacity="0.1"/></svg>'); animation: float 20s ease-in-out infinite; }
     @keyframes float { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-20px);} }
     .search-bar { backdrop-filter: blur(20px); background: rgba(255,255,255,0.95); box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
-    .dest-card { transition: all .4s cubic-bezier(0.4,0,0.2,1); overflow: hidden; }
-    .dest-card:hover { transform: translateY(-12px); box-shadow: 0 25px 50px rgba(0,0,0,0.15); }
-    .dest-card:hover .dest-image { transform: scale(1.1); }
-    .dest-image { transition: transform .6s cubic-bezier(0.4,0,0.2,1); }
+    .dest-card { position: relative; isolation: isolate; transition: transform .3s cubic-bezier(0.4,0,0.2,1), box-shadow .3s ease; overflow: hidden; will-change: transform; }
+    .dest-card:hover { transform: translateY(-6px); z-index: 2; box-shadow: 0 18px 36px rgba(0,0,0,0.12); }
+    .dest-card:hover .dest-image { transform: scale(1.04); }
+    .dest-image { transition: transform .45s cubic-bezier(0.4,0,0.2,1); }
     .badge { backdrop-filter: blur(10px); background: rgba(255,255,255,0.95); border: 1px solid rgba(255,255,255,0.3); }
     .btn-view { background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); transition: all .3s ease; }
     .btn-view:hover { background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%); transform: translateX(4px); }
@@ -22,7 +22,7 @@
 
 @section('content')
     <!-- Hero -->
-    <section class="dest-hero -mt-24 py-32 relative section-reveal">
+    <section class="dest-hero py-32 relative section-reveal">
         <div class="container mx-auto px-6 relative z-10">
             <div class="max-w-4xl mx-auto text-center text-white">
                 <div class="inline-block px-4 py-2 bg-white/20 backdrop-blur-md rounded-full mb-6">
@@ -35,7 +35,7 @@
     </section>
 
     <!-- Search -->
-    <section class="container mx-auto px-6 -mt-8 relative z-20">
+    <section class="container mx-auto px-6 mt-6 relative z-20">
         <div class="search-bar rounded-2xl p-6 max-w-4xl mx-auto">
             <form action="{{ route('akomodasi.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
                 <div class="flex-1">
@@ -62,7 +62,7 @@
                 <p class="text-gray-600">{{ __('site.try_other_keywords') }}</p>
             </div>
         @else
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 @foreach($items as $a)
                     <article class="dest-card bg-white rounded-2xl shadow-lg overflow-hidden group">
                         <div class="relative h-64 overflow-hidden">

@@ -33,22 +33,24 @@
     }
     
     .dest-card {
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        isolation: isolate; /* ensure z-index context */
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
         overflow: hidden;
+        will-change: transform;
     }
     
     .dest-card:hover {
-        transform: translateY(-12px);
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        transform: translateY(-6px);
+        z-index: 2;
+        box-shadow: 0 18px 36px rgba(0, 0, 0, 0.12);
     }
     
     .dest-card:hover .dest-image {
         transform: scale(1.1);
     }
     
-    .dest-image {
-        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+    .dest-image { transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1); }
     
     .badge {
         backdrop-filter: blur(10px);
@@ -80,7 +82,7 @@
 
 @section('content')
     <!-- Professional Hero Section -->
-    <section class="dest-hero -mt-24 py-32 relative section-parallax section-reveal">
+    <section class="dest-hero py-32 relative section-parallax section-reveal">
         <div class="container mx-auto px-6 relative z-10">
             <div class="max-w-4xl mx-auto text-center text-white">
                 <div class="inline-block px-4 py-2 bg-white/20 backdrop-blur-md rounded-full mb-6">
@@ -97,7 +99,7 @@
     </section>
 
     <!-- Search Section -->
-    <section class="container mx-auto px-6 -mt-8 relative z-20">
+    <section class="container mx-auto px-6 mt-6 relative z-20">
         <div class="search-bar rounded-2xl p-6 max-w-4xl mx-auto">
             <form action="{{ route('destinasi.index') }}" method="GET" class="flex flex-col md:flex-row gap-4">
                 <div class="flex-1">
@@ -134,7 +136,7 @@
                 <p class="text-gray-600">Coba kata kunci pencarian lain</p>
             </div>
         @else
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 relative">
                 @foreach($destinasi as $dest)
                     <article class="dest-card bg-white rounded-2xl shadow-lg overflow-hidden group parallax-card">
                         <div class="relative h-64 overflow-hidden">

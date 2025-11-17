@@ -68,7 +68,7 @@
 
 @section('content')
     {{-- Professional Hero for Wilayah --}}
-    <section class="wilayah-hero -mt-24 py-32 relative section-parallax section-reveal">
+    <section class="wilayah-hero py-32 relative section-parallax section-reveal">
         <div class="container mx-auto px-6 relative z-10">
             <div class="max-w-4xl">
                 {{-- Breadcrumb --}}

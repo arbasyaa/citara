@@ -57,14 +57,8 @@
         background: rgba(0, 0, 0, 0.3);
     }
     
-    .related-card {
-        transition: all 0.3s ease;
-    }
-    
-    .related-card:hover {
-        background: #F3F4F6;
-        transform: translateX(8px);
-    }
+    .related-card { transition: transform .2s ease, background .2s ease; will-change: transform; }
+    .related-card:hover { background: #F3F4F6; transform: translateX(4px); }
     
     .btn-maps {
         background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
@@ -85,13 +79,19 @@
 
 @section('content')
     {{-- Professional Hero with Parallax Effect --}}
-    @if($destinasi->foto->where('apakah_slider_utama', true)->isNotEmpty())
-        <section class="hero-detail -mt-24 relative">
+    @php
+        $heroImage = $destinasi->foto->where('apakah_slider_utama', true)->first() 
+                     ?? $destinasi->foto->first();
+    @endphp
+    
+    @if($heroImage)
+    <section class="hero-detail relative">
             <div class="absolute inset-0">
                 <img 
-                    src="{{ Storage::url($destinasi->foto->where('apakah_slider_utama', true)->first()->url) }}"
+                    src="{{ \App\Services\ImageUrl::url($heroImage->url) }}"
                     alt="{{ $destinasi->nama }}"
                     class="w-full h-full object-cover"
+                    loading="eager"
                 >
             </div>
             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
@@ -138,8 +138,8 @@
 
     {{-- Main Content --}}
     <section class="container mx-auto px-6 py-16">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            {{-- Content Area --}}
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-start">
+            {{-- Left Column: Description + Gallery --}}
             <div class="lg:col-span-2 space-y-8">
                 {{-- About Section --}}
                 <article class="content-card bg-white rounded-2xl shadow-xl p-8 md:p-12">
@@ -165,7 +165,7 @@
                     @endif
                 </article>
 
-                {{-- Photo Gallery --}}
+                {{-- Photo Gallery (always below description) --}}
                 @if($destinasi->foto->isNotEmpty())
                     <div class="content-card bg-white rounded-2xl shadow-xl p-8 md:p-12">
                         <div class="flex items-center gap-3 mb-8">
@@ -178,7 +178,7 @@
                         </div>
                                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                                     @foreach($destinasi->foto as $foto)
-                                        <div class="gallery-item aspect-w-16 aspect-h-12 bg-gray-100">
+                                        <div class="gallery-item bg-gray-100" style="aspect-ratio: 16/10;">
                                             <img 
                                                 src="{{ \App\Services\ImageUrl::url($foto->url) }}"
                                                 alt="{{ $foto->keterangan ?? $destinasi->nama }}"
@@ -191,10 +191,10 @@
                 @endif
             </div>
 
-            {{-- Sidebar --}}
-            <aside class="space-y-6">
+            {{-- Right Column: Sidebar cards --}}
+            <aside class="space-y-6 lg:sticky lg:top-24">
                 {{-- Location Card --}}
-                <div class="content-card bg-white rounded-2xl shadow-xl p-8 sticky top-24">
+                <div class="content-card bg-white rounded-2xl shadow-xl p-8">
                     <div class="flex items-center gap-3 mb-6">
                         <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
                             <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -232,13 +232,16 @@
                                 <a href="{{ route('destinasi.show', $other->slug) }}" class="related-card block p-4 rounded-xl">
                                     <div class="flex items-center gap-4">
                                         @if($other->foto->isNotEmpty())
-                                            <div class="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden">
+                                            <div class="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
                                                 <img 
-                                                    src="{{ Storage::url($other->foto->first()->url) }}"
+                                                    src="{{ \App\Services\ImageUrl::url($other->foto->first()->url) }}"
                                                     alt="{{ $other->nama }}"
                                                     class="w-full h-full object-cover"
+                                                    loading="lazy"
                                                 >
                                             </div>
+                                        @else
+                                            <div class="w-20 h-20 flex-shrink-0 rounded-lg bg-gradient-to-br from-blue-400 to-purple-500"></div>
                                         @endif
                                         <div class="flex-1 min-w-0">
                                             <h4 class="font-bold text-gray-900 mb-1 truncate">{{ $other->nama }}</h4>

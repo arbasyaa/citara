@@ -1,21 +1,8 @@
 @props(['paginator'])
 
 @if ($paginator && $paginator->hasPages())
-    <nav role="navigation" aria-label="Pagination" class="flex items-center justify-between">
-        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-            <div>
-                <p class="text-sm text-gray-700">
-                    Showing
-                    <span class="font-medium">{{ $paginator->firstItem() }}</span>
-                    to
-                    <span class="font-medium">{{ $paginator->lastItem() }}</span>
-                    of
-                    <span class="font-medium">{{ $paginator->total() }}</span>
-                    results
-                </p>
-            </div>
-            <div>
-                <ul class="inline-flex items-center -space-x-px" aria-label="Pagination">
+    <nav role="navigation" aria-label="Pagination" class="flex items-center justify-center">
+        <ul class="inline-flex items-center -space-x-px" aria-label="Pagination">
                     {{-- Previous Page Link --}}
                     @if ($paginator->onFirstPage())
                         <li aria-disabled="true">
@@ -75,8 +62,6 @@
                             <span class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm text-gray-500">&gt;</span>
                         </li>
                     @endif
-                </ul>
-            </div>
-        </div>
+        </ul>
     </nav>
 @endif

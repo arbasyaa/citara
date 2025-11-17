@@ -54,8 +54,13 @@
             </table>
         </div>
 
-        <div class="mt-4">
-            @include('components.admin-pagination', ['paginator' => $akomodasi])
+        <div class="mt-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <p class="text-sm text-gray-600">Showing {{ $akomodasi->firstItem() }} to {{ $akomodasi->lastItem() }} of {{ $akomodasi->total() }} results</p>
+                <div class="flex justify-center sm:justify-end">
+                    @include('components.admin-pagination', ['paginator' => $akomodasi])
+                </div>
+            </div>
         </div>
     </div>
 @endsection
