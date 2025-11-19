@@ -56,7 +56,7 @@ class DestinasiSeeder extends Seeder
         ];
 
         foreach ($destinasi as $d) {
-            \App\Models\Destinasi::create($d);
+            \App\Models\Destinasi::updateOrCreate(['slug' => $d['slug']], $d);
         }
     }
 }

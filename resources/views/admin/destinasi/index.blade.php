@@ -9,13 +9,18 @@
             <div class="flex items-center gap-3">
                 <form method="GET" action="" class="flex items-center gap-2">
                     <input name="q" value="{{ $q ?? '' }}" placeholder="Search..." class="px-3 py-2 rounded border border-gray-200">
+                    <select name="tipe" class="px-3 py-2 rounded border border-gray-200">
+                        <option value="">Semua Tipe</option>
+                        <option value="wisata" {{ ($tipe ?? '') === 'wisata' ? 'selected' : '' }}>Wisata</option>
+                        <option value="kuliner" {{ ($tipe ?? '') === 'kuliner' ? 'selected' : '' }}>Kuliner</option>
+                    </select>
                     <select name="per_page" class="px-2 py-2 rounded border border-gray-200">
                         <option value="10">10</option>
                         <option value="15" selected>15</option>
                         <option value="30">30</option>
                         <option value="50">50</option>
                     </select>
-                    <button class="px-3 py-2 bg-gray-800 text-white rounded">Search</button>
+                    <button class="px-3 py-2 bg-gray-800 text-white rounded">Filter</button>
                 </form>
                 <a href="{{ route('panel.destinasi.create') }}" class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 flex items-center gap-2">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
@@ -29,6 +34,7 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipe</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Wilayah</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
@@ -38,6 +44,15 @@
                     @foreach($destinasi as $d)
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $d->nama }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            @if($d->tipe === 'wisata')
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Wisata</span>
+                            @elseif($d->tipe === 'kuliner')
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">Kuliner</span>
+                            @else
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">-</span>
+                            @endif
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $d->wilayah->nama ?? '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $d->slug }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">

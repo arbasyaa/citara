@@ -14,6 +14,7 @@ class Destinasi extends Model
     protected $fillable = [
         'id_wilayah',
         'nama',
+        'tipe',
         'slug',
         'deskripsi',
         'alamat_lokasi',

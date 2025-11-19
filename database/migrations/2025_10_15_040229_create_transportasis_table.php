@@ -11,8 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transportasis', function (Blueprint $table) {
+        Schema::create('transportasi', function (Blueprint $table) {
             $table->id();
+            $table->string('nama');
+            $table->string('slug')->unique();
+            $table->string('tipe')->nullable();
+            $table->text('deskripsi')->nullable();
+            $table->text('rute')->nullable();
+            $table->string('thumbnail')->nullable();
             $table->timestamps();
         });
     }
@@ -22,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transportasis');
+        Schema::dropIfExists('transportasi');
     }
 };

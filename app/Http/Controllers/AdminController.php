@@ -225,6 +225,7 @@ class AdminController extends Controller
     public function destinasiIndex(Request $request)
     {
         $q = trim((string) $request->query('q', ''));
+        $tipe = $request->query('tipe', '');
         $per = (int) $request->query('per_page', 15);
         $per = $per > 0 && $per <= 200 ? $per : 15;
 
@@ -235,9 +236,12 @@ class AdminController extends Controller
                   ->orWhere('slug', 'like', "%{$q}%");
             });
         }
+        if ($tipe !== '' && in_array($tipe, ['wisata', 'kuliner'])) {
+            $query->where('tipe', $tipe);
+        }
 
         $destinasi = $query->orderBy('nama')->paginate($per)->appends($request->except('page'));
-        return view('admin.destinasi.index', compact('destinasi', 'q'));
+        return view('admin.destinasi.index', compact('destinasi', 'q', 'tipe'));
     }
 
     public function destinasiCreate()
@@ -249,6 +253,7 @@ class AdminController extends Controller
     {
         $data = $request->validate([
             'nama' => 'required|string',
+            'tipe' => 'required|in:wisata,kuliner',
             'id_wilayah' => 'nullable|exists:wilayah,id',
             'deskripsi' => 'nullable|string',
             'alamat_lokasi' => 'nullable|string',
@@ -262,6 +267,7 @@ class AdminController extends Controller
 
         $payload = [
             'nama' => $data['nama'],
+            'tipe' => $data['tipe'],
             'id_wilayah' => $data['id_wilayah'] ?? null,
             'deskripsi' => $data['deskripsi'] ?? null,
             'alamat_lokasi' => $data['alamat_lokasi'] ?? null,
@@ -310,6 +316,7 @@ class AdminController extends Controller
     {
         $data = $request->validate([
             'nama' => 'required|string',
+            'tipe' => 'required|in:wisata,kuliner',
             'id_wilayah' => 'nullable|exists:wilayah,id',
             'deskripsi' => 'nullable|string',
             'alamat_lokasi' => 'nullable|string',
@@ -322,6 +329,7 @@ class AdminController extends Controller
 
         $payload = [
             'nama' => $data['nama'],
+            'tipe' => $data['tipe'],
             'id_wilayah' => $data['id_wilayah'] ?? null,
             'deskripsi' => $data['deskripsi'] ?? null,
             'alamat_lokasi' => $data['alamat_lokasi'] ?? null,

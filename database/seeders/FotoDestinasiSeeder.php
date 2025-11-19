@@ -43,7 +43,10 @@ class FotoDestinasiSeeder extends Seeder
         ];
 
         foreach ($fotos as $foto) {
-            \App\Models\FotoDestinasi::create($foto);
+            \App\Models\FotoDestinasi::updateOrCreate([
+                'id_destinasi' => $foto['id_destinasi'],
+                'url' => $foto['url']
+            ], $foto);
         }
     }
 }

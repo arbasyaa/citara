@@ -41,7 +41,7 @@ class WilayahSeeder extends Seeder
         ];
 
         foreach ($wilayah as $w) {
-            \App\Models\Wilayah::create($w);
+            \App\Models\Wilayah::updateOrCreate(['slug' => $w['slug']], $w);
         }
     }
 }

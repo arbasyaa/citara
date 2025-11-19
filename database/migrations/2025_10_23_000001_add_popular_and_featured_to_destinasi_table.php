@@ -10,8 +10,12 @@ return new class extends Migration
     {
         if (Schema::hasTable('destinasi')) {
             Schema::table('destinasi', function (Blueprint $table) {
-                $table->boolean('is_popular')->default(false)->after('url_gmaps');
-                $table->boolean('is_featured')->default(false)->after('is_popular');
+                if (! Schema::hasColumn('destinasi', 'is_popular')) {
+                    $table->boolean('is_popular')->default(false)->after('url_gmaps');
+                }
+                if (! Schema::hasColumn('destinasi', 'is_featured')) {
+                    $table->boolean('is_featured')->default(false)->after('is_popular');
+                }
             });
         }
     }

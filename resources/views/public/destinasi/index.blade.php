@@ -149,10 +149,21 @@
                             @else
                                 <div class="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500"></div>
                             @endif
-                            <div class="absolute top-4 right-4">
+                            <div class="absolute top-4 right-4 flex items-center gap-2">
                                 <span class="badge px-4 py-2 rounded-full text-sm font-semibold text-gray-800 shadow-lg">
                                     {{ $dest->wilayah->nama }}
                                 </span>
+                                @if($dest->tipe === 'wisata')
+                                    <span class="inline-flex items-center px-3 py-2 rounded-full text-xs font-medium bg-blue-500/95 text-white shadow-lg backdrop-blur-sm">
+                                        <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        Wisata
+                                    </span>
+                                @elseif($dest->tipe === 'kuliner')
+                                    <span class="inline-flex items-center px-3 py-2 rounded-full text-xs font-medium bg-orange-500/95 text-white shadow-lg backdrop-blur-sm">
+                                        <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                                        Kuliner
+                                    </span>
+                                @endif
                             </div>
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </div>

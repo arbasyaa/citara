@@ -11,7 +11,7 @@ class CreateFotoDestinasisTable extends Migration
      */
     public function up(): void
     {
-                if (! Schema::hasTable('foto_destinasi')) {
+        if (! Schema::hasTable('foto_destinasi')) {
             Schema::create('foto_destinasi', function (Blueprint $table) {
                 $table->id();
                 // the application uses the singular `destinasi` table and the SQL dump references `destinasi`.

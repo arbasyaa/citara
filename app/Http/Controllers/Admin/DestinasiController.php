@@ -31,6 +31,7 @@ class DestinasiController extends Controller
         $validated = $request->validate([
             'id_wilayah' => 'required|exists:wilayah,id',
             'nama' => 'required|string|max:255',
+            'tipe' => 'required|in:wisata,kuliner',
             'deskripsi' => 'required|string',
             'alamat_lokasi' => 'required|string',
             'url_gmaps' => 'nullable|url|max:2048'
@@ -62,6 +63,7 @@ class DestinasiController extends Controller
     $validated = $request->validate([
         'id_wilayah' => 'required|exists:wilayah,id',
         'nama' => 'required|string|max:255',
+        'tipe' => 'required|in:wisata,kuliner',
         'deskripsi' => 'required|string',
         'alamat_lokasi' => 'required|string',
         'url_gmaps' => 'nullable|url|max:2048',

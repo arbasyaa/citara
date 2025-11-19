@@ -13,6 +13,13 @@
                 <input name="nama" value="{{ $destinasi->nama }}" class="mt-1 block w-full rounded border-gray-300" required>
             </div>
             <div class="mb-4">
+                <label class="block text-sm">Tipe</label>
+                <select name="tipe" class="mt-1 block w-full rounded border-gray-300" required>
+                    <option value="wisata" {{ $destinasi->tipe === 'wisata' ? 'selected' : '' }}>Wisata</option>
+                    <option value="kuliner" {{ $destinasi->tipe === 'kuliner' ? 'selected' : '' }}>Kuliner</option>
+                </select>
+            </div>
+            <div class="mb-4">
                 <label class="block text-sm">Wilayah</label>
                 <select name="id_wilayah" class="mt-1 block w-full rounded border-gray-300">
                     <option value="">-- Pilih Wilayah --</option>
