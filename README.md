@@ -2,52 +2,42 @@
 
 ![Laravel](https://img.shields.io/badge/Laravel-12.x-red)
 ![PHP](https://img.shields.io/badge/PHP-8.2+-blue)
-![Vite](https://img.shields.io/badge/Vite-Latest-yellow)
+![Vite](https://img.shields.io/badge/Vite-7.x-yellow)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.x-cyan)
 
-Website pariwisata Cilacap yang menampilkan destinasi wisata, akomodasi, transportasi, dan kalender event dengan dukungan bilingual (Indonesia & English).
+Website pariwisata Cilacap yang menampilkan destinasi wisata & kuliner, akomodasi, transportasi, layanan, dan kalender event.
 
 ---
 
 ## 📋 Daftar Isi
 
 - [Tentang Proyek](#-tentang-proyek)
-- [Tujuan Proyek](#-tujuan-proyek)
 - [Fitur Utama](#-fitur-utama)
 - [Teknologi yang Digunakan](#-teknologi-yang-digunakan)
 - [Requirements](#-requirements)
-- [Instalasi](#-instalasi)
+- [Quick Start](#-quick-start)
+- [Instalasi Manual](#-instalasi-manual)
 - [Struktur Database](#-struktur-database)
-- [Arsitektur Fitur Bilingual](#-arsitektur-fitur-bilingual)
-- [Fitur Admin Panel](#-fitur-admin-panel)
-- [Cara Menggunakan](#-cara-menggunakan)
+- [Admin Panel](#-admin-panel)
+- [Development Workflow](#-development-workflow)
 - [Testing](#-testing)
 - [Deployment](#-deployment)
+- [Dokumentasi Tambahan](#-dokumentasi-tambahan)
 - [Kontribusi](#-kontribusi)
-- [Lisensi](#-lisensi)
 
 ---
 
 ## 🎯 Tentang Proyek
 
-**Cilacap Tourism and Creative** adalah website pariwisata yang dibangun untuk mempromosikan destinasi wisata, akomodasi, transportasi, dan berbagai event di Kabupaten Cilacap. Website ini dilengkapi dengan fitur bilingual (Bahasa Indonesia & English) untuk menarik wisatawan domestik dan internasional.
+**Cilacap Tourism and Creative** adalah website pariwisata yang dibangun untuk mempromosikan destinasi wisata dan kuliner, akomodasi, transportasi, serta berbagai event di Kabupaten Cilacap.
 
-### Mengapa Proyek Ini Dibuat?
+### Fitur Unggulan
 
-1. **Digitalisasi Pariwisata**: Memudahkan wisatawan menemukan informasi destinasi wisata Cilacap
-2. **Jangkauan Internasional**: Dengan dukungan bahasa Inggris, dapat menarik wisatawan mancanegara
-3. **Informasi Terpusat**: Menggabungkan data destinasi, akomodasi, transportasi, dan event dalam satu platform
-4. **Mudah Dikelola**: Admin panel yang user-friendly untuk manajemen konten
-
----
-
-## 🎯 Tujuan Proyek
-
-1. **Meningkatkan Kunjungan Wisata**: Memberikan informasi lengkap dan menarik tentang destinasi wisata Cilacap
-2. **Memudahkan Wisatawan**: Menyediakan informasi akomodasi dan transportasi yang terintegrasi
-3. **Promosi Event**: Menampilkan kalender kegiatan wisata sepanjang tahun
-4. **Aksesibilitas Global**: Menyediakan konten dalam dua bahasa (Indonesia & English)
-5. **Pengalaman Pengguna Optimal**: Interface yang responsif dan mudah digunakan di berbagai perangkat
+1. **Digitalisasi Pariwisata**: Portal informasi terpadu untuk destinasi wisata Cilacap
+2. **Kategorisasi Lengkap**: Pemisahan destinasi wisata dan kuliner yang jelas
+3. **Informasi Terpusat**: Destinasi, akomodasi, transportasi, layanan, dan event dalam satu platform
+4. **Dual Admin Panel**: Dua sistem admin yang terpisah untuk fleksibilitas pengelolaan
+5. **Performa Optimal**: Dioptimasi untuk kecepatan loading dan SEO
 
 ---
 
@@ -55,53 +45,67 @@ Website pariwisata Cilacap yang menampilkan destinasi wisata, akomodasi, transpo
 
 ### Fitur Publik (Website)
 
-#### 1. **Sistem Bilingual (ID/EN)** 🌍
-- Switch bahasa otomatis untuk seluruh konten
-- Session-based: pilihan bahasa tersimpan selama browsing
-- Fallback mechanism: jika terjemahan English tidak ada, tampilkan Bahasa Indonesia
-- Terjemahan UI dan konten database terpisah
-
-#### 2. **Destinasi Wisata** 🏖️
-- Daftar lengkap destinasi wisata di Cilacap
-- Kategori berdasarkan wilayah
-- Galeri foto untuk setiap destinasi
-- Deskripsi lengkap (bilingual)
-- Integrasi Google Maps untuk lokasi
+#### 1. **Destinasi Wisata & Kuliner** 🏖️🍜
+- **Kategori Ganda**: Pemisahan destinasi wisata dan kuliner dengan field `tipe`
+- Daftar lengkap destinasi di seluruh Cilacap
+- Pengelompokan berdasarkan wilayah
+- Galeri foto untuk setiap destinasi (slider utama + gallery)
+- Deskripsi lengkap dengan lokasi
+- Integrasi Google Maps untuk navigasi
 - Filter destinasi unggulan & populer
+- Sistem slug SEO-friendly untuk URL
 
-#### 3. **Wilayah Wisata** 🗺️
+#### 2. **Wilayah Wisata** 🗺️
 - Pengelompokan destinasi berdasarkan wilayah
-- Deskripsi setiap wilayah (bilingual)
-- Counter jumlah destinasi per wilayah
-- Halaman khusus untuk setiap wilayah
+- Deskripsi setiap wilayah dengan gambar
+- Counter otomatis jumlah destinasi per wilayah
+- Halaman detail untuk setiap wilayah
+- Responsive card design dengan gradient overlay
 
-#### 4. **Akomodasi** 🏨
-- Daftar hotel, wisma, villa, homestay
+#### 3. **Akomodasi** 🏨
+- Daftar lengkap hotel, wisma, villa, homestay
 - Informasi lokasi dan kontak
-- Deskripsi fasilitas (bilingual)
-- Kategori berdasarkan tipe akomodasi
+- Link website untuk booking
+- Deskripsi fasilitas lengkap
+- Hero image dengan gradient overlay
+- Sticky sidebar dengan informasi penting
 
-#### 5. **Transportasi** 🚌
+#### 4. **Transportasi** 🚌
 - Informasi transportasi lokal
-- Rute perjalanan
-- Deskripsi layanan (bilingual)
+- Rute perjalanan detail
 - Kategori: Kereta Api, Bus, Pesawat, Transportasi Lokal
+- Hero design konsisten dengan destinasi
+- Info tipe dan rute di sidebar
 
-#### 6. **Kalender Event 2026** 📅
-- Tampilan kalender kegiatan bulanan
-- Slider horizontal untuk navigasi bulan
-- Event wisata sepanjang tahun
-- Informasi tanggal dan nama event
+#### 5. **Layanan Wisata** 🎯
+- Informasi layanan tambahan (tour guide, paket wisata, dll)
+- Deskripsi lengkap layanan
+- Gambar dan informasi kontak
+- Grid layout responsif
 
-#### 7. **Pencarian** 🔍
-- Search bar untuk mencari destinasi
-- Filter berdasarkan wilayah
-- Hasil pencarian real-time
+#### 6. **Kalender Event** 📅
+- Kalender kegiatan wisata tahunan (2026+)
+- Tampilan kartu per bulan dengan gradient headers
+- Mode single-month untuk detail event
+- Event cards dengan border hover effects
+- Informasi tanggal, lokasi, dan deskripsi
+- Kategori event: Festival, Workshop, Pameran
+- Info section dengan gradient cards
+
+#### 7. **Homepage Dinamis** 🏠
+- Hero section dengan animated pattern
+- Featured destinations showcase
+- Wilayah wisata grid (hanya menampilkan wilayah dengan destinasi)
+- Services preview
+- Calendar events highlight
+- Smooth scroll animations
 
 #### 8. **Responsive Design** 📱
 - Tampilan optimal di desktop, tablet, mobile
-- Mobile-first approach
+- Fixed navbar dengan blur effect
 - Touch-friendly navigation
+- Optimized images dengan lazy loading
+- Mobile-first approach
 
 ---
 
@@ -163,7 +167,31 @@ Website pariwisata Cilacap yang menampilkan destinasi wisata, akomodasi, transpo
 
 ---
 
-## 🚀 Instalasi
+## 🚀 Quick Start
+
+Untuk setup dan development yang cepat, gunakan composer scripts:
+
+### Setup Awal (Pertama Kali)
+```bash
+# Clone repository
+git clone https://github.com/arbasyaa/citara.git
+cd citara-dev
+
+# Setup otomatis: install dependencies, migrate, build assets
+composer run-script setup
+```
+
+### Development Mode
+```bash
+# Jalankan server, queue, pail, dan vite secara bersamaan
+composer run-script dev
+```
+
+Website akan berjalan di: `http://localhost:8000`
+
+---
+
+## 🔧 Instalasi Manual
 
 ### 1. Clone Repository
 ```bash
@@ -172,37 +200,33 @@ cd citara-dev
 ```
 
 ### 2. Install Dependencies
-
-#### Install PHP Dependencies
 ```bash
+# PHP dependencies
 composer install
-```
 
-#### Install Node Dependencies
-```bash
+# Node dependencies
 npm install
 ```
 
 ### 3. Setup Environment
-
-#### Copy .env file
 ```bash
+# Copy environment file
 cp .env.example .env
-```
 
-#### Generate Application Key
-```bash
+# Generate application key
 php artisan key:generate
 ```
 
-#### Konfigurasi Database (.env)
+### 4. Konfigurasi Database
+
+Edit `.env` file:
 ```env
 APP_NAME="Cilacap Tourism and Creative"
 APP_ENV=local
-APP_KEY=base64:...
 APP_DEBUG=true
-APP_URL=http://localhost
+APP_URL=http://localhost:8000
 
+# Database (MySQL Production)
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
@@ -210,73 +234,47 @@ DB_DATABASE=citara_db
 DB_USERNAME=root
 DB_PASSWORD=
 
-# Session Configuration
-SESSION_DRIVER=file
-SESSION_LIFETIME=120
-
-# Locale Configuration
+# Locale
 APP_LOCALE=id
 APP_FALLBACK_LOCALE=id
+
+# Admin Panel Password (untuk /panel)
+PANEL_PASSWORD=your_secure_password
 ```
 
-### 4. Database Setup
-
-#### Run Migrations
+### 5. Database Setup
 ```bash
+# Run migrations
 php artisan migrate
-```
 
-#### (Optional) Seed Data
-```bash
+# (Optional) Seed dengan data contoh
 php artisan db:seed
+
+# Backfill tipe destinasi jika upgrade dari versi lama
+php artisan db:seed --class=BackfillDestinasiTipeSeeder
 ```
 
-### 5. Storage Link
+### 6. Storage Link
 ```bash
 php artisan storage:link
 ```
 
-### 6. Build Assets
-
-#### Development
+### 7. Build Assets
 ```bash
+# Development (watch mode)
 npm run dev
-```
 
-#### Production
-```bash
+# Production (minified)
 npm run build
 ```
 
-### 7. Run Application
-
-#### Menggunakan Artisan (Development)
+### 8. Run Application
 ```bash
+# Simple artisan serve
 php artisan serve
-```
 
-#### Menggunakan Composer Script
-```bash
+# Atau gunakan composer script untuk dev lengkap
 composer run-script dev
-```
-
-Website akan berjalan di: `http://localhost:8000`
-
-### 8. Setup Admin Panel
-
-#### Akses Panel
-- URL: `http://localhost:8000/panel`
-- Password default: Cek di `.env` → `PANEL_PASSWORD`
-
-#### Atau menggunakan Auth Admin
-- URL: `http://localhost:8000/admin`
-- Register user baru melalui: `php artisan tinker`
-```php
-User::create([
-    'name' => 'Admin',
-    'email' => 'admin@example.com',
-    'password' => bcrypt('password')
-]);
 ```
 
 ---
@@ -285,35 +283,36 @@ User::create([
 
 ### Tabel Utama
 
-#### 1. **destinasi**
+#### 1. **wilayah**
+```sql
+- id (bigint, PK)
+- nama (varchar 255)
+- slug (varchar 255, unique)
+- deskripsi (text, nullable)
+- gambar (varchar 255, nullable)
+- timestamps
+```
+
+#### 2. **destinasi** ⭐ Updated
 ```sql
 - id (bigint, PK)
 - id_wilayah (bigint, FK → wilayah)
 - nama (varchar 255)
 - slug (varchar 255, unique)
+- tipe (varchar 255, default 'wisata') -- 'wisata' atau 'kuliner'
 - deskripsi (text, nullable)
-- deskripsi_en (text, nullable) -- Untuk bilingual
 - alamat_lokasi (text, nullable)
 - url_gmaps (text, nullable)
-- is_popular (tinyint, default 0)
-- is_featured (tinyint, default 0)
+- is_popular (boolean, default 0)
+- is_featured (boolean, default 0)
 - timestamps
 ```
-
-#### 2. **wilayah**
-```sql
-- id (bigint, PK)
-- nama (varchar 255)
-- slug (varchar 255, unique)
-- deskripsi (text, nullable)
-- deskripsi_en (text, nullable) -- Untuk bilingual
-- timestamps
-```
+**Note**: Field `tipe` ditambahkan untuk membedakan destinasi wisata dan kuliner.
 
 #### 3. **foto_destinasi**
 ```sql
 - id (bigint, PK)
-- id_destinasi (bigint, FK → destinasi)
+- id_destinasi (bigint, FK → destinasi, onDelete: cascade)
 - url (varchar 255)
 - keterangan (text, nullable)
 - apakah_slider_utama (boolean, default 0)
@@ -324,12 +323,13 @@ User::create([
 ```sql
 - id (bigint, PK)
 - nama (varchar 255)
-- tipe (varchar 255, nullable)
+- slug (varchar 255, unique)
+- tipe (varchar 255, nullable) -- Hotel, Wisma, Villa, Homestay
 - lokasi (text, nullable)
 - deskripsi (text, nullable)
-- deskripsi_en (text, nullable) -- Untuk bilingual
 - nomor_telepon (varchar 50, nullable)
 - url_situs_web (text, nullable)
+- gambar (varchar 255, nullable)
 - timestamps
 ```
 
@@ -337,55 +337,162 @@ User::create([
 ```sql
 - id (bigint, PK)
 - nama (varchar 255)
-- tipe (varchar 255, nullable)
+- slug (varchar 255, unique)
+- tipe (varchar 255, nullable) -- Kereta Api, Bus, Pesawat, dll
 - rute (text, nullable)
 - deskripsi (text, nullable)
-- deskripsi_en (text, nullable) -- Untuk bilingual
+- gambar (varchar 255, nullable)
 - timestamps
 ```
 
-#### 6. **calendar_events**
+#### 6. **services**
+```sql
+- id (bigint, PK)
+- nama (varchar 255)
+- slug (varchar 255, unique)
+- deskripsi (text, nullable)
+- image (varchar 255, nullable)
+- timestamps
+```
+
+#### 7. **calendar_events**
 ```sql
 - id (bigint, PK)
 - title (varchar 255)
 - description (text, nullable)
+- location (varchar 255, nullable)
 - event_date (date)
 - image (varchar 255, nullable)
 - timestamps
 ```
 
+#### 8. **users** (Admin Auth)
+```sql
+- id (bigint, PK)
+- name (varchar 255)
+- email (varchar 255, unique)
+- email_verified_at (timestamp, nullable)
+- password (varchar 255)
+- remember_token (varchar 100, nullable)
+- timestamps
+```
+
 ### Relasi Database
-- `destinasi` **belongsTo** `wilayah`
-- `wilayah` **hasMany** `destinasi`
-- `destinasi` **hasMany** `foto_destinasi`
+```
+wilayah (1) ──< (N) destinasi
+destinasi (1) ──< (N) foto_destinasi
+```
+
+### Konvensi Penamaan
+- **Table names**: Singular (contoh: `wilayah`, `destinasi`, bukan `wilayahs`/`destinasis`)
+- **Slug generation**: Otomatis dibuat di model `booted()` method
+- **Foreign keys**: Menggunakan `onDelete('cascade')` untuk integritas referensial
 
 ---
 
-## 🌐 Arsitektur Fitur Bilingual
+## 👨‍💼 Admin Panel
 
-### Konsep Dasar
+### Sistem Dual Admin
 
-Sistem bilingual di proyek ini menggunakan pendekatan **hybrid**:
-1. **Database-level**: Konten dinamis (deskripsi destinasi, wilayah, dll) menggunakan kolom terpisah
-2. **Translation files**: Teks UI statis (navigasi, tombol, label) menggunakan Laravel translation
+Proyek ini memiliki **DUA sistem admin** yang terpisah:
 
-### Flow Diagram
-
+#### 1. **Panel (Lightweight Admin)** - `/panel`
 ```
-User clicks EN/ID
-       ↓
-Session stores locale ('en' atau 'id')
-       ↓
-Middleware SetLocale runs on every request
-       ↓
-App::setLocale() sets Laravel locale
-       ↓
-Views call getTranslatedDescription()
-       ↓
-Model checks locale and returns appropriate content
-       ↓
-Display content in selected language
+URL: http://localhost:8000/panel
+Auth: Password-based (dari .env)
+Middleware: AdminAuth
+Target: Admin konten yang tidak perlu full auth system
 ```
+
+**Setup:**
+```env
+# .env
+PANEL_PASSWORD=your_secure_password_here
+```
+
+**Cara Akses:**
+1. Buka `/panel`
+2. Masukkan password dari `.env` → `PANEL_PASSWORD`
+3. Password tersimpan di session
+
+**Fitur:**
+- ✅ CRUD Destinasi (dengan kategori wisata/kuliner)
+- ✅ CRUD Wilayah
+- ✅ CRUD Akomodasi
+- ✅ CRUD Transportasi
+- ✅ CRUD Services
+- ✅ CRUD Calendar Events
+- ✅ Upload & manage images
+- ✅ Simple interface
+
+#### 2. **Admin (Full Auth)** - `/admin`
+```
+URL: http://localhost:8000/admin
+Auth: Laravel Authentication (users table)
+Middleware: auth
+Target: Super admin dengan role-based access
+```
+
+**Setup User:**
+```bash
+php artisan tinker
+```
+
+```php
+User::create([
+    'name' => 'Admin',
+    'email' => 'admin@example.com',
+    'password' => bcrypt('your_password')
+]);
+```
+
+**Fitur:**
+- ✅ Full CRUD dengan advanced features
+- ✅ Role-based access control (future)
+- ✅ Activity logging (future)
+- ✅ Bulk operations
+
+### CRUD Operations
+
+#### Destinasi Management (`/panel/destinasi`)
+
+**Fields:**
+- `nama` (required) - Nama destinasi
+- `id_wilayah` (optional) - Relasi ke wilayah
+- `tipe` (required, default: 'wisata') - 'wisata' atau 'kuliner' ⭐
+- `deskripsi` (optional) - Deskripsi lengkap
+- `alamat_lokasi` (optional) - Alamat detail
+- `url_gmaps` (optional) - Link Google Maps
+- `is_popular` (boolean) - Tandai sebagai populer
+- `is_featured` (boolean) - Tampilkan di featured
+- `image` - Upload gambar utama
+
+**Features:**
+- Auto slug generation dari nama
+- Multiple photo upload (via `foto_destinasi`)
+- Set slider utama
+- Filter by wilayah
+- Filter by tipe (wisata/kuliner)
+
+#### Wilayah Management (`/panel/wilayah`)
+
+**Fields:**
+- `nama` (required)
+- `deskripsi` (optional)
+- `gambar` (optional)
+
+**Features:**
+- Auto slug generation
+- Counter destinasi per wilayah
+- Cascade delete protection
+
+#### Akomodasi, Transportasi, Services, Calendar Events
+
+Semua menggunakan pola CRUD yang sama dengan:
+- Auto slug generation
+- Image upload
+- Soft deletes (optional)
+- Search & filter
 
 ### Implementasi Detail
 
@@ -783,214 +890,142 @@ Proyek ini memiliki **DUA sistem admin**:
 - **Fitur**: Advanced management dengan role-based access
 - **Target**: Super admin dengan akun terdaftar
 
-### Panel CRUD (Lightweight Admin)
+---
 
-#### 1. **Destinasi Management**
+## 🔨 Development Workflow
 
-**URL**: `/panel/destinasi`
+### Composer Scripts (Recommended)
 
-**Fitur:**
-- ✅ Daftar semua destinasi
-- ✅ Create destinasi baru
-- ✅ Edit destinasi existing
-- ✅ Hapus destinasi
-- ✅ Upload foto destinasi
-- ✅ Set foto utama untuk slider
-- ✅ **Bilingual**: Form dengan dua field deskripsi (Indonesia & English)
-- ✅ **Highlight**: Checkbox "Tandai sebagai Unggulan & Populer"
-- ✅ **Lokasi**: Input alamat lokasi & Google Maps URL
-- ✅ **Auto-slug**: Generate slug otomatis dari nama
+Proyek ini menyediakan helper scripts untuk memudahkan development:
 
-**Form Fields:**
+#### Setup Awal
+```bash
+composer run-script setup
 ```
-- Nama (required)
-- Wilayah (dropdown, required)
-- Deskripsi (Indonesia) (textarea, optional)
-- Deskripsi (English) - optional (textarea, optional)
-- Alamat Lokasi (text, optional)
-- Google Maps URL (url, optional)
-- Tandai sebagai Unggulan & Populer (checkbox)
-- Gambar (file upload, optional)
+Menjalankan: env copy, key generate, storage link, migrate, npm install, npm build
+
+#### Development Mode
+```bash
+composer run-script dev
+```
+Menjalankan secara paralel:
+- `php artisan serve` - Laravel server (port 8000)
+- `php artisan queue:listen` - Queue worker
+- `php artisan pail` - Real-time log viewer
+- `npm run dev` - Vite dev server (hot reload)
+
+#### Testing
+```bash
+composer test
+# atau
+php artisan test
 ```
 
-**Validator:**
+#### Clear Caches
+```bash
+# Clear semua cache (view, config, route, application)
+php artisan optimize:clear
+
+# Clear individual caches
+php artisan cache:clear
+php artisan config:clear
+php artisan view:clear
+php artisan route:clear
+```
+
+### Common Development Tasks
+
+#### Menambah Model Baru dengan Slug
+
+Contoh: Model baru `Event` dengan auto-slug
+
 ```php
-$request->validate([
-    'nama' => 'required|string',
-    'id_wilayah' => 'nullable|exists:wilayah,id',
-    'deskripsi' => 'nullable|string',
-    'deskripsi_en' => 'nullable|string',
-    'alamat_lokasi' => 'nullable|string',
-    'url_gmaps' => 'nullable|url',
-    'is_highlight' => 'nullable|boolean',
-    'image' => 'nullable|image|max:4096',
-]);
+// app/Models/Event.php
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+
+class Event extends Model
+{
+    protected $table = 'events'; // singular table name
+    
+    protected $fillable = ['nama', 'slug', 'deskripsi'];
+    
+    protected static function booted()
+    {
+        static::creating(function ($event) {
+            $slug = Str::slug($event->nama);
+            $count = 1;
+            
+            while (static::where('slug', $slug)->exists()) {
+                $slug = Str::slug($event->nama) . '-' . $count++;
+            }
+            
+            $event->slug = $slug;
+        });
+    }
+}
 ```
 
-**Logic Khusus:**
-- Jika `is_highlight` checked, set `is_popular=1` dan `is_featured=1`
-- Auto-generate slug dari nama destinasi
-- Cek duplikat slug, tambahkan counter jika perlu
-- Upload gambar ke `storage/app/public/uploads`
+#### Menambah Route Public
 
-#### 2. **Wilayah Management**
+```php
+// routes/web.php
+use App\Http\Controllers\Public\EventController;
 
-**URL**: `/panel/wilayah`
-
-**Fitur:**
-- ✅ Daftar semua wilayah
-- ✅ Create wilayah baru
-- ✅ Edit wilayah
-- ✅ Hapus wilayah
-- ✅ **Bilingual**: Deskripsi Indonesia & English
-- ✅ **Auto-create**: Destinasi placeholder saat create wilayah baru
-- ✅ **Counter**: Tampil jumlah destinasi per wilayah
-
-**Form Fields:**
-```
-- Nama (required)
-- Deskripsi (Indonesia) (textarea, optional)
-- Deskripsi (English) - optional (textarea, optional)
+Route::get('/events', [EventController::class, 'index'])->name('events.index');
+Route::get('/events/{event:slug}', [EventController::class, 'show'])->name('events.show');
 ```
 
-**Logic Khusus:**
-- Saat create wilayah baru, otomatis create 1 destinasi placeholder
-- Destinasi placeholder: "Destinasi Awal untuk [Nama Wilayah]"
-- Tujuan: Agar wilayah langsung muncul di homepage (filter by destinasi_count > 0)
+#### Menambah Admin CRUD
 
-#### 3. **Akomodasi Management**
-
-**URL**: `/panel/akomodasi`
-
-**Fitur:**
-- ✅ Daftar akomodasi (hotel, wisma, villa, homestay)
-- ✅ CRUD lengkap
-- ✅ **Bilingual**: Deskripsi Indonesia & English
-- ✅ Informasi kontak (telepon, website)
-
-**Form Fields:**
-```
-- Nama (required)
-- Tipe (Hotel/Wisma/Villa/Homestay)
-- Lokasi (text, optional)
-- Deskripsi (Indonesia) (textarea, optional)
-- Deskripsi (English) - optional (textarea, optional)
-- Nomor Telepon (text, optional)
-- URL Situs Web (url, optional)
+```php
+// routes/web.php - Panel routes
+Route::middleware(['admin.auth'])->prefix('panel')->name('panel.')->group(function () {
+    Route::resource('events', Admin\EventController::class);
+});
 ```
 
-#### 4. **Transportasi Management**
+### Debugging Tips
 
-**URL**: `/panel/transportasi`
+#### Missing Records di Homepage
 
-**Fitur:**
-- ✅ Daftar transportasi
-- ✅ CRUD lengkap
-- ✅ **Bilingual**: Deskripsi Indonesia & English
-- ✅ Info rute dan tipe
+Jika wilayah/destinasi tidak muncul di homepage:
 
-**Form Fields:**
-```
-- Nama (required)
-- Tipe (Kereta Api/Bus/Pesawat/Transportasi Lokal)
-- Rute (text, optional)
-- Deskripsi (Indonesia) (textarea, optional)
-- Deskripsi (English) - optional (textarea, optional)
+**Penyebab**: `HomeController@index` filter wilayah dengan `withCount('destinasi')->having('destinasi_count', '>', 0)`
+
+**Solusi**:
+```bash
+# Cek apakah wilayah punya destinasi
+php artisan tinker
+>>> Wilayah::withCount('destinasi')->get()
 ```
 
-### Workflow Admin
+#### Slug Collision
 
-#### Workflow Menambah Destinasi Bilingual
+Model sudah implement unique slug generation di `booted()` method. Lihat `app/Models/Wilayah.php` dan `app/Models/Destinasi.php` untuk contoh implementasi.
 
-**Langkah-langkah:**
+#### Image Not Showing
 
-1. **Login ke Panel**
-   - Akses: `http://localhost:8000/panel`
-   - Masukkan password dari `.env`
+**Checklist**:
+1. Storage link created? `php artisan storage:link`
+2. File exists? Check `storage/app/public/uploads/`
+3. Permissions? `chmod -R 775 storage bootstrap/cache`
+4. Using `ImageUrl::url()` service for fallback
 
-2. **Navigasi ke Destinasi**
-   - Klik menu "Destinasi"
-   - Klik tombol "Tambah Destinasi"
+#### Cache Issues
 
-3. **Isi Form**
-   - **Nama**: "Pantai Teluk Penyu"
-   - **Wilayah**: Pilih "Cilacap Selatan"
-   - **Deskripsi**: 
-     ```
-     Pantai indah dengan pemandangan sunset yang menakjubkan. 
-     Lokasi yang tepat untuk bersantai bersama keluarga.
-     ```
-   - **Deskripsi (English)**:
-     ```
-     Beautiful beach with stunning sunset views. 
-     Perfect spot to relax with family.
-     ```
-   - **Alamat Lokasi**: "Jl. Yos Sudarso, Cilacap Selatan"
-   - **Google Maps URL**: "https://maps.google.com/..."
-   - **Unggulan & Populer**: ✓ (centang jika ingin highlight)
-   - **Upload Gambar**: Pilih file foto destinasi
+Setelah ubah `.env` atau config, selalu clear cache:
+```bash
+php artisan config:clear
+php artisan cache:clear
+```
 
-4. **Simpan**
-   - Klik "Create"
-   - Sistem akan:
-     - Generate slug: "pantai-teluk-penyu"
-     - Simpan data ke database
-     - Upload gambar ke storage
-     - Create record foto_destinasi
-     - Set is_popular & is_featured jika checked
+### Important Conventions
 
-5. **Hasil**
-   - Destinasi muncul di daftar admin
-   - Destinasi muncul di homepage (jika di-highlight)
-   - Deskripsi otomatis switch sesuai bahasa user
-
-#### Workflow Menambah Terjemahan Nanti
-
-**Skenario**: Admin sudah create destinasi tanpa terjemahan English, ingin tambahkan nanti
-
-**Langkah:**
-
-1. **Edit Destinasi**
-   - Buka `/panel/destinasi`
-   - Klik "Edit" pada destinasi yang ingin ditambahkan terjemahan
-
-2. **Isi Field English**
-   - Field **Deskripsi (English)** masih kosong
-   - Tambahkan terjemahan:
-     ```
-     Historic fort from the Dutch colonial era, built in 1861. 
-     A must-visit for history enthusiasts.
-     ```
-
-3. **Simpan**
-   - Klik "Save"
-   - Terjemahan tersimpan
-
-4. **Efek Langsung**
-   - User yang pilih English sekarang akan lihat terjemahan baru
-   - Sebelumnya (saat English belum ada): User English lihat deskripsi Indonesia (fallback)
-   - Sekarang (setelah English ditambahkan): User English lihat deskripsi English
-   - User Indonesia tetap lihat deskripsi Indonesia
-
-**Benefit**: Admin bisa terjemahkan konten **secara bertahap** tanpa harus langsung semua!
-
-### Best Practices untuk Admin
-
-#### 1. **Apa yang Harus Diterjemahkan?**
-
-✅ **Prioritas Tinggi (Terjemahkan Dulu):**
-- Deskripsi destinasi populer/featured
-- Deskripsi wilayah utama
-- Informasi penting yang dilihat banyak wisatawan
-
-✅ **Prioritas Sedang:**
-- Deskripsi destinasi sekunder
-- Deskripsi akomodasi
-- Deskripsi transportasi
-
-✅ **Prioritas Rendah:**
-- Konten arsip
-- Destinasi yang jarang dikunjungi
+- **Table naming**: Singular (wilayah, destinasi, bukan wilayahs/destinasis)
+- **Slug generation**: Otomatis di model `booted()` method
+- **Image storage**: `storage/app/public/uploads/` dengan disk `public`
+- **Defensive coding**: Controllers cek `Schema::hasTable()` sebelum query
 
 ❌ **Jangan Diterjemahkan:**
 - Nama destinasi (tetap autentik: "Pantai Teluk Penyu")
@@ -1039,110 +1074,6 @@ English: "Beach beautiful with view sunset that amazing"
 - Gunakan foto landscape untuk hero image
 - Centang "Slider Utama" untuk foto cover destinasi
 - Upload beberapa foto untuk galeri
-
----
-
-## 📖 Cara Menggunakan
-
-### Untuk End User (Wisatawan)
-
-#### 1. **Menjelajah Website**
-
-**Homepage:**
-- Lihat destinasi unggulan & populer
-- Jelajahi wilayah wisata
-- Cek kalender event 2026
-
-**Search Destinasi:**
-- Gunakan search bar di hero section
-- Ketik nama destinasi atau kata kunci
-- Filter berdasarkan wilayah
-
-**Switch Bahasa:**
-- Klik tombol "EN" atau "ID" di navbar kanan atas
-- Seluruh konten otomatis berubah
-- Pilihan bahasa tersimpan selama sesi browsing
-
-#### 2. **Melihat Detail Destinasi**
-
-**Cara:**
-- Klik card destinasi di homepage atau halaman destinasi
-- Akan terbuka halaman detail dengan:
-  - Hero image besar
-  - Deskripsi lengkap (sesuai bahasa pilihan)
-  - Galeri foto
-  - Informasi lokasi
-  - Link Google Maps
-  - Destinasi lain di wilayah yang sama
-
-#### 3. **Eksplorasi Berdasarkan Wilayah**
-
-**Cara:**
-- Di homepage, bagian "Wilayah Wisata"
-- Klik card wilayah
-- Lihat semua destinasi di wilayah tersebut
-
-### Untuk Admin/Pengelola Konten
-
-#### 1. **Login Admin**
-
-**Panel (Simple):**
-```
-URL: http://localhost:8000/panel
-Password: [check .env → PANEL_PASSWORD]
-```
-
-**Admin (Full Auth):**
-```
-URL: http://localhost:8000/admin
-Email: admin@example.com
-Password: [your password]
-```
-
-#### 2. **Mengelola Destinasi**
-
-**Create Destinasi:**
-1. Panel → Destinasi → Tambah Destinasi
-2. Isi semua field (minimal Nama dan Wilayah)
-3. **Penting**: Isi Deskripsi Indonesia & English
-4. Upload foto (recommended)
-5. Centang "Unggulan & Populer" jika ingin highlight
-6. Save
-
-**Edit Destinasi:**
-1. Panel → Destinasi → Klik Edit
-2. Update informasi
-3. Bisa tambah terjemahan English nanti
-4. Save
-
-**Hapus Destinasi:**
-1. Panel → Destinasi → Klik Delete
-2. Confirm deletion
-
-#### 3. **Mengelola Wilayah**
-
-**Create Wilayah:**
-1. Panel → Wilayah → Tambah Wilayah
-2. Isi Nama & Deskripsi (bilingual)
-3. Save
-4. Sistem otomatis create destinasi placeholder
-
-**Best Practice:**
-- Buat wilayah dulu sebelum destinasi
-- Isi deskripsi wilayah yang informatif
-- Tambahkan terjemahan English untuk wilayah utama
-
-#### 4. **Mengelola Konten Lainnya**
-
-**Akomodasi:**
-- Panel → Akomodasi
-- Tambah hotel/wisma/villa/homestay
-- Isi deskripsi, lokasi, kontak
-
-**Transportasi:**
-- Panel → Transportasi
-- Tambah info kereta/bus/pesawat
-- Isi rute dan deskripsi layanan
 
 ---
 
@@ -1214,9 +1145,70 @@ Password: [your password]
 
 ---
 
+## 🧪 Testing
+
+### Run Tests
+```bash
+# Via composer script
+composer test
+
+# Via artisan
+php artisan test
+
+# Specific test suite
+php artisan test --testsuite=Feature
+php artisan test --testsuite=Unit
+
+# With coverage (requires xdebug)
+php artisan test --coverage
+```
+
+### Writing Tests
+
+Contoh test untuk Destinasi:
+
+```php
+// tests/Feature/DestinasiTest.php
+public function test_can_view_destinasi_index()
+{
+    $response = $this->get('/destinasi');
+    $response->assertStatus(200);
+    $response->assertSee('Destinasi Wisata');
+}
+
+public function test_can_view_destinasi_by_tipe()
+{
+    $wisata = Destinasi::factory()->create(['tipe' => 'wisata']);
+    $kuliner = Destinasi::factory()->create(['tipe' => 'kuliner']);
+    
+    $response = $this->get('/destinasi?tipe=wisata');
+    $response->assertSee($wisata->nama);
+    $response->assertDontSee($kuliner->nama);
+}
+```
+
+---
+
 ## 🚀 Deployment
 
-### Persiapan Production
+### Quick Deploy Script
+
+Gunakan script deploy yang sudah tersedia:
+
+```bash
+# Deploy dengan optimasi
+bash deploy-optimize.sh
+```
+
+Script ini akan menjalankan:
+- Git pull
+- Composer install
+- NPM install & build
+- Database migration
+- Cache optimization
+- Permission fixes
+
+### Manual Deployment
 
 #### 1. **Environment Configuration**
 
@@ -1225,9 +1217,9 @@ Update `.env` untuk production:
 ```env
 APP_NAME="Cilacap Tourism and Creative"
 APP_ENV=production
-APP_KEY=base64:...  # Generate dengan: php artisan key:generate
+APP_KEY=base64:...
 APP_DEBUG=false
-APP_URL=https://cilaceptourism.com
+APP_URL=https://yourdomain.com
 
 # Database Production
 DB_CONNECTION=mysql
@@ -1237,40 +1229,43 @@ DB_DATABASE=citara_production
 DB_USERNAME=citara_user
 DB_PASSWORD=strong_password_here
 
-# Session Driver (gunakan database atau redis di production)
+# Session (gunakan database di production)
 SESSION_DRIVER=database
 SESSION_LIFETIME=120
 
-# Cache Driver
-CACHE_DRIVER=redis
-QUEUE_CONNECTION=redis
+# Cache (gunakan redis untuk performa optimal)
+CACHE_DRIVER=file
+QUEUE_CONNECTION=database
+
+# Panel Password
+PANEL_PASSWORD=your_secure_production_password
 ```
 
 #### 2. **Optimize untuk Production**
 
 ```bash
-# Clear semua cache
-php artisan config:clear
-php artisan cache:clear
-php artisan view:clear
-php artisan route:clear
+# Install dependencies (no dev)
+composer install --optimize-autoloader --no-dev
 
-# Cache config dan routes
+# Run migrations
+php artisan migrate --force
+
+# Build production assets
+npm run build
+
+# Cache everything
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# Optimize composer autoloader
-composer install --optimize-autoloader --no-dev
-
-# Build production assets
-npm run build
+# Create storage link
+php artisan storage:link
 ```
 
 #### 3. **Set Permissions**
 
 ```bash
-# Set ownership
+# Set ownership (adjust user:group sesuai server)
 sudo chown -R www-data:www-data /path/to/citara-dev
 
 # Set directory permissions
@@ -1279,72 +1274,160 @@ sudo find /path/to/citara-dev -type d -exec chmod 755 {} \;
 # Set file permissions
 sudo find /path/to/citara-dev -type f -exec chmod 644 {} \;
 
-# Set storage dan bootstrap/cache writable
-sudo chmod -R 775 storage
-sudo chmod -R 775 bootstrap/cache
+# Set storage writable
+sudo chmod -R 775 storage bootstrap/cache
 ```
+
+#### 4. **Web Server Configuration**
+
+**Nginx Example:**
+```nginx
+server {
+    listen 80;
+    server_name yourdomain.com;
+    root /path/to/citara-dev/public;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-Content-Type-Options "nosniff";
+
+    index index.php;
+
+    charset utf-8;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    error_page 404 /index.php;
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}
+```
+
+### Performance Optimization
+
+Lihat dokumentasi lengkap: `docs/PERFORMANCE_OPTIMIZATION.md`
+
+**Quick tips:**
+- Enable OPcache di production
+- Gunakan Redis untuk cache dan queue
+- Optimize images sebelum upload
+- Enable gzip compression di web server
+- Use CDN untuk static assets
+
+---
+
+## 📚 Dokumentasi Tambahan
+
+Proyek ini memiliki dokumentasi lengkap untuk topik-topik khusus:
+
+### 1. **LOCALIZATION.md** (`docs/LOCALIZATION.md`)
+- Panduan lengkap sistem lokalisasi Laravel native
+- Cara menambah translation keys
+- Best practices untuk multilingual content
+- Language switching mechanism
+
+### 2. **PERFORMANCE_OPTIMIZATION.md** (`docs/PERFORMANCE_OPTIMIZATION.md`)
+- Optimasi database query
+- Caching strategies
+- Image optimization
+- Server configuration tips
+- Load testing guidelines
+
+### 3. **SINGLE_LANGUAGE_MIGRATION.md** (`docs/SINGLE_LANGUAGE_MIGRATION.md`)
+- Panduan migrasi dari sistem bilingual ke single language
+- Database cleanup procedures
+- Code refactoring steps
+
+### Copilot Instructions
+
+File `.github/copilot-instructions.md` berisi panduan untuk AI coding agents yang bekerja dengan repository ini. Lihat file tersebut untuk:
+- Konvensi kode proyek
+- Lokasi file penting
+- Common pitfalls
+- Development workflows
 
 ---
 
 ## 🤝 Kontribusi
 
-Kami menerima kontribusi dari developer lain! Berikut panduan kontribusi:
+Kontribusi sangat diterima! Berikut cara berkontribusi:
 
-### Cara Berkontribusi
-
-1. **Fork Repository**
+### 1. Fork & Clone
 ```bash
-# Fork via GitHub UI, lalu clone
 git clone https://github.com/YOUR_USERNAME/citara.git
+cd citara-dev
 ```
 
-2. **Create Branch Baru**
+### 2. Create Feature Branch
 ```bash
-git checkout -b feature/nama-fitur
+git checkout -b feature/new-feature
 # atau
-git checkout -b fix/nama-bug
+git checkout -b fix/bug-fix
 ```
 
-3. **Develop & Test**
+### 3. Develop & Test
 ```bash
-# Develop fitur/fix
+# Install dependencies
+composer install
+npm install
+
 # Run tests
-php artisan test
+composer test
 
 # Check code style
 ./vendor/bin/pint
 ```
 
-4. **Commit Changes**
+### 4. Commit & Push
 ```bash
 git add .
-git commit -m "feat: tambah fitur bilingual untuk event"
-# atau
-git commit -m "fix: perbaiki fallback mechanism di transportasi"
+git commit -m "feat: add new feature"
+git push origin feature/new-feature
 ```
 
-5. **Push & Create PR**
-```bash
-git push origin feature/nama-fitur
-# Create Pull Request via GitHub
-```
+### 5. Create Pull Request
+Buat PR via GitHub dengan deskripsi yang jelas tentang perubahan.
+
+### Commit Convention
+
+Gunakan conventional commits:
+- `feat:` - Fitur baru
+- `fix:` - Bug fix
+- `docs:` - Perubahan dokumentasi
+- `style:` - Formatting, missing semicolons, dll
+- `refactor:` - Code refactoring
+- `test:` - Menambah tests
+- `chore:` - Maintenance tasks
 
 ---
 
-## 📄 Lisensi
+## 📄 License
 
-Proyek ini menggunakan lisensi **MIT License**.
+Proyek ini menggunakan **MIT License**. Lihat file `LICENSE` untuk detail.
 
 ---
 
-## 📞 Kontak & Support
+## 📞 Contact & Support
 
-### Tim Development
-- **Email**: dev@cilaceptourism.com
-- **GitHub**: https://github.com/arbasyaa/citara
+### Repository
+- **GitHub**: [arbasyaa/citara](https://github.com/arbasyaa/citara)
+- **Issues**: [GitHub Issues](https://github.com/arbasyaa/citara/issues)
 
-### Laporkan Bug
-- **GitHub Issues**: https://github.com/arbasyaa/citara/issues
+### Development Team
+- **Owner**: [@arbasyaa](https://github.com/arbasyaa)
+- **Contributors**: Lihat [Contributors](https://github.com/arbasyaa/citara/graphs/contributors)
 
 ---
 
@@ -1352,24 +1435,24 @@ Proyek ini menggunakan lisensi **MIT License**.
 
 Terima kasih kepada:
 
-- **Laravel Team** - Framework yang luar biasa
-- **TailwindCSS Team** - Utility CSS yang powerful
-- **Open Source Community** - Packages dan libraries yang membantu
+- **Laravel Framework** - The PHP framework for web artisans
+- **TailwindCSS** - Utility-first CSS framework
+- **Vite** - Next generation frontend tooling
+- **Open Source Community** - Semua package dan library yang digunakan
 
 ---
 
-**Dibuat dengan ❤️ untuk Cilacap Tourism**
+## 📈 Project Status
 
-*Last Updated: November 2025*
+- ✅ **MVP Completed** - Core features implemented
+- ✅ **Admin Panel** - Dual admin system ready
+- ✅ **Destinasi Categories** - Wisata & Kuliner supported
+- ✅ **Calendar System** - Event management implemented
+- 🚧 **API Development** - In progress
+- 📝 **Mobile App** - Planned
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**Dibuat dengan ❤️ untuk Cilacap Tourism and Creative**
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+*Last Updated: November 20, 2025*
