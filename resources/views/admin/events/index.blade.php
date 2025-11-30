@@ -13,6 +13,8 @@
                 <tr>
                     <th class="px-4 py-3 text-left bg-gray-50">Month</th>
                     <th class="px-4 py-3 text-left bg-gray-50">Title</th>
+                    <th class="px-4 py-3 text-left bg-gray-50">Date Range</th>
+                    <th class="px-4 py-3 text-left bg-gray-50">Destinasi / Lokasi</th>
                     <th class="px-4 py-3 bg-gray-50">Actions</th>
                 </tr>
             </thead>
@@ -21,6 +23,16 @@
                 <tr class="border-t hover:bg-gray-50">
                     <td class="px-4 py-2">{{ $event->month }}</td>
                     <td class="px-4 py-2">{{ $event->title }}</td>
+                    <td class="px-4 py-2">{{ $event->date_range ?? 'TBA' }}</td>
+                    <td class="px-4 py-2">
+                        @if($event->destinasi)
+                            <a href="{{ route('destinasi.show', $event->destinasi->slug) }}" target="_blank" class="text-indigo-600 hover:underline">
+                                {{ $event->destinasi->nama }}
+                            </a>
+                        @else
+                            {{ $event->location ?? '-' }}
+                        @endif
+                    </td>
                     <td class="px-4 py-2 text-center">
                         <a href="{{ route('panel.events.edit', $event) }}" class="text-indigo-600 hover:text-indigo-800 mr-2">Edit</a>
                         <form method="POST" action="{{ route('panel.events.destroy', $event) }}" class="inline" onsubmit="return confirm('Delete?')">

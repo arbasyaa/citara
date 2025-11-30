@@ -85,6 +85,8 @@ Route::prefix('panel')->name('panel.')->group(function () {
     Route::get('/events/{event}/edit', [AdminController::class, 'eventsEdit'])->name('events.edit');
     Route::put('/events/{event}', [AdminController::class, 'eventsUpdate'])->name('events.update');
     Route::delete('/events/{event}', [AdminController::class, 'eventsDestroy'])->name('events.destroy');
+    // Destinasi search for admin combobox
+    Route::get('/destinasi/search', [AdminController::class, 'destinasiSearch'])->name('destinasi.search');
 
     // Wilayah (panel)
     Route::get('/wilayah', [AdminController::class, 'wilayahIndex'])->name('wilayah.index');

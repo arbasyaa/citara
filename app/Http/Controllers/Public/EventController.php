@@ -11,7 +11,8 @@ class EventController extends Controller
 {
     public function calendar()
     {
-        $events = CalendarEvent::orderBy('month', 'asc')
+        $events = CalendarEvent::with('destinasi:id,nama,slug,alamat_lokasi')
+            ->orderBy('month', 'asc')
             ->get()
             ->map(function ($event) {
                 // Normalize month to numeric (1-12). Database may contain names or numbers.
@@ -37,6 +38,11 @@ class EventController extends Controller
                     }
                 }
 
+                $dest = $event->destinasi;
+                $locationLabel = $dest?->nama ?? $event->location ?? null;
+                $locationUrl = $dest ? route('destinasi.show', $dest->slug) : null;
+                $locationAddress = $dest?->alamat_lokasi;
+
                 return [
                     'id' => $event->id,
                     'title' => $event->title ?? $event->judul,
@@ -44,7 +50,12 @@ class EventController extends Controller
                     'date_range' => $event->date_range ?? $event->tanggal,
                     'month' => $monthNumeric,
                     'raw_month' => $event->month,
+                    'year' => $event->year,
+                    'category' => $event->category ?? 'festival',
                     'location' => $event->location ?? $event->lokasi,
+                    'location_label' => $locationLabel,
+                    'location_url' => $locationUrl,
+                    'location_address' => $locationAddress,
                     'image' => $event->image ? ImageUrl::url($event->image) : null,
                 ];
             });

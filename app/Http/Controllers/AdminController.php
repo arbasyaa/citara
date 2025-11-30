@@ -17,6 +17,24 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
+    // Lightweight destinasi search for admin combobox
+    public function destinasiSearch(Request $request)
+    {
+        $q = trim((string) $request->query('q', ''));
+        $limit = (int) $request->query('limit', 20);
+        $limit = $limit > 0 && $limit <= 50 ? $limit : 20;
+        $query = Destinasi::query();
+        if ($q !== '') {
+            $query->where(function($b) use ($q){
+                $b->where('nama', 'like', "%{$q}%")
+                  ->orWhere('alamat_lokasi', 'like', "%{$q}%");
+            });
+        }
+        $items = $query->orderBy('nama')->limit($limit)->get(['id','nama','alamat_lokasi']);
+        return response()->json([
+            'items' => $items,
+        ]);
+    }
     public function loginForm()
     {
         return view('admin.login');
@@ -65,25 +83,57 @@ class AdminController extends Controller
     // Events CRUD
     public function eventsIndex()
     {
-        $events = CalendarEvent::orderBy('id')->get();
-    return view('admin.events.index', compact('events'));
+        $events = CalendarEvent::with('destinasi:id,nama,slug')
+            ->orderBy('id')
+            ->get();
+
+        return view('admin.events.index', compact('events'));
     }
 
     public function eventsCreate()
     {
-        return view('admin.events.create');
+        $destinasiList = Destinasi::orderBy('nama')->get(['id', 'nama', 'alamat_lokasi']);
+
+        return view('admin.events.create', compact('destinasiList'));
     }
 
     public function eventsStore(Request $request)
     {
         $data = $request->validate([
-            'month' => 'required|string',
+            'month' => 'required|integer|min:1|max:12',
+            'category' => 'required|in:festival,workshop,pameran',
+            'year' => 'nullable|integer',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
             'date_range' => 'nullable|string',
             'title' => 'required|string',
-            'location' => 'nullable|string',
+            'location' => 'required|string',
             'description' => 'nullable|string',
             'image' => 'nullable|image|max:4096'
         ]);
+        
+        // Convert numeric month to Indonesian month name for storage
+        $monthNames = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        if (isset($data['month']) && is_numeric($data['month'])) {
+            $data['month'] = $monthNames[(int)$data['month']] ?? $data['month'];
+        }
+        
+        // Derive year if not provided
+        if (empty($data['year'])) {
+            if (!empty($data['start_date'])) {
+                $data['year'] = (int) date('Y', strtotime($data['start_date']));
+            } elseif (!empty($data['end_date'])) {
+                $data['year'] = (int) date('Y', strtotime($data['end_date']));
+            }
+        }
+        // Generate date_range if not provided but dates exist
+        if (empty($data['date_range'])) {
+            if (!empty($data['start_date']) && !empty($data['end_date'])) {
+                $data['date_range'] = date('j', strtotime($data['start_date'])) . ' - ' . date('j F', strtotime($data['end_date']));
+            } elseif (!empty($data['start_date'])) {
+                $data['date_range'] = date('j F', strtotime($data['start_date']));
+            }
+        }
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('uploads', 'public');
             $data['image'] = $path;
@@ -101,19 +151,46 @@ class AdminController extends Controller
 
     public function eventsEdit(CalendarEvent $event)
     {
-        return view('admin.events.edit', compact('event'));
+        $destinasiList = Destinasi::orderBy('nama')->get(['id', 'nama', 'alamat_lokasi']);
+
+        return view('admin.events.edit', compact('event', 'destinasiList'));
     }
 
     public function eventsUpdate(Request $request, CalendarEvent $event)
     {
         $data = $request->validate([
-            'month' => 'required|string',
+            'month' => 'required|integer|min:1|max:12',
+            'category' => 'required|in:festival,workshop,pameran',
+            'year' => 'nullable|integer',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
             'date_range' => 'nullable|string',
             'title' => 'required|string',
-            'location' => 'nullable|string',
+            'location' => 'required|string',
             'description' => 'nullable|string',
             'image' => 'nullable|image|max:4096'
         ]);
+        
+        // Convert numeric month to Indonesian month name
+        $monthNames = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        if (isset($data['month']) && is_numeric($data['month'])) {
+            $data['month'] = $monthNames[(int)$data['month']] ?? $data['month'];
+        }
+        
+        if (empty($data['year'])) {
+            if (!empty($data['start_date'])) {
+                $data['year'] = (int) date('Y', strtotime($data['start_date']));
+            } elseif (!empty($data['end_date'])) {
+                $data['year'] = (int) date('Y', strtotime($data['end_date']));
+            }
+        }
+        if (empty($data['date_range'])) {
+            if (!empty($data['start_date']) && !empty($data['end_date'])) {
+                $data['date_range'] = date('j', strtotime($data['start_date'])) . ' - ' . date('j F', strtotime($data['end_date']));
+            } elseif (!empty($data['start_date'])) {
+                $data['date_range'] = date('j F', strtotime($data['start_date']));
+            }
+        }
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('uploads', 'public');
             $data['image'] = $path;
