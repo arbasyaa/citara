@@ -19,7 +19,7 @@ class HomeController extends Controller
         $locale = app()->getLocale();
 
         // Featured Destinations (prefer admin-flagged if column exists)
-        $featuredDestinations = Cache::remember("home.featured.{$locale}", now()->addMinutes(10), function () {
+        $featuredDestinations = Cache::remember("home.featured.{$locale}", now()->addHours(6), function () {
             try {
                 $table = (new Destinasi())->getTable();
                 if (Schema::hasColumn($table, 'is_featured')) {
@@ -44,7 +44,7 @@ class HomeController extends Controller
         });
 
         // Popular Destinations (prefer is_popular when available)
-        $popularDestinasi = Cache::remember("home.popular.{$locale}", now()->addMinutes(10), function () {
+        $popularDestinasi = Cache::remember("home.popular.{$locale}", now()->addHours(6), function () {
             try {
                 $table = (new Destinasi())->getTable();
                 if (Schema::hasColumn($table, 'is_popular')) {
@@ -53,11 +53,13 @@ class HomeController extends Controller
             } catch (\Exception $e) {
                 // fall through
             }
-            return Destinasi::with(['wilayah', 'foto'])->inRandomOrder()->take(8)->get();
+            // Use latest() instead of inRandomOrder() for better performance
+            // If you need variety, consider using is_popular flag or featured rotation
+            return Destinasi::with(['wilayah', 'foto'])->latest()->take(8)->get();
         });
 
         // Recent Destinations
-        $recentDestinasi = Cache::remember("home.recent.{$locale}", now()->addMinutes(10), function () {
+        $recentDestinasi = Cache::remember("home.recent.{$locale}", now()->addHour(), function () {
             try {
                 $table = (new Destinasi())->getTable();
                 if (Schema::hasColumn($table, 'is_featured') || Schema::hasColumn($table, 'is_popular')) {
@@ -72,7 +74,7 @@ class HomeController extends Controller
         });
 
         // Regions / Wilayah
-        $wilayah = Cache::remember("home.wilayah.{$locale}", now()->addMinutes(10), function () {
+        $wilayah = Cache::remember("home.wilayah.{$locale}", now()->addHours(12), function () {
             try {
                 return Wilayah::withCount('destinasi')->get();
             } catch (\Exception $e) {
@@ -81,12 +83,12 @@ class HomeController extends Controller
         });
 
         // Destinasi count (for hero stats)
-        $destinasiCount = Cache::remember("home.destinasi_count.{$locale}", now()->addMinutes(10), function () {
+        $destinasiCount = Cache::remember("home.destinasi_count.{$locale}", now()->addHours(6), function () {
             try { return Destinasi::count(); } catch (\Exception $e) { return 0; }
         });
 
         // Events (ordered by Indonesian month names)
-        $events = Cache::remember("home.events.{$locale}", now()->addMinutes(10), function () {
+        $events = Cache::remember("home.events.{$locale}", now()->addHour(), function () {
             try {
                 return CalendarEvent::orderByRaw("FIELD(month, 'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember')")->get();
             } catch (\Exception $e) {
@@ -95,11 +97,11 @@ class HomeController extends Controller
         });
 
         // Akomodasi and Transportasi small home lists
-        $akomodasiHome = Cache::remember("home.akomodasi.{$locale}", now()->addMinutes(10), function () {
+        $akomodasiHome = Cache::remember("home.akomodasi.{$locale}", now()->addHours(6), function () {
             try { return Akomodasi::orderByDesc('id')->take(6)->get(); } catch (\Exception $e) { return collect(); }
         });
 
-        $transportasiHome = Cache::remember("home.transportasi.{$locale}", now()->addMinutes(10), function () {
+        $transportasiHome = Cache::remember("home.transportasi.{$locale}", now()->addHours(6), function () {
             try { return Transportasi::orderByDesc('id')->take(6)->get(); } catch (\Exception $e) { return collect(); }
         });
 

@@ -16,8 +16,8 @@ Route::get('/login', function () {
     return redirect()->route('panel.login');
 })->name('login');
 
-// Public Routes (apply locale middleware to set app locale from session)
-Route::middleware([SetLocale::class])->group(function () {
+// Public Routes (apply locale middleware + rate limiting to prevent abuse)
+Route::middleware([SetLocale::class, 'throttle:100,1'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/destinasi', [DestinasiController::class, 'index'])->name('destinasi.index');
     Route::get('/destinasi/{destinasi:slug}', [DestinasiController::class, 'show'])->name('destinasi.show');
@@ -125,3 +125,29 @@ Route::prefix('panel')->name('panel.')->middleware('throttle:60,1')->group(funct
     Route::delete('/transportasi/{transportasi}', [AdminController::class, 'transportasiDestroy'])->name('transportasi.destroy');
     });
 });
+
+// Health check endpoint for monitoring (no auth required for uptime checks)
+Route::get('/health', function () {
+    try {
+        DB::connection()->getPdo();
+        $dbStatus = 'connected';
+    } catch (\Exception $e) {
+        $dbStatus = 'disconnected';
+    }
+
+    Cache::put('health_check', true, 60);
+    $cacheStatus = Cache::has('health_check') ? 'working' : 'failing';
+
+    $status = ($dbStatus === 'connected' && $cacheStatus === 'working') ? 'healthy' : 'unhealthy';
+
+    return response()->json([
+        'status' => $status,
+        'database' => $dbStatus,
+        'cache' => $cacheStatus,
+        'timestamp' => now()->toIso8601String(),
+        'app' => [
+            'name' => config('app.name'),
+            'env' => app()->environment(),
+        ],
+    ], $status === 'healthy' ? 200 : 503);
+})->name('health');
