@@ -105,12 +105,17 @@ class AdminController extends Controller
             'year' => 'nullable|integer',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
-            'date_range' => 'nullable|string',
-            'title' => 'required|string',
-            'location' => 'required|string',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|max:4096'
+            'date_range' => 'nullable|string|max:255',
+            'title' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'description' => 'nullable|string|max:5000',
+            'image' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:4096'
         ]);
+        
+        // Sanitize description HTML
+        if (isset($data['description'])) {
+            $data['description'] = strip_tags($data['description'], '<p><br><strong><em><ul><ol><li>');
+        }
         
         // Convert numeric month to Indonesian month name for storage
         $monthNames = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
@@ -135,7 +140,17 @@ class AdminController extends Controller
             }
         }
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('uploads', 'public');
+            $file = $request->file('image');
+            
+            // Validate actual image content
+            $imageInfo = @getimagesize($file->path());
+            if (!$imageInfo) {
+                return back()->withErrors(['image' => 'File is not a valid image'])->withInput();
+            }
+            
+            // Generate unique filename to prevent overwrite
+            $filename = uniqid() . '_' . time() . '.' . $file->extension();
+            $path = $file->storeAs('uploads', $filename, 'public');
             $data['image'] = $path;
         }
         CalendarEvent::create($data);
@@ -164,12 +179,17 @@ class AdminController extends Controller
             'year' => 'nullable|integer',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
-            'date_range' => 'nullable|string',
-            'title' => 'required|string',
-            'location' => 'required|string',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|max:4096'
+            'date_range' => 'nullable|string|max:255',
+            'title' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'description' => 'nullable|string|max:5000',
+            'image' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:4096'
         ]);
+        
+        // Sanitize description HTML
+        if (isset($data['description'])) {
+            $data['description'] = strip_tags($data['description'], '<p><br><strong><em><ul><ol><li>');
+        }
         
         // Convert numeric month to Indonesian month name
         $monthNames = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
@@ -192,7 +212,17 @@ class AdminController extends Controller
             }
         }
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('uploads', 'public');
+            $file = $request->file('image');
+            
+            // Validate actual image content
+            $imageInfo = @getimagesize($file->path());
+            if (!$imageInfo) {
+                return back()->withErrors(['image' => 'File is not a valid image'])->withInput();
+            }
+            
+            // Generate unique filename to prevent overwrite
+            $filename = uniqid() . '_' . time() . '.' . $file->extension();
+            $path = $file->storeAs('uploads', $filename, 'public');
             $data['image'] = $path;
         }
         $event->update($data);

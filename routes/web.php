@@ -67,10 +67,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
 // Lightweight session-based admin panel (separate from existing auth admin)
 Route::get('/panel/login', [AdminController::class, 'loginForm'])->name('panel.login');
-Route::post('/panel/login', [AdminController::class, 'login'])->name('panel.login.post');
+Route::post('/panel/login', [AdminController::class, 'login'])
+    ->middleware('throttle:5,1') // 5 attempts per minute
+    ->name('panel.login.post');
 Route::post('/panel/logout', [AdminController::class, 'logout'])->name('panel.logout');
 
-Route::prefix('panel')->name('panel.')->group(function () {
+Route::prefix('panel')->name('panel.')->middleware('throttle:60,1')->group(function () {
     // Protected routes using AdminAuth middleware
     Route::middleware([\App\Http\Middleware\AdminAuth::class])->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
