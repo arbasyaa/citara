@@ -74,7 +74,7 @@ Route::post('/panel/logout', [AdminController::class, 'logout'])->name('panel.lo
 
 Route::prefix('panel')->name('panel.')->middleware('throttle:60,1')->group(function () {
     // Protected routes using AdminAuth middleware
-    Route::middleware([\App\Http\Middleware\AdminAuth::class])->group(function () {
+    Route::middleware([\App\Http\Middleware\AdminAuth::class, 'log.admin'])->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
 
         // Services panel removed (managed by standard /admin area). If you want to re-enable,

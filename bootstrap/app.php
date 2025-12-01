@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Register admin activity logging middleware
+        $middleware->alias([
+            'log.admin' => \App\Http\Middleware\LogAdminActivity::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
