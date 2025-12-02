@@ -153,42 +153,84 @@
 <body class="bg-gray-100 overflow-x-hidden">
     <!-- Header/Navbar -->
     <header class="fixed w-full z-50 transition-all duration-300 bg-transparent" id="navbar">
-        <nav class="container mx-auto px-4 py-3">
+        <nav class="max-w-screen-xl mx-auto px-4 md:px-6 py-3">
             <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <a href="{{ route('home') }}" class="text-2xl font-bold tracking-tight text-white transition-colors duration-300" id="nav-logo">
-                        {{ __('site.site_name') }}
+                <div class="flex items-center shrink-0">
+                    <a href="{{ route('home') }}" class="text-xl sm:text-2xl font-bold tracking-tight text-white transition-colors duration-300 leading-tight" id="nav-logo">
+                        <span class="block">Cilacap tourism &amp; Travel</span>
                     </a>
                 </div>
-                <div class="flex items-center space-x-3">
-                    <a href="{{ route('home') }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-1 rounded-md hover:bg-white/10 transition">{{ __('site.home') }}</a>
-                    <a href="{{ route('destinasi.index') }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-1 rounded-md hover:bg-white/10 transition">{{ __('site.destinations') }}</a>
-                    <a href="{{ route('akomodasi.index') }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-1 rounded-md hover:bg-white/10 transition">{{ __('site.accommodation') }}</a>
-                    <a href="{{ route('transportasi.index') }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-1 rounded-md hover:bg-white/10 transition">{{ __('site.transport') }}</a>
-                    <a href="{{ route('events.calendar', ['year' => 2025, 'month' => 1]) }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-1 rounded-md hover:bg-white/10 transition">{{ __('site.event_calendar') }}</a>
 
-                    <!-- Motion is always enabled (toggle removed) -->
-
-                    <!-- Language switcher -->
-                    <div class="flex items-center space-x-1 ml-2 border-l border-white/30 pl-3">
-                        <a href="{{ route('lang.switch', 'en') }}" 
-                           class="text-white font-medium px-2 py-1 rounded transition {{ app()->getLocale() === 'en' ? 'bg-white/20' : 'hover:bg-white/10' }}">
-                            EN
-                        </a>
-                        <span class="text-white/50">|</span>
-                        <a href="{{ route('lang.switch', 'id') }}" 
-                           class="text-white font-medium px-2 py-1 rounded transition {{ app()->getLocale() === 'id' ? 'bg-white/20' : 'hover:bg-white/10' }}">
-                            ID
-                        </a>
+                <!-- Desktop navigation -->
+                <div class="hidden lg:flex items-center space-x-2 xl:space-x-3">
+                    <a href="{{ route('home') }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-2 rounded-md hover:bg-white/10 transition text-sm xl:text-base">{{ __('site.home') }}</a>
+                    <a href="{{ route('destinasi.index') }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-2 rounded-md hover:bg-white/10 transition text-sm xl:text-base">{{ __('site.destinations') }}</a>
+                    <a href="{{ route('akomodasi.index') }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-2 rounded-md hover:bg-white/10 transition text-sm xl:text-base">{{ __('site.accommodation') }}</a>
+                    <a href="{{ route('transportasi.index') }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-2 rounded-md hover:bg-white/10 transition text-sm xl:text-base">{{ __('site.transport') }}</a>
+                    <a href="{{ route('events.calendar', ['year' => 2025, 'month' => 1]) }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-2 rounded-md hover:bg-white/10 transition text-sm xl:text-base">{{ __('site.event_calendar') }}</a>
+                    <div class="flex items-center space-x-1 ml-2 pl-3 border-l border-white/30">
+                        <a href="{{ route('lang.switch', 'en') }}" class="text-white font-medium px-2 py-1 rounded transition text-xs xl:text-sm {{ app()->getLocale() === 'en' ? 'bg-white/20' : 'hover:bg-white/10' }}">EN</a>
+                        <span class="text-white/50 text-xs xl:text-sm">|</span>
+                        <a href="{{ route('lang.switch', 'id') }}" class="text-white font-medium px-2 py-1 rounded transition text-xs xl:text-sm {{ app()->getLocale() === 'id' ? 'bg-white/20' : 'hover:bg-white/10' }}">ID</a>
                     </div>
+                </div>
+
+                <!-- Mobile hamburger -->
+                <button id="navToggle" aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle navigation" class="lg:hidden inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white">
+                    <svg id="navToggleIconOpen" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg id="navToggleIconClose" class="h-6 w-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <!-- Mobile menu panel -->
+            <div id="mobileMenu" class="lg:hidden hidden mt-2 rounded-lg bg-white/95 backdrop-blur-sm shadow-lg border border-white/30 divide-y divide-gray-200">
+                <div class="py-2 px-2 space-y-1">
+                    <a href="{{ route('home') }}" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-primary-50">{{ __('site.home') }}</a>
+                    <a href="{{ route('destinasi.index') }}" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-primary-50">{{ __('site.destinations') }}</a>
+                    <a href="{{ route('akomodasi.index') }}" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-primary-50">{{ __('site.accommodation') }}</a>
+                    <a href="{{ route('transportasi.index') }}" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-primary-50">{{ __('site.transport') }}</a>
+                    <a href="{{ route('events.calendar', ['year' => 2025, 'month' => 1]) }}" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-primary-50">{{ __('site.event_calendar') }}</a>
+                </div>
+                <div class="py-2 px-2 flex items-center gap-2">
+                    <span class="text-xs font-medium text-gray-500">LANG</span>
+                    <a href="{{ route('lang.switch', 'en') }}" class="px-2 py-1 rounded text-xs font-semibold {{ app()->getLocale() === 'en' ? 'bg-primary-100 text-primary-700' : 'text-gray-600 hover:bg-primary-50' }}">EN</a>
+                    <a href="{{ route('lang.switch', 'id') }}" class="px-2 py-1 rounded text-xs font-semibold {{ app()->getLocale() === 'id' ? 'bg-primary-100 text-primary-700' : 'text-gray-600 hover:bg-primary-50' }}">ID</a>
                 </div>
             </div>
         </nav>
+        <script>
+            (function() {
+                const toggle = document.getElementById('navToggle');
+                const menu = document.getElementById('mobileMenu');
+                const openIcon = document.getElementById('navToggleIconOpen');
+                const closeIcon = document.getElementById('navToggleIconClose');
+                if(!toggle || !menu) return;
+                function setState(open){
+                    menu.classList.toggle('hidden', !open);
+                    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                    openIcon.classList.toggle('hidden', open);
+                    closeIcon.classList.toggle('hidden', !open);
+                    document.body.classList.toggle('overflow-hidden', open);
+                }
+                toggle.addEventListener('click', () => setState(menu.classList.contains('hidden')));
+                // Close on outside click
+                document.addEventListener('click', (e) => {
+                    if(!menu.classList.contains('hidden') && !menu.contains(e.target) && !toggle.contains(e.target)) {
+                        setState(false);
+                    }
+                });
+                // Close on ESC
+                document.addEventListener('keydown', (e) => { if(e.key === 'Escape') setState(false); });
+            })();
+        </script>
         <style>
             /* Stronger solid navbar shadow and backdrop blur when it becomes solid */
             #navbar.bg-white {
                 box-shadow: 0 6px 20px -8px rgba(0,0,0,0.35) !important;
                 backdrop-filter: blur(6px);
+            }
+            @media (max-width: 640px) {
+                #navbar.bg-white .nav-link { color: #1f2937 !important; }
             }
         </style>
     </header>

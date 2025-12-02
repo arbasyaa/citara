@@ -319,6 +319,19 @@
     .hero-stats-grid {
         margin-top: 3rem;
     }
+    /* Mobile adjustments */
+    @media (max-width:640px){
+        .hero-portal {min-height:520px;height:auto;padding-top:4.5rem;padding-bottom:3rem;}
+        .hero-title {font-size:2.25rem;line-height:1.2;margin-bottom:1.25rem;}
+        .hero-subtitle {font-size:1rem;line-height:1.55;margin-bottom:1.5rem;}
+        .trending-badge {padding:.4rem .75rem;font-size:.65rem;gap:.35rem;margin-bottom:1rem;}
+        .search-box form {gap:.5rem;}
+        .search-box input {padding:.65rem .9rem;font-size:.95rem;}
+        .search-box button {padding:.65rem 1rem;font-size:.9rem;}
+        .hero-stats-grid {grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:1.5rem;}
+        .hero-stats {padding:.6rem;}
+        .hero-stats .stats-counter {font-size:1.35rem;}
+    }
 </style>
 @endpush
 
@@ -351,11 +364,11 @@
                 </div>
 
                 {{-- Main Headline --}}
-                <h1 class="hero-title text-5xl md:text-7xl lg:text-8xl font-black text-white slide-up delay-100">
+                <h1 class="hero-title text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight slide-up delay-100">
                     {{ __('site.hero_title') }}
                 </h1>
                 
-                <p class="hero-subtitle text-xl md:text-2xl text-white/90 slide-up delay-200 max-w-3xl">
+                <p class="hero-subtitle text-base sm:text-lg md:text-2xl text-white/90 slide-up delay-200 max-w-2xl md:max-w-3xl">
                     {{ __('site.hero_subtitle') }}
                 </p>
 

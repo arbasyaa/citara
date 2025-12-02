@@ -23,16 +23,13 @@
     }
 
     .month-card {
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         isolation: isolate;
         border-radius: 12px;
+        transition: box-shadow .25s ease;
     }
-    
-    .month-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    }
+    /* Remove heavy hover animations for cleaner desktop */
+    .month-card:hover { box-shadow: 0 10px 24px rgba(0,0,0,.08); }
     
     .month-card.active {
         border-color: #0052A7;
@@ -64,9 +61,7 @@
         }
     }
 
-    .animate-fade-in {
-        animation: fadeIn 0.4s ease-out;
-    }
+    .animate-fade-in { animation: none; }
 
     /* Compact Date Selector */
     .date-selector {
@@ -102,16 +97,45 @@
         background-size: 1.25em 1.25em;
     }
 
-    /* Responsive */
-    @media (max-width: 640px) {
-        .month-card {
-            transform: none !important;
+    /* Mobile horizontal scroll for months */
+    .months-row {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 85%;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        gap: 1rem;
+        padding-bottom: .5rem;
+        margin-left: -1.5rem; /* align to edges (px-6 container) */
+        margin-right: -1.5rem;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+    .months-row .month-card { scroll-snap-align: start; }
+
+        .months-row::-webkit-scrollbar { height: 6px; }
+        .months-row::-webkit-scrollbar-track { background: transparent; }
+        .months-row::-webkit-scrollbar-thumb { background: rgba(0,0,0,.15); border-radius: 3px; }
+        .months-row:hover::-webkit-scrollbar-thumb { background: rgba(0,0,0,.3); }
+
+        .months-fade-left, .months-fade-right {
+            position: absolute; top: 0; bottom: 0; width: 30px; pointer-events: none; z-index: 5;
         }
-        
-        .month-card:hover {
-            transform: none !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        .months-fade-left { left: 0; background: linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0)); }
+        .months-fade-right { right: 0; background: linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0)); }
+
+    @media (min-width: 768px) {
+        .months-row {
+            grid-auto-flow: row;
+            grid-auto-columns: auto;
+            overflow: visible;
+            margin: 0; padding: 0;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
         }
+    }
+    @media (min-width: 1024px) {
+        .months-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
 </style>
 @endpush
@@ -219,12 +243,18 @@
                 </div>
             </div>
 
-            <!-- Calendar Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <!-- Calendar Grid: horizontal scroll on mobile, grid on desktop -->
+            <div class="relative">
+                <div class="months-fade-left hidden sm:block"></div>
+                <div class="months-fade-right hidden sm:block"></div>
+                <div class="months-row gap-5">
                 @foreach(['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $index => $month)
                     <div class="calendar-month month-card bg-white border border-gray-200 shadow-sm overflow-hidden cursor-pointer"
+                         role="button" tabindex="0"
+                         aria-expanded="false"
                          data-month="{{ $index + 1 }}"
-                         onclick="onMonthCardClick({{ $index + 1 }})">
+                         onclick="onMonthCardClick({{ $index + 1 }})"
+                         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();onMonthCardClick({{ $index + 1 }});}">
                         <!-- Month Header - Professional & Minimal -->
                         <div class="p-5 bg-gradient-to-br from-gray-50 to-blue-50/30 border-b border-gray-200">
                             <div class="flex items-center justify-between">
@@ -260,6 +290,7 @@
                         </div>
                     </div>
                 @endforeach
+                </div>
             </div>
         </div>
     </section>
@@ -735,13 +766,73 @@ function openMonthKeepOthers(month) {
     const container = document.getElementById(`events-${month}`);
     const monthCard = document.querySelector(`[data-month="${month}"]`);
     if (!container || !monthCard) return;
+    const isMobile = window.matchMedia('(max-width: 640px)').matches;
+    if (isMobile) {
+        // On mobile, still keep exclusivity
+        document.querySelectorAll('.calendar-month').forEach(card => {
+            const m = card.getAttribute('data-month');
+            if (m && parseInt(m) !== month) {
+                const panel = document.getElementById('events-' + m);
+                if (panel) { panel.classList.add('hidden'); panel.style.maxHeight='0px'; }
+                card.classList.remove('active');
+                card.setAttribute('aria-expanded','false');
+            }
+        });
+    }
     container.classList.remove('hidden');
     monthCard.classList.add('active');
+    monthCard.setAttribute('aria-expanded','true');
     container.style.maxHeight = container.scrollHeight + 'px';
 }
 
 function onMonthCardClick(month) {
-    toggleMonth(month);
+    const isMobile = window.matchMedia('(max-width: 640px)').matches;
+    if (isMobile) {
+        // Exclusive open behavior on mobile: close all others first
+        document.querySelectorAll('.calendar-month').forEach(card => {
+            const m = card.getAttribute('data-month');
+            if (!m) return;
+            if (parseInt(m) !== month) {
+                const panel = document.getElementById('events-' + m);
+                if (panel) {
+                    panel.classList.add('hidden');
+                    panel.style.maxHeight = '0px';
+                }
+                card.classList.remove('active');
+                card.setAttribute('aria-expanded','false');
+            }
+        });
+        // Toggle the chosen month (allow close if already open)
+        const container = document.getElementById('events-' + month);
+        const monthCard = document.querySelector('[data-month="' + month + '"]');
+        if (!container || !monthCard) return;
+        const wasOpen = !container.classList.contains('hidden');
+        if (wasOpen) {
+            container.classList.add('hidden');
+            container.style.maxHeight = '0px';
+            monthCard.classList.remove('active');
+            monthCard.setAttribute('aria-expanded','false');
+            openMonth = null;
+        } else {
+            container.classList.remove('hidden');
+            monthCard.classList.add('active');
+            monthCard.setAttribute('aria-expanded','true');
+            // Set height after paint
+            requestAnimationFrame(()=>{ container.style.maxHeight = container.scrollHeight + 'px'; });
+            openMonth = month;
+            // Ensure card stays in view horizontally
+            monthCard.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+        }
+    } else {
+        // Desktop retains existing toggle behavior (multi-open allowed via search helpers)
+        toggleMonth(month);
+        const monthCard = document.querySelector('[data-month="' + month + '"]');
+        const container = document.getElementById('events-' + month);
+        if (monthCard && container) {
+            const isOpen = !container.classList.contains('hidden');
+            monthCard.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        }
+    }
 }
 
 function filterByMonth(month) {
