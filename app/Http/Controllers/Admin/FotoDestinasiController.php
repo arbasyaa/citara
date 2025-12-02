@@ -31,7 +31,8 @@ class FotoDestinasiController extends Controller
             'apakah_slider_utama' => 'boolean'
         ]);
 
-        $path = $request->file('foto')->store('public/destinasi');
+        // Store on the public disk so it is served via /storage
+        $path = $request->file('foto')->store('uploads/destinasi', 'public');
         
         // If this is set as main slider, unset others
         if ($validated['apakah_slider_utama']) {
@@ -39,8 +40,8 @@ class FotoDestinasiController extends Controller
         }
 
         $destinasi->foto()->create([
-            'path_gambar' => $path,
-            'keterangan' => $validated['keterangan'],
+            'url' => $path,
+            'keterangan' => $validated['keterangan'] ?? null,
             'apakah_slider_utama' => $validated['apakah_slider_utama'] ?? false
         ]);
 
@@ -54,7 +55,16 @@ class FotoDestinasiController extends Controller
         $destinasi = $fotoDestinasi->destinasi;
         
         // Delete the file
-        Storage::delete($fotoDestinasi->path_gambar);
+        if (!empty($fotoDestinasi->url)) {
+            // Delete from the public disk if present
+            try { 
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($fotoDestinasi->url)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($fotoDestinasi->url);
+                }
+            } catch (\Exception $e) {
+                // ignore file deletion errors
+            }
+        }
         
         $fotoDestinasi->delete();
 
