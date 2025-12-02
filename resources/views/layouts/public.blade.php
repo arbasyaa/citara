@@ -157,7 +157,7 @@
             <div class="flex items-center justify-between">
                 <div class="flex items-center shrink-0">
                     <a href="{{ route('home') }}" class="text-xl sm:text-2xl font-bold tracking-tight text-white transition-colors duration-300 leading-tight" id="nav-logo">
-                        <span class="block">Cilacap tourism &amp; Travel</span>
+                        <span class="block">Cilacap tourism &amp; Creative</span>
                     </a>
                 </div>
 
