@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Destinasi;
 use App\Models\FotoDestinasi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -45,6 +46,9 @@ class FotoDestinasiController extends Controller
             'apakah_slider_utama' => $validated['apakah_slider_utama'] ?? false
         ]);
 
+        // Clear homepage caches so new photo appears immediately
+        $this->clearHomeCache();
+
         return redirect()
             ->route('admin.foto-destinasi.index', $destinasi)
             ->with('success', 'Foto berhasil ditambahkan');
@@ -68,6 +72,9 @@ class FotoDestinasiController extends Controller
         
         $fotoDestinasi->delete();
 
+        // Clear homepage caches so photo removal reflects immediately
+        $this->clearHomeCache();
+
         return redirect()
             ->route('admin.foto-destinasi.index', $destinasi)
             ->with('success', 'Foto berhasil dihapus');
@@ -86,8 +93,27 @@ class FotoDestinasiController extends Controller
             'apakah_slider_utama' => !$fotoDestinasi->apakah_slider_utama
         ]);
 
+        // Clear homepage caches so slider changes reflect immediately
+        $this->clearHomeCache();
+
         return redirect()
             ->route('admin.foto-destinasi.index', $destinasi)
             ->with('success', 'Status slider utama berhasil diperbarui');
+    }
+
+    /**
+     * Clear all homepage related caches for all locales
+     */
+    private function clearHomeCache(): void
+    {
+        $locales = config('app.locales', ['id', 'en']);
+        
+        foreach ($locales as $locale) {
+            \Illuminate\Support\Facades\Cache::forget("home.featured.{$locale}");
+            \Illuminate\Support\Facades\Cache::forget("home.popular.{$locale}");
+            \Illuminate\Support\Facades\Cache::forget("home.recent.{$locale}");
+            \Illuminate\Support\Facades\Cache::forget("home.wilayah.{$locale}");
+            \Illuminate\Support\Facades\Cache::forget("home.destinasi_count.{$locale}");
+        }
     }
 }

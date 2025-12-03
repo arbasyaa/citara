@@ -12,6 +12,8 @@ class ImageUrl
      * - try common subfolders for basename
      * - if file exists under public/ -> asset(path)
      * - fall back to favicon
+     * 
+     * OPTIMIZED: Removed expensive allFiles() scan for better performance
      */
     public static function url(?string $path): string
     {
@@ -19,7 +21,7 @@ class ImageUrl
             return asset('favicon.ico');
         }
 
-        // If exact path exists on public disk
+        // If exact path exists on public disk - MOST COMMON CASE
         try {
             if (Storage::disk('public')->exists($path)) {
                 return Storage::url($path);
@@ -28,15 +30,17 @@ class ImageUrl
             // ignore and try other fallbacks
         }
 
-    $basename = basename($path);
-    $stem = pathinfo($basename, PATHINFO_FILENAME);
-    // strip trailing numeric suffixes like '-1', '_1'
-    $stem = preg_replace('/[-_]?\d+$/', '', $stem);
+        $basename = basename($path);
 
-        // Try common folders
+        // Try common folders - check most likely locations first
         $candidates = [
             $path,
             'uploads/' . $basename,
+            'uploads/destinasi/' . $basename,
+            'uploads/akomodasi/' . $basename,
+            'uploads/transportasi/' . $basename,
+            'uploads/services/' . $basename,
+            'uploads/events/' . $basename,
             'destinasi/' . $basename,
             'akomodasi/' . $basename,
             'transportasi/' . $basename,
@@ -50,33 +54,16 @@ class ImageUrl
             } catch (\Exception $e) {
                 // ignore
             }
-            // check public path as last resort
+        }
+
+        // Check public path as last resort (for legacy files)
+        foreach ($candidates as $c) {
             if (file_exists(public_path($c))) {
                 return asset($c);
             }
         }
 
-        // try scanning storage public for a file that fuzzily matches the stem
-        try {
-            $files = Storage::disk('public')->allFiles();
-            foreach ($files as $f) {
-                // Skip .gitignore and hidden files
-                if (basename($f) === '.gitignore' || str_starts_with(basename($f), '.')) {
-                    continue;
-                }
-                
-                $fileBase = basename($f);
-                $fileStem = pathinfo($fileBase, PATHINFO_FILENAME);
-                // strip trailing numbers
-                $fileStemStripped = preg_replace('/[-_]?\d+$/', '', $fileStem);
-                if ($fileBase === $basename || $fileStem === $stem || stripos($fileStem, $stem) !== false || stripos($stem, $fileStem) !== false || $fileStemStripped === $stem) {
-                    return Storage::url($f);
-                }
-            }
-        } catch (\Exception $e) {
-            // ignore
-        }
-
+        // Fallback to placeholder
         return asset('favicon.ico');
     }
 }

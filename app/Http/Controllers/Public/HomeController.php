@@ -19,7 +19,8 @@ class HomeController extends Controller
         $locale = app()->getLocale();
 
         // Featured Destinations (prefer admin-flagged if column exists)
-        $featuredDestinations = Cache::remember("home.featured.{$locale}", now()->addHours(6), function () {
+        // Cache reduced from 6 hours to 30 minutes for faster updates
+        $featuredDestinations = Cache::remember("home.featured.{$locale}", now()->addMinutes(30), function () {
             try {
                 $table = (new Destinasi())->getTable();
                 if (Schema::hasColumn($table, 'is_featured')) {
@@ -44,7 +45,8 @@ class HomeController extends Controller
         });
 
         // Popular Destinations (prefer is_popular when available)
-        $popularDestinasi = Cache::remember("home.popular.{$locale}", now()->addHours(6), function () {
+        // Cache reduced from 6 hours to 30 minutes for faster updates
+        $popularDestinasi = Cache::remember("home.popular.{$locale}", now()->addMinutes(30), function () {
             try {
                 $table = (new Destinasi())->getTable();
                 if (Schema::hasColumn($table, 'is_popular')) {
@@ -59,7 +61,7 @@ class HomeController extends Controller
         });
 
         // Recent Destinations
-        $recentDestinasi = Cache::remember("home.recent.{$locale}", now()->addHour(), function () {
+        $recentDestinasi = Cache::remember("home.recent.{$locale}", now()->addMinutes(15), function () {
             try {
                 $table = (new Destinasi())->getTable();
                 if (Schema::hasColumn($table, 'is_featured') || Schema::hasColumn($table, 'is_popular')) {
@@ -74,7 +76,8 @@ class HomeController extends Controller
         });
 
         // Regions / Wilayah
-        $wilayah = Cache::remember("home.wilayah.{$locale}", now()->addHours(12), function () {
+        // Cache reduced from 12 hours to 1 hour for faster updates
+        $wilayah = Cache::remember("home.wilayah.{$locale}", now()->addHour(), function () {
             try {
                 return Wilayah::withCount('destinasi')->get();
             } catch (\Exception $e) {
@@ -83,7 +86,8 @@ class HomeController extends Controller
         });
 
         // Destinasi count (for hero stats)
-        $destinasiCount = Cache::remember("home.destinasi_count.{$locale}", now()->addHours(6), function () {
+        // Cache reduced from 6 hours to 30 minutes
+        $destinasiCount = Cache::remember("home.destinasi_count.{$locale}", now()->addMinutes(30), function () {
             try { return Destinasi::count(); } catch (\Exception $e) { return 0; }
         });
 
