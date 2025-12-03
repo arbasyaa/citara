@@ -5,10 +5,17 @@
 @push('styles')
 <style>
     .hero-detail {
-        height: 70vh;
-        min-height: 500px;
+        height: 60vh;
+        min-height: 400px;
         position: relative;
         overflow: hidden;
+    }
+    
+    @media (min-width: 768px) {
+        .hero-detail {
+            height: 70vh;
+            min-height: 500px;
+        }
     }
     
     .hero-detail::after {
@@ -17,17 +24,25 @@
         bottom: 0;
         left: 0;
         right: 0;
-        height: 200px;
+        height: 150px;
         background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    }
+    
+    @media (min-width: 768px) {
+        .hero-detail::after {
+            height: 200px;
+        }
     }
     
     .content-card {
         transition: all 0.3s ease;
     }
     
-    .content-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    @media (min-width: 768px) {
+        .content-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
     }
     
     .related-card { 
@@ -82,40 +97,40 @@
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
         
         {{-- Breadcrumb --}}
-        <div class="container mx-auto px-6 pt-32 relative z-10">
-            <nav class="breadcrumb inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm mb-8">
-                <a href="{{ route('home') }}" class="text-gray-600 hover:text-blue-600">Home</a>
-                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="container mx-auto px-4 md:px-6 pt-24 md:pt-32 relative z-10">
+            <nav class="breadcrumb inline-flex items-center gap-1 md:gap-2 px-3 md:px-6 py-2 md:py-3 rounded-full text-xs md:text-sm mb-6 md:mb-8 max-w-full overflow-x-auto">
+                <a href="{{ route('home') }}" class="text-gray-600 hover:text-blue-600 whitespace-nowrap">Home</a>
+                <svg class="w-3 h-3 md:w-4 md:h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
-                <a href="{{ route('events.calendar') }}" class="text-gray-600 hover:text-blue-600">Kalender Kegiatan</a>
-                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="{{ route('events.calendar') }}" class="text-gray-600 hover:text-blue-600 whitespace-nowrap">Kalender</a>
+                <svg class="w-3 h-3 md:w-4 md:h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
-                <span class="text-gray-900 font-medium">{{ $event['title'] }}</span>
+                <span class="text-gray-900 font-medium truncate">{{ Str::limit($event['title'], 30) }}</span>
             </nav>
         </div>
         
         {{-- Hero Content --}}
-        <div class="absolute bottom-0 left-0 right-0 pb-12 z-10">
-            <div class="container mx-auto px-6">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="inline-block px-4 py-2 category-{{ $event['category'] }} text-white rounded-full font-semibold text-sm shadow-lg">
+        <div class="absolute bottom-0 left-0 right-0 pb-8 md:pb-12 z-10">
+            <div class="container mx-auto px-4 md:px-6">
+                <div class="flex flex-wrap items-center gap-2 md:gap-3 mb-3 md:mb-4">
+                    <div class="inline-block px-3 md:px-4 py-1.5 md:py-2 category-{{ $event['category'] }} text-white rounded-full font-semibold text-xs md:text-sm shadow-lg">
                         {{ ucfirst($event['category']) }}
                     </div>
                     @if($event['monthName'])
-                        <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-white/20 text-white backdrop-blur-sm">
-                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <span class="inline-flex items-center px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-semibold bg-white/20 text-white backdrop-blur-sm">
+                            <svg class="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
                             {{ $event['monthName'] }} {{ $event['year'] }}
                         </span>
                     @endif
                 </div>
-                <h1 class="text-5xl md:text-7xl font-black text-white mb-4">
+                <h1 class="text-3xl md:text-5xl lg:text-7xl font-black text-white mb-3 md:mb-4 leading-tight">
                     {{ $event['title'] }}
                 </h1>
-                <div class="flex flex-wrap items-center gap-6 text-white/90">
+                <div class="flex flex-wrap items-center gap-4 md:gap-6 text-white/90 text-sm md:text-base">
                     @if($event['date_range'])
                         <div class="flex items-center">
                             <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -139,8 +154,8 @@
     </section>
 
     {{-- Main Content --}}
-    <section class="container mx-auto px-6 py-16">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-start">
+    <section class="container mx-auto px-4 md:px-6 py-8 md:py-16">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-12 items-start">
             {{-- Left Column: Description --}}
             <div class="lg:col-span-2 space-y-8">
                 {{-- About Event Section --}}

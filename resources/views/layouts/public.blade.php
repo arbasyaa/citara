@@ -176,7 +176,7 @@
                 </div>
 
                 <!-- Mobile hamburger -->
-                <button id="navToggle" aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle navigation" class="lg:hidden inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white">
+                <button id="navToggle" aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle navigation" class="lg:hidden inline-flex items-center justify-center rounded-md p-2 text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 bg-white/90 backdrop-blur-sm">
                     <svg id="navToggleIconOpen" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                     <svg id="navToggleIconClose" class="h-6 w-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
