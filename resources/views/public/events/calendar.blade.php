@@ -138,6 +138,7 @@
 
 /* Event Card - Professional Design */
 .event-card {
+    display: block;
     background: white;
     border-radius: var(--radius-md);
     overflow: hidden;
@@ -146,6 +147,8 @@
     cursor: pointer;
     position: relative;
     border: 1px solid var(--gray-100);
+    text-decoration: none;
+    color: inherit;
 }
 
 .event-card:hover {
@@ -602,7 +605,7 @@ button, a, .month-pill, .filter-chip {
                 <div id="eventsContainer">
                     <div class="events-grid" id="eventsGrid">
                         @forelse($events as $event)
-                            <div class="event-card animate-fade-in" 
+                            <a href="{{ route('events.show', $event['slug']) }}" class="event-card animate-fade-in" 
                                  data-month="{{ $event['month'] }}" 
                                  data-category="{{ $event['category'] }}"
                                  data-title="{{ strtolower($event['title']) }}"
@@ -672,7 +675,7 @@ button, a, .month-pill, .filter-chip {
                                         </svg>
                                     </span>
                                 </div>
-                            </div>
+                            </a>
                         @empty
                             <div class="col-span-full">
                                 <div class="empty-state">

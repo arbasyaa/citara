@@ -29,6 +29,7 @@ Route::middleware([SetLocale::class, 'throttle:100,1'])->group(function () {
     Route::get('/transportasi/{transportasi:slug}', [\App\Http\Controllers\Public\TransportasiController::class, 'show'])->name('transportasi.show');
     // Event Calendar
     Route::get('/kalender-kegiatan', [\App\Http\Controllers\Public\EventController::class, 'calendar'])->name('events.calendar');
+    Route::get('/kalender-kegiatan/{slug}', [\App\Http\Controllers\Public\EventController::class, 'show'])->name('events.show');
 });
 
 // Language switch route
