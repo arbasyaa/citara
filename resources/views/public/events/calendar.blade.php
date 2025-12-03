@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', 'Kalender Event & Kegiatan - Cilacap')
+@section('title', __('site.event_calendar_page_title'))
 
 @push('styles')
 <style>
@@ -138,7 +138,6 @@
 
 /* Event Card - Professional Design */
 .event-card {
-    display: block;
     background: white;
     border-radius: var(--radius-md);
     overflow: hidden;
@@ -147,8 +146,6 @@
     cursor: pointer;
     position: relative;
     border: 1px solid var(--gray-100);
-    text-decoration: none;
-    color: inherit;
 }
 
 .event-card:hover {
@@ -505,34 +502,34 @@ button, a, .month-pill, .filter-chip {
                     <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
-                    <span class="text-xs font-semibold text-white uppercase tracking-wider">Kalender Kegiatan</span>
+                    <span class="text-xs font-semibold text-white uppercase tracking-wider">{{ __('site.event_calendar') }}</span>
                 </div>
                 
                 <h1 class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
-                    Event & Kegiatan di Cilacap
+                    {{ __('site.events_activities_cilacap') }}
                 </h1>
                 
                 <p class="text-base md:text-lg text-white/90 max-w-2xl mx-auto mb-8">
-                    Temukan berbagai event menarik, festival budaya, workshop, dan pameran sepanjang tahun
+                    {{ __('site.events_activities_description') }}
                 </p>
 
                 {{-- Stats --}}
                 <div class="stats-grid max-w-3xl mx-auto">
                     <div class="stat-card bg-white/10 backdrop-blur-sm border-white/20">
                         <div class="stat-value text-white" id="totalEvents">{{ $events->count() }}</div>
-                        <div class="stat-label text-white/80">Total Event</div>
+                        <div class="stat-label text-white/80">{{ __('site.total_events') }}</div>
                     </div>
                     <div class="stat-card bg-white/10 backdrop-blur-sm border-white/20">
                         <div class="stat-value text-white" id="festivalCount">{{ $events->where('category', 'festival')->count() }}</div>
-                        <div class="stat-label text-white/80">Festival</div>
+                        <div class="stat-label text-white/80">{{ __('site.festival') }}</div>
                     </div>
                     <div class="stat-card bg-white/10 backdrop-blur-sm border-white/20">
                         <div class="stat-value text-white" id="workshopCount">{{ $events->where('category', 'workshop')->count() }}</div>
-                        <div class="stat-label text-white/80">Workshop</div>
+                        <div class="stat-label text-white/80">{{ __('site.workshop') }}</div>
                     </div>
                     <div class="stat-card bg-white/10 backdrop-blur-sm border-white/20">
                         <div class="stat-value text-white" id="pameranCount">{{ $events->where('category', 'pameran')->count() }}</div>
-                        <div class="stat-label text-white/80">Pameran</div>
+                        <div class="stat-label text-white/80">{{ __('site.pameran') }}</div>
                     </div>
                 </div>
             </div>
@@ -556,28 +553,28 @@ button, a, .month-pill, .filter-chip {
                                     type="text" 
                                     id="searchInput"
                                     class="search-input" 
-                                    placeholder="Cari event berdasarkan nama atau lokasi..."
+                                    placeholder="{{ __('site.search_events') }}"
                                 >
                             </div>
                         </div>
 
                         {{-- Category Filter --}}
                         <div class="filter-group">
-                            <span class="text-sm font-medium text-gray-700 hidden md:inline">Kategori:</span>
+                            <span class="text-sm font-medium text-gray-700 hidden md:inline">{{ __('site.category') }}:</span>
                             <button class="filter-chip active" data-category="all">
-                                Semua
+                                {{ __('site.all_categories') }}
                             </button>
                             <button class="filter-chip" data-category="festival">
                                 <span class="inline-block w-2 h-2 rounded-full bg-red-500 mr-1.5"></span>
-                                Festival
+                                {{ __('site.festival') }}
                             </button>
                             <button class="filter-chip" data-category="workshop">
                                 <span class="inline-block w-2 h-2 rounded-full bg-blue-500 mr-1.5"></span>
-                                Workshop
+                                {{ __('site.workshop') }}
                             </button>
                             <button class="filter-chip" data-category="pameran">
                                 <span class="inline-block w-2 h-2 rounded-full bg-green-500 mr-1.5"></span>
-                                Pameran
+                                {{ __('site.pameran') }}
                             </button>
                         </div>
                     </div>
@@ -605,18 +602,18 @@ button, a, .month-pill, .filter-chip {
                 <div id="eventsContainer">
                     <div class="events-grid" id="eventsGrid">
                         @forelse($events as $event)
-                            <a href="{{ route('events.show', $event['slug']) }}" class="event-card animate-fade-in" 
-                                 data-month="{{ $event['month'] }}" 
-                                 data-category="{{ $event['category'] }}"
-                                 data-title="{{ strtolower($event['title']) }}"
-                                 data-location="{{ strtolower($event['location'] ?? '') }}"
-                                 data-description="{{ strtolower($event['description'] ?? '') }}">
+                            <div class="event-card animate-fade-in" 
+                                 data-month="{{ $event->month }}" 
+                                 data-category="{{ $event->category }}"
+                                 data-title="{{ strtolower($event->title) }}"
+                                 data-location="{{ strtolower($event->location ?? '') }}"
+                                 data-description="{{ strtolower($event->description ?? '') }}">
                                 
                                 {{-- Event Image --}}
                                 <div class="event-card-image">
-                                    @if($event['image'])
-                                        <img src="{{ \App\Services\ImageUrl::url($event['image']) }}" 
-                                             alt="{{ $event['title'] }}" 
+                                    @if($event->image)
+                                        <img src="{{ \App\Services\ImageUrl::url($event->image) }}" 
+                                             alt="{{ $event->title }}" 
                                              loading="lazy">
                                     @else
                                         <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
@@ -627,63 +624,69 @@ button, a, .month-pill, .filter-chip {
                                     @endif
                                     
                                     {{-- Category Badge --}}
-                                    <div class="event-category-badge category-{{ $event['category'] }}">
-                                        {{ ucfirst($event['category']) }}
+                                    <div class="event-category-badge category-{{ $event->category }}">
+                                        {{ ucfirst($event->category) }}
                                     </div>
                                     
-                                    {{-- Date Badge (removed - start_date not in array) --}}
+                                    {{-- Date Badge --}}
+                                    @if($event->start_date)
+                                        <div class="event-date-badge">
+                                            <span class="day">{{ $event->start_date->format('d') }}</span>
+                                            <span class="month">{{ strtoupper(substr(['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'][$event->start_date->format('n') - 1], 0, 3)) }}</span>
+                                        </div>
+                                    @endif
                                 </div>
 
                                 {{-- Event Content --}}
                                 <div class="event-card-content">
-                                    <h3 class="event-title">{{ $event['title'] }}</h3>
+                                    <h3 class="event-title">{{ $event->title }}</h3>
                                     
                                     <div class="event-meta">
                                         {{-- Date Range --}}
-                                        @if($event['date_range'])
+                                        @if($event->date_range)
                                             <div class="event-meta-item">
                                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                                 </svg>
-                                                <span>{{ $event['date_range'] }}</span>
+                                                <span>{{ $event->date_range }}</span>
                                             </div>
                                         @endif
                                         
                                         {{-- Location --}}
-                                        @if($event['location'])
+                                        @if($event->location)
                                             <div class="event-meta-item">
                                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                                 </svg>
-                                                <span>{{ $event['location'] }}</span>
+                                                <span>{{ $event->location }}</span>
                                             </div>
                                         @endif
                                     </div>
 
-                                    @if($event['description'])
-                                        <p class="event-description">{{ $event['description'] }}</p>
+                                    @if($event->description)
+                                        <p class="event-description">{{ $event->description }}</p>
                                     @endif
                                 </div>
 
                                 {{-- Event Footer --}}
                                 <div class="event-card-footer">
                                     <span class="event-learn-more">
-                                        Lihat Detail
+                                        {{ __('site.view_detail') }}
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                                         </svg>
                                     </span>
                                 </div>
-                            </a>
+                            </div>
                         @empty
                             <div class="col-span-full">
                                 <div class="empty-state">
                                     <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                     </svg>
-                                    <h3 class="empty-state-title">Belum Ada Event</h3>
-                                    <p class="empty-state-description">Saat ini belum ada event yang terdaftar. Silakan cek kembali nanti.</p>
+                                    <h3 class="empty-state-title">{{ __('site.no_events_found') }}</h3>
+                                    <p class="empty-state-description">{{ __('site.no_events_description') }}</p>
                                 </div>
                             </div>
                         @endforelse
@@ -695,8 +698,8 @@ button, a, .month-pill, .filter-chip {
                             <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                             </svg>
-                            <h3 class="empty-state-title">Tidak Ada Hasil</h3>
-                            <p class="empty-state-description">Tidak ditemukan event yang sesuai dengan filter Anda. Coba ubah filter atau kata kunci pencarian.</p>
+                            <h3 class="empty-state-title">{{ __('site.no_results_found') }}</h3>
+                            <p class="empty-state-description">{{ __('site.no_results_description') }}</p>
                         </div>
                     </div>
                 </div>

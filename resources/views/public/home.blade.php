@@ -653,21 +653,21 @@
     </section>
 
     {{-- Events Timeline Section --}}
-    <section class="bg-gray-50 events-section section-parallax section-reveal py-16 md:py-20">
+    <section class="bg-gray-50 events-section section-parallax section-reveal">
         <div class="parallax-bg pattern-grid" data-speed="0.1" style="opacity:.3"></div>
-        <div class="container mx-auto px-4 md:px-6">
-            <div class="text-center mb-8 md:mb-12">
-                <span class="text-blue-600 font-semibold uppercase tracking-wide text-xs md:text-sm">{{ __('site.event_calendar') }}</span>
-                <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 mt-3 md:mt-4 mb-2 md:mb-3">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-8">
+                <span class="text-blue-600 font-semibold uppercase tracking-wide text-sm">{{ __('site.event_calendar') }}</span>
+                <h2 class="text-4xl md:text-5xl font-black text-gray-900 mt-4 mb-3">
                     {{ __('site.event_calendar') }}
                 </h2>
                 <div class="section-divider"></div>
-                <p class="text-base md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed px-4">
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
                     {{ __('site.event_calendar_subtitle') }}
                 </p>
             </div>
 
-            <div class="max-w-6xl mx-auto relative px-0 md:px-4">
+            <div class="max-w-6xl mx-auto relative">
                 <button type="button" class="scroller-prev scroller-nav left-0 z-10 hidden md:block bg-white/90 hover:bg-white shadow-lg rounded-full p-2 border border-gray-200">
                     <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                 </button>
@@ -680,84 +680,47 @@
                     $eventsByMonth = $events->groupBy('month');
                 @endphp
 
-                <div id="month-scroller" class="month-scroller no-scrollbar overflow-x-auto flex gap-3 md:gap-4 px-2 md:px-1 pb-2 scroll-smooth snap-x snap-mandatory">
+                <div id="month-scroller" class="month-scroller no-scrollbar overflow-x-auto flex gap-4 px-1">
                     @foreach($months as $m)
                         @php $list = $eventsByMonth->get($m, collect()); @endphp
                         @php $monthIndex = array_search($m, $months) + 1; @endphp
-                        <div class="min-w-[260px] sm:min-w-[280px] md:min-w-[320px] month-card bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md overflow-hidden transition-shadow snap-start flex-shrink-0">
-                            <div class="px-4 md:px-5 py-3 md:py-4 flex items-center justify-between bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-100">
+                        <div class="min-w-[280px] md:min-w-[320px] month-card bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden parallax-card">
+                            <div class="px-5 py-4 flex items-center justify-between bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-100">
                                 <div class="flex items-center gap-2">
-                                    <span class="inline-flex items-center justify-center w-7 h-7 md:w-8 md:h-8 rounded-full bg-blue-600 text-white font-bold text-sm">{{ substr($m,0,1) }}</span>
-                                    <h3 class="text-base md:text-lg font-bold text-gray-900">{{ $m }}</h3>
+                                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-bold">{{ substr($m,0,1) }}</span>
+                                    <h3 class="text-lg font-bold text-gray-900">{{ $m }}</h3>
                                 </div>
-                                <span class="text-xs text-gray-500 font-medium">{{ $list->count() }} {{ $list->count() === 1 ? 'event' : 'events' }}</span>
+                                <span class="text-xs text-gray-500">{{ $list->count() }} {{ $list->count() === 1 ? __('site.event') : __('site.events') }}</span>
                             </div>
                             <div class="p-4 space-y-3">
                                 @forelse($list->take(3) as $event)
-                                    {{-- Link to event detail page if slug exists, otherwise to calendar --}}
-                                    <a href="{{ $event->slug ? route('events.show', $event->slug) : route('events.calendar', ['year' => date('Y'), 'month' => $monthIndex]) }}" class="group block p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                                    {{-- Link to calendar page with year and month params so calendar opens on that month --}}
+                                    <a href="{{ route('events.calendar', ['year' => date('Y'), 'month' => $monthIndex]) }}" class="group block">
                                         <div class="flex gap-3">
                                             @if($event->image)
-                                                <img src="{{ \App\Services\ImageUrl::url($event->image) }}" alt="{{ $event->title ?? $event->judul }}" class="w-16 h-16 rounded-lg object-cover flex-shrink-0" loading="lazy" decoding="async">
+                                                <img src="{{ \App\Services\ImageUrl::url($event->image) }}" alt="{{ $event->judul }}" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 parallax-target" loading="lazy" decoding="async">
                                             @else
-                                                <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center text-2xl flex-shrink-0">📅</div>
+                                                <div class="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 flex-shrink-0">📅</div>
                                             @endif
-                                            <div class="min-w-0 flex-1">
-                                                <div class="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors mb-1">{{ $event->title ?? $event->judul }}</div>
-                                                <div class="flex items-center gap-2 text-xs text-gray-500 mb-1 flex-wrap">
-                                                    @if($event->date_range ?? $event->tanggal)
-                                                        <span class="inline-flex items-center gap-1">
-                                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                                            </svg>
-                                                            {{ $event->date_range ?? $event->tanggal }}
-                                                        </span>
-                                                    @endif
-                                                    @if(!empty($event->location ?? $event->lokasi))
-                                                        <span class="inline-flex items-center gap-1">
-                                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                                            </svg>
-                                                            {{ Str::limit($event->location ?? $event->lokasi, 20) }}
-                                                        </span>
-                                                    @endif
+                                            <div class="min-w-0">
+                                                <div class="flex items-center gap-2 text-xs text-gray-500 mb-1">
+                                                    <span class="inline-flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>{{ $event->tanggal }}</span>
+                                                    @if(!empty($event->lokasi))<span class="inline-flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>{{ $event->lokasi }}</span>@endif
                                                 </div>
-                                                @if($event->description ?? $event->deskripsi)
-                                                    <div class="text-xs text-gray-600 line-clamp-2">{{ $event->description ?? $event->deskripsi }}</div>
-                                                @endif
+                                                <div class="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-blue-600">{{ $event->judul }}</div>
+                                                <div class="text-xs text-gray-600 line-clamp-2">{{ $event->deskripsi }}</div>
                                             </div>
                                         </div>
                                     </a>
                                 @empty
-                                    <div class="text-center py-6 text-sm text-gray-500">
-                                        <svg class="w-12 h-12 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                        </svg>
-                                        Belum ada acara
-                                    </div>
+                                    <div class="text-sm text-gray-500">{{ __('site.no_events_month') }}</div>
                                 @endforelse
                                 @if($list->count() > 3)
-                                    <a href="{{ route('events.calendar', ['year' => date('Y'), 'month' => $monthIndex]) }}" class="text-blue-600 text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all mt-2">
-                                        Lihat Semua ({{ $list->count() }}) 
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                                        </svg>
-                                    </a>
+                                    <a href="{{ route('events.index', ['month' => $m]) }}" class="text-blue-600 text-sm font-semibold inline-flex items-center gap-1">{{ __('site.view_all') }} <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
                                 @endif
                             </div>
                         </div>
                     @endforeach
-                </div>
-
-                {{-- View All Button --}}
-                <div class="text-center mt-8 md:mt-12">
-                    <a href="{{ route('events.calendar') }}" class="inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                        Lihat Semua Event
-                    </a>
                 </div>
             </div>
         </div>

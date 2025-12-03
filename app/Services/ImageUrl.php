@@ -8,12 +8,12 @@ class ImageUrl
 {
     /**
      * Resolve an image path from DB to a usable URL with fallbacks.
+     * - if path exists on public disk -> Storage::url(path)
+     * - try common subfolders for basename
+     * - if file exists under public/ -> asset(path)
+     * - fall back to favicon
      * 
-     * PRODUCTION-READY: Multiple fallback strategies
-     * 1. Check exact path on public disk
-     * 2. Try common folder variations
-     * 3. Check physical file existence via symlink
-     * 4. Fallback to placeholder
+     * OPTIMIZED: Removed expensive allFiles() scan for better performance
      */
     public static function url(?string $path): string
     {
@@ -21,23 +21,18 @@ class ImageUrl
             return asset('favicon.ico');
         }
 
-        // Clean path (remove leading slashes)
-        $path = ltrim($path, '/');
-
-        // Strategy 1: Check exact path on public disk (MOST COMMON)
+        // If exact path exists on public disk - MOST COMMON CASE
         try {
             if (Storage::disk('public')->exists($path)) {
-                // Build URL manually for better reliability
-                $url = config('app.url') . '/storage/' . $path;
-                return $url;
+                return Storage::url($path);
             }
         } catch (\Exception $e) {
-            // Continue to fallbacks
+            // ignore and try other fallbacks
         }
 
         $basename = basename($path);
 
-        // Strategy 2: Try common folder variations
+        // Try common folders - check most likely locations first
         $candidates = [
             $path,
             'uploads/' . $basename,
@@ -46,39 +41,29 @@ class ImageUrl
             'uploads/transportasi/' . $basename,
             'uploads/services/' . $basename,
             'uploads/events/' . $basename,
+            'destinasi/' . $basename,
+            'akomodasi/' . $basename,
+            'transportasi/' . $basename,
         ];
 
-        foreach ($candidates as $candidate) {
+        foreach ($candidates as $c) {
             try {
-                if (Storage::disk('public')->exists($candidate)) {
-                    $url = config('app.url') . '/storage/' . $candidate;
-                    return $url;
+                if (Storage::disk('public')->exists($c)) {
+                    return Storage::url($c);
                 }
             } catch (\Exception $e) {
-                // Continue
+                // ignore
             }
         }
 
-        // Strategy 3: Check physical symlink path (for production where Storage facade might fail)
-        $symlinkPath = public_path('storage/' . $path);
-        if (file_exists($symlinkPath) && is_file($symlinkPath)) {
-            return asset('storage/' . $path);
-        }
-
-        // Try symlink with candidates
-        foreach ($candidates as $candidate) {
-            $symlinkPath = public_path('storage/' . $candidate);
-            if (file_exists($symlinkPath) && is_file($symlinkPath)) {
-                return asset('storage/' . $candidate);
+        // Check public path as last resort (for legacy files)
+        foreach ($candidates as $c) {
+            if (file_exists(public_path($c))) {
+                return asset($c);
             }
         }
 
-        // Strategy 4: Check if file exists directly in public (legacy)
-        if (file_exists(public_path($path))) {
-            return asset($path);
-        }
-
-        // Final fallback: placeholder image
+        // Fallback to placeholder
         return asset('favicon.ico');
     }
 }

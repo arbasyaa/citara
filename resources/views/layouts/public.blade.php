@@ -44,8 +44,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const navbar = document.getElementById('navbar');
             const navLogo = document.getElementById('nav-logo');
-            const navLinks = document.querySelectorAll('.nav-link');
-            const langSwitcher = document.getElementById('lang-switcher');
+            const navLinks = document.querySelectorAll('.nav-link, .container a');
             const hero = document.getElementById('hero');
 
             function makeTransparent() {
@@ -57,12 +56,8 @@
                 }
                 navLinks.forEach(link => {
                     link.classList.add('text-white');
-                    link.classList.remove('text-gray-700', 'text-gray-500');
+                    link.classList.remove('text-gray-700');
                 });
-                if (langSwitcher) {
-                    langSwitcher.classList.remove('border-gray-300');
-                    langSwitcher.classList.add('border-white/30');
-                }
             }
 
             function makeSolid() {
@@ -75,16 +70,7 @@
                 navLinks.forEach(link => {
                     link.classList.remove('text-white');
                     link.classList.add('text-gray-700');
-                    // Keep separator gray
-                    if (link.tagName === 'SPAN') {
-                        link.classList.add('text-gray-500');
-                        link.classList.remove('text-gray-700');
-                    }
                 });
-                if (langSwitcher) {
-                    langSwitcher.classList.remove('border-white/30');
-                    langSwitcher.classList.add('border-gray-300');
-                }
             }
 
             if (hero && navbar) {
@@ -182,15 +168,15 @@
                     <a href="{{ route('akomodasi.index') }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-2 rounded-md hover:bg-white/10 transition text-sm xl:text-base">{{ __('site.accommodation') }}</a>
                     <a href="{{ route('transportasi.index') }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-2 rounded-md hover:bg-white/10 transition text-sm xl:text-base">{{ __('site.transport') }}</a>
                     <a href="{{ route('events.calendar', ['year' => 2025, 'month' => 1]) }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-2 rounded-md hover:bg-white/10 transition text-sm xl:text-base">{{ __('site.event_calendar') }}</a>
-                    <div class="flex items-center space-x-1 ml-2 pl-3 border-l border-white/30" id="lang-switcher">
-                        <a href="{{ route('lang.switch', 'en') }}" class="nav-link text-white font-semibold px-2 py-1 rounded transition text-sm {{ app()->getLocale() === 'en' ? 'bg-white/20' : 'hover:bg-white/10' }}">EN</a>
-                        <span class="nav-link text-white/50 text-sm font-bold">|</span>
-                        <a href="{{ route('lang.switch', 'id') }}" class="nav-link text-white font-semibold px-2 py-1 rounded transition text-sm {{ app()->getLocale() === 'id' ? 'bg-white/20' : 'hover:bg-white/10' }}">ID</a>
+                    <div class="flex items-center space-x-1 ml-2 pl-3 border-l border-white/30">
+                        <a href="{{ route('lang.switch', 'en') }}" class="text-white font-medium px-2 py-1 rounded transition text-xs xl:text-sm {{ app()->getLocale() === 'en' ? 'bg-white/20' : 'hover:bg-white/10' }}">EN</a>
+                        <span class="text-white/50 text-xs xl:text-sm">|</span>
+                        <a href="{{ route('lang.switch', 'id') }}" class="text-white font-medium px-2 py-1 rounded transition text-xs xl:text-sm {{ app()->getLocale() === 'id' ? 'bg-white/20' : 'hover:bg-white/10' }}">ID</a>
                     </div>
                 </div>
 
                 <!-- Mobile hamburger -->
-                <button id="navToggle" aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle navigation" class="lg:hidden inline-flex items-center justify-center rounded-md p-2 text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 bg-white/90 backdrop-blur-sm">
+                <button id="navToggle" aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle navigation" class="lg:hidden inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white">
                     <svg id="navToggleIconOpen" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                     <svg id="navToggleIconClose" class="h-6 w-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>

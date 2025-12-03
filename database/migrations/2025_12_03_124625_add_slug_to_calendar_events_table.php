@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('calendar_events', function (Blueprint $table) {
-            $table->string('slug')->unique()->nullable()->after('title');
+            //
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('calendar_events', function (Blueprint $table) {
-            $table->dropColumn('slug');
+            //
         });
     }
 };

@@ -4,40 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Str;
 
 class CalendarEvent extends Model
 {
     protected $table = 'calendar_events';
-
-    protected static function booted(): void
-    {
-        static::creating(function ($event) {
-            if (empty($event->slug)) {
-                $event->slug = static::generateUniqueSlug($event->title);
-            }
-        });
-
-        static::updating(function ($event) {
-            if ($event->isDirty('title') && empty($event->slug)) {
-                $event->slug = static::generateUniqueSlug($event->title);
-            }
-        });
-    }
-
-    protected static function generateUniqueSlug(string $title): string
-    {
-        $slug = Str::slug($title);
-        $originalSlug = $slug;
-        $count = 1;
-
-        while (static::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $count;
-            $count++;
-        }
-
-        return $slug;
-    }
 
     protected $fillable = [
         'month',
@@ -47,7 +17,6 @@ class CalendarEvent extends Model
         'end_date',
         'date_range',
         'title',
-        'slug',
         'location',
         'description',
         'image',
