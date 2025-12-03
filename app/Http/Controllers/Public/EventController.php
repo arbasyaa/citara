@@ -45,6 +45,7 @@ class EventController extends Controller
 
                 return [
                     'id' => $event->id,
+                    'slug' => $event->slug,
                     'title' => $event->title ?? $event->judul,
                     'description' => $event->description ?? $event->deskripsi,
                     'date_range' => $event->date_range ?? $event->tanggal,
@@ -97,6 +98,15 @@ class EventController extends Controller
             'events' => $events,
             'initialYear' => $initialYear,
             'initialMonth' => $initialMonth,
+        ]);
+    }
+
+    public function show(CalendarEvent $event): View
+    {
+        $event->load('destinasi:id,nama,slug,alamat_lokasi');
+        
+        return view('public.events.show', [
+            'event' => $event,
         ]);
     }
 }

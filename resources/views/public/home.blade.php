@@ -694,8 +694,8 @@
                             </div>
                             <div class="p-4 space-y-3">
                                 @forelse($list->take(3) as $event)
-                                    {{-- Link to calendar page with year and month params so calendar opens on that month --}}
-                                    <a href="{{ route('events.calendar', ['year' => date('Y'), 'month' => $monthIndex]) }}" class="group block">
+                                    {{-- Link to event detail page --}}
+                                    <a href="{{ route('events.show', $event->slug) }}" class="group block">
                                         <div class="flex gap-3">
                                             @if($event->image)
                                                 <img src="{{ \App\Services\ImageUrl::url($event->image) }}" alt="{{ $event->judul }}" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 parallax-target" loading="lazy" decoding="async">

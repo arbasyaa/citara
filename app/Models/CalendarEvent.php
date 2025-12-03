@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class CalendarEvent extends Model
 {
     protected $table = 'calendar_events';
 
     protected $fillable = [
+        'slug',
         'month',
         'category',
         'year',
@@ -22,6 +24,20 @@ class CalendarEvent extends Model
         'image',
         'destinasi_id',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($event) {
+            if (empty($event->slug)) {
+                $slug = Str::slug($event->title ?? $event->judul ?? 'event');
+                $count = 1;
+                while (self::where('slug', $slug)->exists()) {
+                    $slug = Str::slug($event->title ?? $event->judul ?? 'event') . '-' . $count++;
+                }
+                $event->slug = $slug;
+            }
+        });
+    }
 
     protected $casts = [
         'start_date' => 'date',

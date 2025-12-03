@@ -168,10 +168,10 @@
                     <a href="{{ route('akomodasi.index') }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-2 rounded-md hover:bg-white/10 transition text-sm xl:text-base">{{ __('site.accommodation') }}</a>
                     <a href="{{ route('transportasi.index') }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-2 rounded-md hover:bg-white/10 transition text-sm xl:text-base">{{ __('site.transport') }}</a>
                     <a href="{{ route('events.calendar', ['year' => 2025, 'month' => 1]) }}" class="nav-link text-white font-medium hover:text-gray-100 px-3 py-2 rounded-md hover:bg-white/10 transition text-sm xl:text-base">{{ __('site.event_calendar') }}</a>
-                    <div class="flex items-center space-x-1 ml-2 pl-3 border-l border-white/30">
-                        <a href="{{ route('lang.switch', 'en') }}" class="text-white font-medium px-2 py-1 rounded transition text-xs xl:text-sm {{ app()->getLocale() === 'en' ? 'bg-white/20' : 'hover:bg-white/10' }}">EN</a>
-                        <span class="text-white/50 text-xs xl:text-sm">|</span>
-                        <a href="{{ route('lang.switch', 'id') }}" class="text-white font-medium px-2 py-1 rounded transition text-xs xl:text-sm {{ app()->getLocale() === 'id' ? 'bg-white/20' : 'hover:bg-white/10' }}">ID</a>
+                    <div class="flex items-center space-x-1 ml-2 pl-3 border-l border-white/30" id="lang-switcher">
+                        <a href="{{ route('lang.switch', 'en') }}" class="nav-link text-white font-bold px-2 py-1 rounded transition text-sm {{ app()->getLocale() === 'en' ? 'bg-white/20' : 'hover:bg-white/10' }}">EN</a>
+                        <span class="nav-link text-white/70 text-sm font-bold">|</span>
+                        <a href="{{ route('lang.switch', 'id') }}" class="nav-link text-white font-bold px-2 py-1 rounded transition text-sm {{ app()->getLocale() === 'id' ? 'bg-white/20' : 'hover:bg-white/10' }}">ID</a>
                     </div>
                 </div>
 

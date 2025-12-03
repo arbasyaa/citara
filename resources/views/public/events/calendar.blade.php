@@ -602,15 +602,16 @@ button, a, .month-pill, .filter-chip {
                 <div id="eventsContainer">
                     <div class="events-grid" id="eventsGrid">
                         @forelse($events as $event)
-                            <div class="event-card animate-fade-in" 
-                                 data-month="{{ $event['month'] }}" 
-                                 data-category="{{ $event['category'] }}"
-                                 data-title="{{ strtolower($event['title']) }}"
-                                 data-location="{{ strtolower($event['location'] ?? '') }}"
-                                 data-description="{{ strtolower($event['description'] ?? '') }}">
-                                
-                                {{-- Event Image --}}
-                                <div class="event-card-image">
+                            <a href="{{ route('events.show', $event['slug']) }}" class="block">
+                                <div class="event-card animate-fade-in" 
+                                     data-month="{{ $event['month'] }}" 
+                                     data-category="{{ $event['category'] }}"
+                                     data-title="{{ strtolower($event['title']) }}"
+                                     data-location="{{ strtolower($event['location'] ?? '') }}"
+                                     data-description="{{ strtolower($event['description'] ?? '') }}">
+                                    
+                                    {{-- Event Image --}}
+                                    <div class="event-card-image">
                                     @if($event['image'])
                                         <img src="{{ \App\Services\ImageUrl::url($event['image']) }}" 
                                              alt="{{ $event['title'] }}" 
@@ -670,7 +671,8 @@ button, a, .month-pill, .filter-chip {
                                         </svg>
                                     </span>
                                 </div>
-                            </div>
+                                </div>
+                            </a>
                         @empty
                             <div class="col-span-full">
                                 <div class="empty-state">
