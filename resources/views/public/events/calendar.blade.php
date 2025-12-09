@@ -875,6 +875,7 @@ document.addEventListener('DOMContentLoaded', function() {
         filterChips[0].classList.add('active');
         yearPills.forEach(p => p.classList.remove('active'));
         yearPills[0].classList.add('active');
+
         monthPills.forEach(p => p.classList.remove('active'));
         monthPills[0].classList.add('active');
         
