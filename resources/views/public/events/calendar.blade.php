@@ -117,6 +117,36 @@
     box-shadow: var(--shadow-md);
 }
 
+/* Year Pills */
+.year-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    background: white;
+    color: var(--gray-700);
+    border: 1.5px solid var(--gray-200);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+}
+
+.year-pill:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.year-pill.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+}
+
 /* Event Cards - Grid Layout */
 .events-grid {
     display: grid;
@@ -134,6 +164,16 @@
     .events-grid {
         grid-template-columns: repeat(3, 1fr);
     }
+}
+
+/* Event item wrapper */
+.event-item {
+    width: 100%;
+}
+
+/* Hidden items should not take up grid space */
+.event-item[style*="display: none"] {
+    display: none !important;
 }
 
 /* Event Card - Professional Design */
@@ -580,17 +620,30 @@ button, a, .month-pill, .filter-chip {
                     </div>
                 </div>
 
+                {{-- Year Filter --}}
+                <div class="mb-6">
+                    <div class="flex items-center gap-4 flex-wrap">
+                        <span class="text-sm font-medium text-gray-700">{{ __('site.year') }}:</span>
+                        <div class="flex gap-2 flex-wrap">
+                            <button class="year-pill active" data-year="all">{{ __('site.all_years') }}</button>
+                            @foreach($availableYears ?? [2025] as $year)
+                                <button class="year-pill" data-year="{{ $year }}">{{ $year }}</button>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
                 {{-- Month Timeline Navigator --}}
                 <div class="mb-8">
                     <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-xl font-bold text-gray-900">Pilih Bulan</h2>
+                        <h2 class="text-xl font-bold text-gray-900">{{ __('site.select_month') }}</h2>
                         <button id="resetFilters" class="text-sm font-medium text-primary hover:text-primary-dark transition-colors">
-                            Reset Filter
+                            {{ __('site.reset_filter') }}
                         </button>
                     </div>
                     <div class="month-timeline">
-                        <button class="month-pill active" data-month="all">Semua Bulan</button>
-                        @foreach(['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $index => $monthName)
+                        <button class="month-pill active" data-month="all">{{ __('site.all_months') }}</button>
+                        @foreach([__('site.january'), __('site.february'), __('site.march'), __('site.april'), __('site.may'), __('site.june'), __('site.july'), __('site.august'), __('site.september'), __('site.october'), __('site.november'), __('site.december')] as $index => $monthName)
                             <button class="month-pill" data-month="{{ $index + 1 }}" data-month-name="{{ $monthName }}">
                                 {{ $monthName }}
                             </button>
@@ -602,13 +655,15 @@ button, a, .month-pill, .filter-chip {
                 <div id="eventsContainer">
                     <div class="events-grid" id="eventsGrid">
                         @forelse($events as $event)
-                            <a href="{{ route('events.show', $event['slug']) }}" class="block">
-                                <div class="event-card animate-fade-in" 
-                                     data-month="{{ $event['month'] }}" 
-                                     data-category="{{ $event['category'] }}"
-                                     data-title="{{ strtolower($event['title']) }}"
-                                     data-location="{{ strtolower($event['location'] ?? '') }}"
-                                     data-description="{{ strtolower($event['description'] ?? '') }}">
+                            <a href="{{ !empty($event['slug']) ? route('events.show', $event['slug']) : '#' }}" 
+                               class="event-item block {{ empty($event['slug']) ? 'pointer-events-none' : '' }}"
+                               data-month="{{ $event['month'] }}" 
+                               data-year="{{ $event['year'] ?? 2025 }}"
+                               data-category="{{ $event['category'] }}"
+                               data-title="{{ strtolower($event['title']) }}"
+                               data-location="{{ strtolower($event['location'] ?? '') }}"
+                               data-description="{{ strtolower($event['description'] ?? '') }}">
+                                <div class="event-card animate-fade-in">
                                     
                                     {{-- Event Image --}}
                                     <div class="event-card-image">
@@ -710,25 +765,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
     const filterChips = document.querySelectorAll('.filter-chip');
     const monthPills = document.querySelectorAll('.month-pill');
+    const yearPills = document.querySelectorAll('.year-pill');
     const resetButton = document.getElementById('resetFilters');
     
     let currentFilters = {
         search: '',
         category: 'all',
-        month: 'all'
+        month: 'all',
+        year: 'all'
     };
 
     // Filter events
     function filterEvents() {
-        const cards = eventsGrid.querySelectorAll('.event-card');
+        const items = eventsGrid.querySelectorAll('.event-item');
         let visibleCount = 0;
 
-        cards.forEach(card => {
-            const cardMonth = card.dataset.month;
-            const cardCategory = card.dataset.category;
-            const cardTitle = card.dataset.title;
-            const cardLocation = card.dataset.location;
-            const cardDescription = card.dataset.description;
+        items.forEach(item => {
+            const cardMonth = item.dataset.month;
+            const cardYear = item.dataset.year || '2025';
+            const cardCategory = item.dataset.category;
+            const cardTitle = item.dataset.title;
+            const cardLocation = item.dataset.location;
+            const cardDescription = item.dataset.description;
             
             const searchText = currentFilters.search.toLowerCase();
             const matchesSearch = !searchText || 
@@ -741,13 +799,15 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const matchesMonth = currentFilters.month === 'all' || 
                                cardMonth == currentFilters.month;
+            
+            const matchesYear = currentFilters.year === 'all' || 
+                              cardYear == currentFilters.year;
 
-            if (matchesSearch && matchesCategory && matchesMonth) {
-                card.style.display = 'block';
-                card.classList.add('animate-fade-in');
+            if (matchesSearch && matchesCategory && matchesMonth && matchesYear) {
+                item.style.display = 'block';
                 visibleCount++;
             } else {
-                card.style.display = 'none';
+                item.style.display = 'none';
             }
         });
 
@@ -781,6 +841,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Year filter
+    yearPills.forEach(pill => {
+        pill.addEventListener('click', function() {
+            yearPills.forEach(p => p.classList.remove('active'));
+            this.classList.add('active');
+            currentFilters.year = this.dataset.year;
+            filterEvents();
+        });
+    });
+
     // Month filter
     monthPills.forEach(pill => {
         pill.addEventListener('click', function() {
@@ -796,12 +866,15 @@ document.addEventListener('DOMContentLoaded', function() {
         currentFilters = {
             search: '',
             category: 'all',
-            month: 'all'
+            month: 'all',
+            year: 'all'
         };
         
         searchInput.value = '';
         filterChips.forEach(c => c.classList.remove('active'));
         filterChips[0].classList.add('active');
+        yearPills.forEach(p => p.classList.remove('active'));
+        yearPills[0].classList.add('active');
         monthPills.forEach(p => p.classList.remove('active'));
         monthPills[0].classList.add('active');
         

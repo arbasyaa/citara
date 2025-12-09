@@ -19,11 +19,41 @@ class CalendarEvent extends Model
         'end_date',
         'date_range',
         'title',
+        'title_en',
         'location',
+        'location_en',
         'description',
+        'description_en',
         'image',
         'destinasi_id',
     ];
+
+    /**
+     * Get localized title based on current locale
+     */
+    public function getLocalizedTitleAttribute(): string
+    {
+        $locale = app()->getLocale();
+        return $locale === 'en' && !empty($this->title_en) ? $this->title_en : $this->title;
+    }
+
+    /**
+     * Get localized description based on current locale
+     */
+    public function getLocalizedDescriptionAttribute(): ?string
+    {
+        $locale = app()->getLocale();
+        return $locale === 'en' && !empty($this->description_en) ? $this->description_en : $this->description;
+    }
+
+    /**
+     * Get localized location based on current locale
+     */
+    public function getLocalizedLocationAttribute(): ?string
+    {
+        $locale = app()->getLocale();
+        return $locale === 'en' && !empty($this->location_en) ? $this->location_en : $this->location;
+    }
 
     protected static function booted()
     {

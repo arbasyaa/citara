@@ -11,8 +11,22 @@ class EventController extends Controller
 {
     public function calendar()
     {
+        // Get available years from database
+        $availableYears = CalendarEvent::whereNotNull('year')
+            ->where('year', '!=', '')
+            ->distinct()
+            ->pluck('year')
+            ->map(fn($y) => (int)$y)
+            ->filter(fn($y) => $y > 2000 && $y < 2100)
+            ->sort()
+            ->values();
+        
+        if ($availableYears->isEmpty()) {
+            $availableYears = collect([2025]); // default fallback
+        }
+        
         $events = CalendarEvent::with('destinasi:id,nama,slug,alamat_lokasi')
-            ->orderBy('month', 'asc')
+            ->orderByRaw("FIELD(month, 'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember')")
             ->get()
             ->map(function ($event) {
                 // Normalize month to numeric (1-12). Database may contain names or numbers.
@@ -51,7 +65,7 @@ class EventController extends Controller
                     'date_range' => $event->date_range ?? $event->tanggal,
                     'month' => $monthNumeric,
                     'raw_month' => $event->month,
-                    'year' => $event->year,
+                    'year' => $event->year ?? 2025,
                     'category' => $event->category ?? 'festival',
                     'location' => $event->location ?? $event->lokasi,
                     'location_label' => $locationLabel,
@@ -59,7 +73,12 @@ class EventController extends Controller
                     'location_address' => $locationAddress,
                     'image' => $event->image ? ImageUrl::url($event->image) : null,
                 ];
-            });
+            })
+            ->sortBy([
+                ['month', 'asc'],
+                ['id', 'asc']
+            ])
+            ->values();
 
         // Accept optional query parameters to open a specific year and month
         $requestedYear = request()->query('year');
@@ -98,6 +117,7 @@ class EventController extends Controller
             'events' => $events,
             'initialYear' => $initialYear,
             'initialMonth' => $initialMonth,
+            'availableYears' => $availableYears,
         ]);
     }
 

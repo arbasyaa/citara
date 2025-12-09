@@ -12,10 +12,30 @@ class Wilayah extends Model
     
     protected $fillable = [
         'nama',
+        'nama_en',
         'slug',
         'deskripsi',
+        'deskripsi_en',
         // timestamps handled by created_at / updated_at
     ];
+
+    /**
+     * Get localized name based on current locale
+     */
+    public function getLocalizedNameAttribute(): string
+    {
+        $locale = app()->getLocale();
+        return $locale === 'en' && !empty($this->nama_en) ? $this->nama_en : $this->nama;
+    }
+
+    /**
+     * Get localized description based on current locale
+     */
+    public function getLocalizedDescriptionAttribute(): ?string
+    {
+        $locale = app()->getLocale();
+        return $locale === 'en' && !empty($this->deskripsi_en) ? $this->deskripsi_en : $this->deskripsi;
+    }
 
 
     public function destinasi(): HasMany

@@ -26,7 +26,7 @@
         <div class="container mx-auto px-6 relative z-10">
             <div class="max-w-4xl mx-auto text-center text-white">
                 <div class="inline-block px-4 py-2 bg-white/20 backdrop-blur-md rounded-full mb-6">
-                    <span class="text-sm font-semibold uppercase tracking-wide">Jelajahi Cilacap</span>
+                    <span class="text-sm font-semibold uppercase tracking-wide">{{ __('site.explore_cilacap') }}</span>
                 </div>
                 <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">{{ __('site.transport') }}</h1>
                 <p class="text-xl md:text-2xl text-white/90 leading-relaxed">{{ __('site.transport_subtitle') }}</p>

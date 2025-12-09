@@ -82,7 +82,7 @@
                 
                 {{-- Title --}}
                 <div class="inline-block px-4 py-2 bg-white/20 backdrop-blur-md rounded-full mb-6">
-                    <span class="text-white text-sm font-semibold uppercase tracking-wide">Wilayah Wisata</span>
+                    <span class="text-white text-sm font-semibold uppercase tracking-wide">{{ __('site.tourism_area') }}</span>
                 </div>
                 <h1 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
                     {{ $wilayah->nama }}
@@ -97,7 +97,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                     </svg>
-                    <span class="text-white font-semibold text-lg">{{ $destinasi->total() }} Destinasi Wisata</span>
+                    <span class="text-white font-semibold text-lg">{{ __('site.destinations_count_text', ['count' => $destinasi->total()]) }}</span>
                 </div>
             </div>
         </div>
@@ -114,9 +114,9 @@
                     </svg>
                 </div>
                 <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ __('site.no_destinations_area') }}</h3>
-                <p class="text-gray-600 mb-8">Belum ada destinasi di wilayah ini</p>
+                <p class="text-gray-600 mb-8">{{ __('site.no_destinations_in_area') }}</p>
                 <a href="{{ route('destinasi.index') }}" class="btn-view inline-flex items-center gap-2 px-8 py-4 text-white rounded-xl font-semibold shadow-lg">
-                    Lihat Semua Destinasi
+                    {{ __('site.view_all_destinations') }}
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                     </svg>

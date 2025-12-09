@@ -404,7 +404,7 @@
                     </div>
                     <div class="hero-stats rounded-xl p-6 text-center">
                         <div class="text-4xl font-bold text-white mb-2">{{ $events->count() }}</div>
-                        <div class="text-white/80 text-sm">Events</div>
+                        <div class="text-white/80 text-sm">{{ __('site.events_text') }}</div>
                     </div>
                 </div>
             </div>
@@ -470,12 +470,12 @@
                                     @if($featured->tipe === 'wisata')
                                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-500/90 text-white">
                                             <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                            Wisata
+                                            {{ __('site.tourism_type') }}
                                         </span>
                                     @elseif($featured->tipe === 'kuliner')
                                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-orange-500/90 text-white">
                                             <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                                            Kuliner
+                                            {{ __('site.culinary_type') }}
                                         </span>
                                     @endif
                                     <span class="trending-badge px-3 py-1 rounded-full text-white text-xs font-bold uppercase">
@@ -516,12 +516,12 @@
                                         @if($dest->tipe === 'wisata')
                                             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/90 text-white">
                                                 <svg class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                                Wisata
+                                                {{ __('site.tourism_type') }}
                                             </span>
                                         @elseif($dest->tipe === 'kuliner')
                                             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-orange-500/90 text-white">
                                                 <svg class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                                                Kuliner
+                                                {{ __('site.culinary_type') }}
                                             </span>
                                         @endif
                                     </div>
@@ -560,11 +560,11 @@
                                     </span>
                                     @if($dest->tipe === 'wisata')
                                         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                            Wisata
+                                            {{ __('site.tourism_type') }}
                                         </span>
                                     @elseif($dest->tipe === 'kuliner')
                                         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
-                                            Kuliner
+                                            {{ __('site.culinary_type') }}
                                         </span>
                                     @endif
                                 </div>
@@ -630,7 +630,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                     </svg>
-                                    <span class="text-white font-medium text-sm">{{ $area->destinasi_count }} Destinasi</span>
+                                    <span class="text-white font-medium text-sm">{{ $area->destinasi_count }} {{ __('site.destination_text') }}</span>
                                 </div>
                                 <h3 class="text-2xl font-bold text-white mb-2">
                                     {{ $area->nama }}
@@ -653,75 +653,83 @@
     </section>
 
     {{-- Events Timeline Section --}}
-    <section class="bg-gray-50 events-section section-parallax section-reveal">
-        <div class="parallax-bg pattern-grid" data-speed="0.1" style="opacity:.3"></div>
+    <section class="bg-white section-reveal">
         <div class="container mx-auto px-6">
-            <div class="text-center mb-8">
-                <span class="text-blue-600 font-semibold uppercase tracking-wide text-sm">{{ __('site.event_calendar') }}</span>
-                <h2 class="text-4xl md:text-5xl font-black text-gray-900 mt-4 mb-3">
-                    {{ __('site.event_calendar') }}
-                </h2>
-                <div class="section-divider"></div>
-                <p class="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                    {{ __('site.event_calendar_subtitle') }}
-                </p>
+            <div class="flex items-end justify-between mb-8">
+                <div>
+                    <span class="text-blue-600 font-semibold uppercase tracking-wide text-xs">{{ __('site.event_calendar') }}</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mt-2">{{ __('site.event_calendar') }}</h2>
+                    <p class="text-gray-600 mt-2">{{ __('site.event_calendar_subtitle') }}</p>
+                </div>
+                <a href="{{ route('events.calendar') }}" class="inline-flex items-center gap-2 text-blue-600 font-semibold hover:underline">
+                    {{ __('site.view_all') }}
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                </a>
             </div>
 
-            <div class="max-w-6xl mx-auto relative">
-                <button type="button" class="scroller-prev scroller-nav left-0 z-10 hidden md:block bg-white/90 hover:bg-white shadow-lg rounded-full p-2 border border-gray-200">
-                    <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                </button>
-                <button type="button" class="scroller-next scroller-nav right-0 z-10 hidden md:block bg-white/90 hover:bg-white shadow-lg rounded-full p-2 border border-gray-200">
-                    <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </button>
+            @php
+                $months = [
+                    __('site.january'), __('site.february'), __('site.march'),
+                    __('site.april'), __('site.may'), __('site.june'),
+                    __('site.july'), __('site.august'), __('site.september'),
+                    __('site.october'), __('site.november'), __('site.december')
+                ];
+                $eventsByMonth = $events->groupBy(function($e) use ($months){
+                    $m = $e->month;
+                    if (is_numeric($m)) { $idx = (int)$m - 1; return $idx >=0 && $idx < 12 ? $months[$idx] : $m; }
+                    return $m;
+                });
+            @endphp
 
-                @php
-                    $months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-                    $eventsByMonth = $events->groupBy('month');
-                @endphp
+            <div class="flex flex-wrap gap-2 mb-6">
+                @foreach($months as $m)
+                    @php $count = ($eventsByMonth->get($m) ?? collect())->count(); @endphp
+                    <a href="{{ route('events.calendar', ['month' => $m]) }}" class="px-3 py-1 rounded-full text-sm border {{ $count ? 'border-gray-300 text-gray-700 hover:border-blue-600 hover:text-blue-600' : 'border-gray-200 text-gray-400 cursor-default' }}">
+                        {{ $m }} <span class="text-xs text-gray-400">{{ $count }}</span>
+                    </a>
+                @endforeach
+            </div>
 
-                <div id="month-scroller" class="month-scroller no-scrollbar overflow-x-auto flex gap-4 px-1">
-                    @foreach($months as $m)
-                        @php $list = $eventsByMonth->get($m, collect()); @endphp
-                        @php $monthIndex = array_search($m, $months) + 1; @endphp
-                        <div class="min-w-[280px] md:min-w-[320px] month-card bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden parallax-card">
-                            <div class="px-5 py-4 flex items-center justify-between bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-100">
-                                <div class="flex items-center gap-2">
-                                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-bold">{{ substr($m,0,1) }}</span>
-                                    <h3 class="text-lg font-bold text-gray-900">{{ $m }}</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @php $preview = $events->take(6); @endphp
+                @forelse($preview as $event)
+                    @php $slug = $event->slug ?? null; @endphp
+                    <div class="group rounded-xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+                        <div class="h-40 bg-gray-100 overflow-hidden">
+                            @if(!empty($event->image))
+                                <img src="{{ \App\Services\ImageUrl::url($event->image) }}" alt="{{ $event->judul }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+                                    <svg class="w-12 h-12 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                 </div>
-                                <span class="text-xs text-gray-500">{{ $list->count() }} {{ $list->count() === 1 ? __('site.event') : __('site.events') }}</span>
+                            @endif
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center gap-2 text-xs text-gray-500 mb-2">
+                                <span class="inline-flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>{{ $event->date_range ?? $event->tanggal }}</span>
+                                @if(!empty($event->location ?? $event->lokasi))
+                                    <span class="inline-flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>{{ $event->location ?? $event->lokasi }}</span>
+                                @endif
                             </div>
-                            <div class="p-4 space-y-3">
-                                @forelse($list->take(3) as $event)
-                                    {{-- Link to event detail page --}}
-                                    <a href="{{ route('events.show', $event->slug) }}" class="group block">
-                                        <div class="flex gap-3">
-                                            @if($event->image)
-                                                <img src="{{ \App\Services\ImageUrl::url($event->image) }}" alt="{{ $event->judul }}" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 parallax-target" loading="lazy" decoding="async">
-                                            @else
-                                                <div class="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 flex-shrink-0">📅</div>
-                                            @endif
-                                            <div class="min-w-0">
-                                                <div class="flex items-center gap-2 text-xs text-gray-500 mb-1">
-                                                    <span class="inline-flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>{{ $event->tanggal }}</span>
-                                                    @if(!empty($event->lokasi))<span class="inline-flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>{{ $event->lokasi }}</span>@endif
-                                                </div>
-                                                <div class="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-blue-600">{{ $event->judul }}</div>
-                                                <div class="text-xs text-gray-600 line-clamp-2">{{ $event->deskripsi }}</div>
-                                            </div>
-                                        </div>
+                            <h3 class="text-base font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{{ $event->title ?? $event->judul }}</h3>
+                            @if(!empty($event->description ?? $event->deskripsi))
+                                <p class="text-sm text-gray-600 mt-1 line-clamp-2">{{ $event->description ?? $event->deskripsi }}</p>
+                            @endif
+                            <div class="mt-4">
+                                @if(!empty($slug))
+                                    <a href="{{ route('events.show', $slug) }}" class="inline-flex items-center gap-2 text-blue-600 text-sm font-semibold hover:underline">
+                                        {{ __('site.learn_more') }}
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                                     </a>
-                                @empty
-                                    <div class="text-sm text-gray-500">{{ __('site.no_events_month') }}</div>
-                                @endforelse
-                                @if($list->count() > 3)
-                                    <a href="{{ route('events.index', ['month' => $m]) }}" class="text-blue-600 text-sm font-semibold inline-flex items-center gap-1">{{ __('site.view_all') }} <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+                                @else
+                                    <span class="text-gray-400 text-sm">{{ __('site.learn_more') }}</span>
                                 @endif
                             </div>
                         </div>
-                    @endforeach
-                </div>
+                    </div>
+                @empty
+                    <div class="text-gray-500">{{ __('site.no_events_month') }}</div>
+                @endforelse
             </div>
         </div>
     </section>

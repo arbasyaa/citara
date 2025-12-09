@@ -14,15 +14,35 @@ class Destinasi extends Model
     protected $fillable = [
         'id_wilayah',
         'nama',
+        'nama_en',
         'tipe',
         'slug',
         'deskripsi',
+        'deskripsi_en',
         'alamat_lokasi',
         'url_gmaps',
         'is_popular',
         'is_featured',
         // timestamps handled by created_at / updated_at
     ];
+
+    /**
+     * Get localized name based on current locale
+     */
+    public function getLocalizedNameAttribute(): string
+    {
+        $locale = app()->getLocale();
+        return $locale === 'en' && !empty($this->nama_en) ? $this->nama_en : $this->nama;
+    }
+
+    /**
+     * Get localized description based on current locale
+     */
+    public function getLocalizedDescriptionAttribute(): ?string
+    {
+        $locale = app()->getLocale();
+        return $locale === 'en' && !empty($this->deskripsi_en) ? $this->deskripsi_en : $this->deskripsi;
+    }
 
 
     public function wilayah(): BelongsTo

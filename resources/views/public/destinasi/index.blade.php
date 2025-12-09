@@ -86,7 +86,7 @@
         <div class="container mx-auto px-6 relative z-10">
             <div class="max-w-4xl mx-auto text-center text-white">
                 <div class="inline-block px-4 py-2 bg-white/20 backdrop-blur-md rounded-full mb-6">
-                    <span class="text-sm font-semibold uppercase tracking-wide">Jelajahi Cilacap</span>
+                    <span class="text-sm font-semibold uppercase tracking-wide">{{ __('site.explore_cilacap') }}</span>
                 </div>
                 <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">
                     {{ __('site.destinations_title') }}
@@ -133,7 +133,7 @@
                     </svg>
                 </div>
                 <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ __('site.no_destinations') }}</h3>
-                <p class="text-gray-600">Coba kata kunci pencarian lain</p>
+                <p class="text-gray-600">{{ __('site.try_other_keywords') }}</p>
             </div>
         @else
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 relative">

@@ -74,8 +74,8 @@ class AdminController extends Controller
 
     public function dashboard()
     {
-        $events = CalendarEvent::orderByRaw("FIELD(month, 'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember')")->get();
-        return view('admin.dashboard', compact('events'));
+        $events = CalendarEvent::latest()->take(5)->get();
+        return view('admin.dashboard-new', compact('events'));
     }
 
     // Services panel removed from lightweight panel. Use main /admin area for full service management.
@@ -83,11 +83,8 @@ class AdminController extends Controller
     // Events CRUD
     public function eventsIndex()
     {
-        $events = CalendarEvent::with('destinasi:id,nama,slug')
-            ->orderBy('id')
-            ->get();
-
-        return view('admin.events.index', compact('events'));
+        $events = CalendarEvent::latest()->paginate(10);
+        return view('admin.events.index-new', compact('events'));
     }
 
     public function eventsCreate()
@@ -262,20 +259,22 @@ class AdminController extends Controller
         }
 
         $wilayah = $query->orderBy('nama')->paginate($per)->appends($request->except('page'));
-        return view('admin.wilayah.index', compact('wilayah', 'q'));
+        return view('admin.wilayah.index-new', compact('wilayah', 'q'));
     }
 
     public function wilayahCreate()
     {
-        return view('admin.wilayah.create');
+        return view('admin.wilayah.create-new');
     }
 
     public function wilayahStore(Request $request)
     {
         $data = $request->validate([
             'nama' => 'required|string',
+            'nama_en' => 'nullable|string',
             'slug' => 'nullable|string',
-            'deskripsi' => 'nullable|string'
+            'deskripsi' => 'nullable|string',
+            'deskripsi_en' => 'nullable|string'
         ]);
         $wilayah = Wilayah::create($data);
 
@@ -300,15 +299,17 @@ class AdminController extends Controller
 
     public function wilayahEdit(Wilayah $wilayah)
     {
-    return view('admin.wilayah.edit', compact('wilayah'));
+    return view('admin.wilayah.edit-new', compact('wilayah'));
     }
 
     public function wilayahUpdate(Request $request, Wilayah $wilayah)
     {
         $data = $request->validate([
             'nama' => 'required|string',
+            'nama_en' => 'nullable|string',
             'slug' => 'nullable|string',
-            'deskripsi' => 'nullable|string'
+            'deskripsi' => 'nullable|string',
+            'deskripsi_en' => 'nullable|string'
         ]);
         $wilayah->update($data);
         foreach (config('app.locales', [app()->getLocale()]) as $loc) {
@@ -348,21 +349,23 @@ class AdminController extends Controller
         }
 
         $destinasi = $query->orderBy('nama')->paginate($per)->appends($request->except('page'));
-        return view('admin.destinasi.index', compact('destinasi', 'q', 'tipe'));
+        return view('admin.destinasi.index-new', compact('destinasi', 'q', 'tipe'));
     }
 
     public function destinasiCreate()
     {
-        return view('admin.destinasi.create');
+        return view('admin.destinasi.create-new');
     }
 
     public function destinasiStore(Request $request)
     {
         $data = $request->validate([
             'nama' => 'required|string',
+            'nama_en' => 'nullable|string',
             'tipe' => 'required|in:wisata,kuliner',
             'id_wilayah' => 'nullable|exists:wilayah,id',
             'deskripsi' => 'nullable|string',
+            'deskripsi_en' => 'nullable|string',
             'alamat_lokasi' => 'nullable|string',
             'url_gmaps' => 'nullable|url',
             'is_highlight' => 'nullable|boolean',
@@ -374,9 +377,11 @@ class AdminController extends Controller
 
         $payload = [
             'nama' => $data['nama'],
+            'nama_en' => $data['nama_en'] ?? null,
             'tipe' => $data['tipe'],
             'id_wilayah' => $data['id_wilayah'] ?? null,
             'deskripsi' => $data['deskripsi'] ?? null,
+            'deskripsi_en' => $data['deskripsi_en'] ?? null,
             'alamat_lokasi' => $data['alamat_lokasi'] ?? null,
             'url_gmaps' => $data['url_gmaps'] ?? null,
         ];
@@ -416,16 +421,18 @@ class AdminController extends Controller
 
     public function destinasiEdit(Destinasi $destinasi)
     {
-    return view('admin.destinasi.edit', compact('destinasi'));
+        return view('admin.destinasi.edit-new', compact('destinasi'));
     }
 
     public function destinasiUpdate(Request $request, Destinasi $destinasi)
     {
         $data = $request->validate([
             'nama' => 'required|string',
+            'nama_en' => 'nullable|string',
             'tipe' => 'required|in:wisata,kuliner',
             'id_wilayah' => 'nullable|exists:wilayah,id',
             'deskripsi' => 'nullable|string',
+            'deskripsi_en' => 'nullable|string',
             'alamat_lokasi' => 'nullable|string',
             'url_gmaps' => 'nullable|url',
             'is_highlight' => 'nullable|boolean',
@@ -436,9 +443,11 @@ class AdminController extends Controller
 
         $payload = [
             'nama' => $data['nama'],
+            'nama_en' => $data['nama_en'] ?? null,
             'tipe' => $data['tipe'],
             'id_wilayah' => $data['id_wilayah'] ?? null,
             'deskripsi' => $data['deskripsi'] ?? null,
+            'deskripsi_en' => $data['deskripsi_en'] ?? null,
             'alamat_lokasi' => $data['alamat_lokasi'] ?? null,
             'url_gmaps' => $data['url_gmaps'] ?? null,
         ];
