@@ -67,7 +67,7 @@
                 </div>
 
                 <!-- Content Management -->
-                <div class="px-2 mb-3">
+                <div class="px-2 mb-3 flex flex-col gap-3">
                     <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-2">Konten</p>
                     
                                         <a href="{{ route('panel.wilayah.index') }}" class="admin-nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg {{ request()->routeIs('panel.wilayah.*') ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/50' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}">
@@ -96,7 +96,7 @@
                 </div>
 
                 <!-- Services -->
-                <div class="px-2">
+                <div class="px-2 flex flex-col gap-3">
                     <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-2">Layanan</p>
                     
                     <a href="{{ route('panel.akomodasi.index') }}" class="admin-nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg {{ request()->routeIs('panel.akomodasi.*') ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/50' : 'text-gray-300 hover:bg-gray-800 hover:text-white' }}">
