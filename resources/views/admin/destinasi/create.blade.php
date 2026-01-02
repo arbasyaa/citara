@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('page-title', 'New Destinasi')
+@section('page-title', 'Destinasi Baru')
 
 @section('content')
     <div class="max-w-2xl bg-white p-6 rounded-xl shadow-sm border border-gray-100">
@@ -50,7 +50,7 @@
                 <input type="file" name="image" accept="image/*" class="mt-1 block w-full">
             </div>
             <div class="flex justify-end">
-                <button class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Create</button>
+                <button class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Buat</button>
             </div>
         </form>
     </div>

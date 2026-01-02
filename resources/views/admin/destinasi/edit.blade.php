@@ -51,7 +51,7 @@
                 <input type="file" name="image" accept="image/*" class="mt-1 block w-full">
             </div>
             <div class="flex justify-end">
-                <button type="submit" class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Save</button>
+                <button type="submit" class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Simpan</button>
             </div>
         </form>
 

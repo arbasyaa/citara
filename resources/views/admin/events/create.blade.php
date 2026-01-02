@@ -1,14 +1,14 @@
 @extends('layouts.admin')
 
-@section('page-title', 'New Event')
+@section('page-title', 'Kegiatan Baru')
 
 @section('content')
         <div class="max-w-2xl bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-            <h1 class="text-xl font-bold mb-4">New Event</h1>
+            <h1 class="text-xl font-bold mb-4">Kegiatan Baru</h1>
             <form method="POST" action="{{ route('panel.events.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-4">
-                    <label class="block text-sm">Month</label>
+                    <label class="block text-sm">Bulan</label>
                     <select name="month" class="mt-1 block w-full rounded border-gray-300" required>
                         <option value="">Pilih bulan</option>
                         @for($m=1;$m<=12;$m++)
@@ -17,7 +17,7 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm">Category</label>
+                    <label class="block text-sm">Kategori</label>
                     <select name="category" class="mt-1 block w-full rounded border-gray-300" required>
                         <option value="">Pilih kategori</option>
                         <option value="festival" {{ old('category') === 'festival' ? 'selected' : '' }}>Festival & Acara</option>
@@ -27,28 +27,28 @@
                 </div>
                 <div class="mb-4 grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div>
-                        <label class="block text-sm">Year</label>
+                        <label class="block text-sm">Tahun</label>
                         <input name="year" value="{{ old('year') }}" class="mt-1 block w-full rounded border-gray-300" placeholder="contoh: 2026">
                     </div>
                     <div>
-                        <label class="block text-sm">Start Date</label>
+                        <label class="block text-sm">Tanggal Mulai</label>
                         <input type="date" name="start_date" value="{{ old('start_date') }}" class="mt-1 block w-full rounded border-gray-300">
                     </div>
                     <div>
-                        <label class="block text-sm">End Date</label>
+                        <label class="block text-sm">Tanggal Selesai</label>
                         <input type="date" name="end_date" value="{{ old('end_date') }}" class="mt-1 block w-full rounded border-gray-300">
                     </div>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm">Date Range</label>
+                    <label class="block text-sm">Rentang Tanggal</label>
                     <input name="date_range" class="mt-1 block w-full rounded border-gray-300">
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm">Title</label>
+                    <label class="block text-sm">Judul</label>
                     <input name="title" class="mt-1 block w-full rounded border-gray-300" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium">Location</label>
+                    <label class="block text-sm font-medium">Lokasi</label>
                     <div class="relative">
                         <input name="location" id="locationInput" value="{{ old('location') }}" class="mt-1 block w-full rounded border-gray-300" placeholder="Cari destinasi (contoh: Teluk Penyu)" required>
                         <div id="locationDropdown" class="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded shadow hidden max-h-56 overflow-auto"></div>
@@ -56,16 +56,16 @@
                     <p class="text-xs text-gray-500 mt-1">Ketik untuk mencari destinasi, lalu pilih dari daftar untuk mengisi lokasi.</p>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm">Description</label>
+                    <label class="block text-sm">Deskripsi</label>
                     <textarea name="description" class="mt-1 block w-full rounded border-gray-300"></textarea>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm">Image</label>
+                    <label class="block text-sm">Gambar</label>
                     <input type="file" name="image" id="eventImage" accept="image/*" class="mt-1 block w-full">
                     <img id="eventImagePreview" src="" alt="" class="mt-3 max-h-40 hidden rounded">
                 </div>
                 <div class="flex justify-end">
-                    <button class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Create</button>
+                    <button class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Buat</button>
                 </div>
             </form>
         </div>

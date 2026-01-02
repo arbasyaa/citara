@@ -46,8 +46,8 @@
                         <span class="absolute -top-1 -right-1 h-3 w-3 bg-green-400 rounded-full border-2 border-gray-900 animate-pulse"></span>
                     </div>
                     <div>
-                        <p class="text-lg font-bold leading-5 text-white">Admin Panel</p>
-                        <p class="text-xs text-indigo-200 font-medium">Content Management</p>
+                        <p class="text-lg font-bold leading-5 text-white">Panel Admin</p>
+                        <p class="text-xs text-indigo-200 font-medium">Manajemen Konten</p>
                     </div>
                 </a>
             </div>
@@ -142,9 +142,9 @@
                             </button>
                             
                             <div>
-                                <h1 class="text-xl font-bold text-gray-900">@yield('page-title','Dashboard')</h1>
+                                <h1 class="text-xl font-bold text-gray-900">@yield('page-title','Dasbor')</h1>
                                 <nav class="flex items-center gap-2 text-sm text-gray-500">
-                                    <a href="{{ route('panel.dashboard') }}" class="hover:text-indigo-600">Home</a>
+                                    <a href="{{ route('panel.dashboard') }}" class="hover:text-indigo-600">Beranda</a>
                                     @hasSection('breadcrumb')
                                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                                         @yield('breadcrumb')
@@ -157,10 +157,10 @@
                         <div class="flex items-center gap-3">
                             <!-- Quick Actions -->
                             <div class="hidden md:flex items-center gap-2">
-                                <button class="h-10 w-10 rounded-lg bg-gray-50 hover:bg-gray-100 flex items-center justify-center transition-colors group" title="Quick Search">
+                                <button class="h-10 w-10 rounded-lg bg-gray-50 hover:bg-gray-100 flex items-center justify-center transition-colors group" title="Pencarian Cepat">
                                     <svg class="h-5 w-5 text-gray-600 group-hover:text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                                 </button>
-                                <button class="h-10 w-10 rounded-lg bg-gray-50 hover:bg-gray-100 flex items-center justify-center transition-colors group relative" title="Notifications">
+                                <button class="h-10 w-10 rounded-lg bg-gray-50 hover:bg-gray-100 flex items-center justify-center transition-colors group relative" title="Notifikasi">
                                     <svg class="h-5 w-5 text-gray-600 group-hover:text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C8.67 6.165 7 8.388 7 11v3.159c0 .538-.214 1.055-.595 1.436L5 17h5m5 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
                                     <span class="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full border border-white"></span>
                                 </button>
@@ -170,7 +170,7 @@
                             <div class="flex items-center gap-3 pl-3 border-l border-gray-200">
                                 <div class="hidden md:block text-right">
                                     <p class="text-sm font-semibold text-gray-900">Admin</p>
-                                    <p class="text-xs text-gray-500">Content Manager</p>
+                                    <p class="text-xs text-gray-500">Pengelola Konten</p>
                                 </div>
                                 <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 text-white flex items-center justify-center text-sm font-bold shadow-lg">
                                     {{ strtoupper(substr(config('app.name'),0,1)) }}

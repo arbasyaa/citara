@@ -43,7 +43,7 @@
                 <p class="text-xs text-gray-500 mt-1">JPG/PNG hingga 4MB. Mengunggah gambar baru akan mengganti thumbnail.</p>
             </div>
             <div class="flex justify-end">
-                <button class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Save</button>
+                <button class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Simpan</button>
             </div>
         </form>
     </div>

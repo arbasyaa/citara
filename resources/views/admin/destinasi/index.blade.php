@@ -8,7 +8,7 @@
             <h2 class="text-xl font-semibold text-gray-900">Daftar Destinasi</h2>
             <div class="flex items-center gap-3">
                 <form method="GET" action="" class="flex items-center gap-2">
-                    <input name="q" value="{{ $q ?? '' }}" placeholder="Search..." class="px-3 py-2 rounded border border-gray-200">
+                    <input name="q" value="{{ $q ?? '' }}" placeholder="Cari..." class="px-3 py-2 rounded border border-gray-200">
                     <select name="tipe" class="px-3 py-2 rounded border border-gray-200">
                         <option value="">Semua Tipe</option>
                         <option value="wisata" {{ ($tipe ?? '') === 'wisata' ? 'selected' : '' }}>Wisata</option>
@@ -71,7 +71,7 @@
 
         <div class="mt-6">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <p class="text-sm text-gray-600">Showing {{ $destinasi->firstItem() }} to {{ $destinasi->lastItem() }} of {{ $destinasi->total() }} results</p>
+                <p class="text-sm text-gray-600">Menampilkan {{ $destinasi->firstItem() }} sampai {{ $destinasi->lastItem() }} dari {{ $destinasi->total() }} hasil</p>
                 <div class="flex justify-center sm:justify-end">
                     @include('components.admin-pagination', ['paginator' => $destinasi])
                 </div>
