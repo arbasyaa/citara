@@ -17,7 +17,7 @@
 <body class="bg-gray-100">
     <div class="min-h-screen flex">
         <!-- Sidebar -->
-        <aside id="sidebar" class="bg-gray-900 text-gray-200 w-64 min-h-screen flex flex-col shadow-xl">
+        <aside id="sidebar" class="bg-gray-900 text-gray-200 w-64 min-h-screen flex flex-col shadow-xl border border-red-500">
             <div class="px-6 py-5 border-b border-gray-800 bg-gradient-to-r from-gray-900 to-gray-800">
                 <a href="{{ route('panel.dashboard') }}" class="flex items-center space-x-3">
                     <span class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600 text-white font-bold">{{ strtoupper(substr(config('app.name'),0,1)) }}</span>
