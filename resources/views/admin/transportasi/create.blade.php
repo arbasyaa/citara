@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('page-title', 'New Transportasi')
+@section('page-title', 'Transportasi Baru')
 
 @section('content')
     <div class="max-w-2xl bg-white p-6 rounded-xl shadow-sm border border-gray-100">
@@ -26,7 +26,7 @@
             <div class="mb-4">
                 <label class="block text-sm">Slug (opsional)</label>
                 <input name="slug" class="mt-1 block w-full rounded border-gray-300" placeholder="custom-friendly-slug">
-                <p class="text-xs text-gray-500 mt-1">Leave empty to generate automatically from name.</p>
+                <p class="text-xs text-gray-500 mt-1">Kosongkan untuk generate otomatis dari nama.</p>
             </div>
             <div class="mb-4">
                 <label class="block text-sm">Thumbnail</label>
@@ -34,7 +34,7 @@
                 <p class="text-xs text-gray-500 mt-1">JPG/PNG hingga 4MB. Opsional.</p>
             </div>
             <div class="flex justify-end">
-                <button class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Create</button>
+                <button class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Buat</button>
             </div>
         </form>
     </div>

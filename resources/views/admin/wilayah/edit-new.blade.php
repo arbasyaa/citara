@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
-@section('page-title', 'Add Tourism Area')
+@section('page-title', 'Tambah Wilayah Wisata')
 
 @section('breadcrumb')
-    <a href="{{ route('panel.wilayah.index') }}" class="hover:text-indigo-600">Tourism Areas</a>
+    <a href="{{ route('panel.wilayah.index') }}" class="hover:text-indigo-600">Wilayah Wisata</a>
     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-    <span class="text-gray-900 font-medium">Create</span>
+    <span class="text-gray-900 font-medium">Tambah Baru</span>
 @endsection
 
 @section('content')

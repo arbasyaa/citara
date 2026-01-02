@@ -1,19 +1,19 @@
 @extends('layouts.admin')
 
-@section('page-title', 'Edit Service')
+@section('page-title', 'Edit Layanan')
 
 @section('content')
         <div class="max-w-2xl bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-            <h1 class="text-xl font-bold mb-4">Edit Service</h1>
+            <h1 class="text-xl font-bold mb-4">Edit Layanan</h1>
             <form method="POST" action="{{ route('admin.services.update', $service) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="mb-4">
-                    <label class="block text-sm">Title</label>
+                    <label class="block text-sm">Judul</label>
                     <input name="title" value="{{ $service->title }}" class="mt-1 block w-full rounded border-gray-300" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm">Description</label>
+                    <label class="block text-sm">Deskripsi</label>
                     <textarea name="description" class="mt-1 block w-full rounded border-gray-300">{{ $service->description }}</textarea>
                 </div>
                 <div class="mb-4">
@@ -21,7 +21,7 @@
                     <input name="link" value="{{ $service->link }}" class="mt-1 block w-full rounded border-gray-300">
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm">Image</label>
+                    <label class="block text-sm">Gambar</label>
                     <input type="file" name="image" id="serviceImage" accept="image/*" class="mt-1 block w-full">
                     @if($service->image)
                         <div class="mt-2">
@@ -31,7 +31,7 @@
                     <img id="serviceImagePreview" src="" alt="" class="mt-3 max-h-40 hidden rounded">
                 </div>
                 <div class="flex justify-end">
-                    <button class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Save</button>
+                    <button class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Simpan</button>
                 </div>
             </form>
         </div>

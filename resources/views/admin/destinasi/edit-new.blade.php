@@ -214,7 +214,7 @@
                 
                 <div class="p-6 space-y-4">
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Type <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Tipe <span class="text-red-500">*</span></label>
                         <select 
                             name="tipe" 
                             class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all" 
@@ -265,8 +265,8 @@
             {{-- Upload Photo Card --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 admin-card">
                 <div class="p-6 border-b border-gray-100">
-                    <h2 class="text-lg font-bold text-gray-900">Upload Photo</h2>
-                    <p class="text-sm text-gray-600 mt-1">Add new photo to gallery</p>
+                    <h2 class="text-lg font-bold text-gray-900">Upload Foto</h2>
+                    <p class="text-sm text-gray-600 mt-1">Tambahkan foto baru ke galeri</p>
                 </div>
                 
                 <div class="p-6">

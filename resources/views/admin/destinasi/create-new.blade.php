@@ -167,13 +167,13 @@
                 
                 <div class="p-6 space-y-4">
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Type <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Tipe <span class="text-red-500">*</span></label>
                         <select 
                             name="tipe" 
                             class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all" 
                             required
                         >
-                            <option value="">-- Select Type --</option>
+                            <option value="">-- Pilih Tipe --</option>
                             <option value="wisata" {{ old('tipe') === 'wisata' ? 'selected' : '' }}>🏖️ Wisata</option>
                             <option value="kuliner" {{ old('tipe') === 'kuliner' ? 'selected' : '' }}>🍜 Kuliner</option>
                         </select>

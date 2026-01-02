@@ -64,13 +64,13 @@
         <div class="p-6 border-b border-gray-100">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <h2 class="text-xl font-bold text-gray-900 mb-1">All Destinations</h2>
-                    <p class="text-sm text-gray-600">Manage your tourism destinations and culinary spots</p>
+                    <h2 class="text-xl font-bold text-gray-900 mb-1">Semua Destinasi</h2>
+                    <p class="text-sm text-gray-600">Kelola destinasi wisata dan kuliner Anda</p>
                 </div>
                 
                 <a href="{{ route('panel.destinasi.create') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold shadow-lg shadow-indigo-500/50 hover:shadow-xl hover:shadow-indigo-500/50 hover:scale-105 transition-all">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-                    Add Destination
+                    Tambah Destinasi
                 </a>
             </div>
         </div>
@@ -94,10 +94,10 @@
                 </select>
                 
                 <select name="per_page" class="px-4 py-2.5 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all">
-                    <option value="10">10 items</option>
-                    <option value="15" selected>15 items</option>
-                    <option value="30">30 items</option>
-                    <option value="50">50 items</option>
+                    <option value="10">10 item</option>
+                    <option value="15" selected>15 item</option>
+                    <option value="30">30 item</option>
+                    <option value="50">50 item</option>
                 </select>
                 
                 <button type="submit" class="px-6 py-2.5 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors">
@@ -107,7 +107,7 @@
                 
                 @if($q || $tipe)
                     <a href="{{ route('panel.destinasi.index') }}" class="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors">
-                        Clear
+                        Hapus Filter
                     </a>
                 @endif
             </form>
@@ -118,9 +118,9 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Destination</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Destinasi</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tipe</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Area</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Wilayah</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
                     </tr>
@@ -147,12 +147,12 @@
                             @if($d->tipe === 'wisata')
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 admin-badge">
                                     <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="3"/></svg>
-                                    Tourism
+                                    Wisata
                                 </span>
                             @elseif($d->tipe === 'kuliner')
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-700 admin-badge">
                                     <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="3"/></svg>
-                                    Culinary
+                                    Kuliner
                                 </span>
                             @else
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">-</span>
@@ -169,15 +169,15 @@
                             @if($d->is_featured || $d->is_popular)
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700 admin-badge">
                                     <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                    Featured
+                                    Unggulan
                                 </span>
                             @else
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">Standard</span>
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">Standar</span>
                             @endif
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center justify-end gap-2">
-                                <a href="{{ route('destinasi.show', $d->slug) }}" target="_blank" class="inline-flex items-center justify-center h-9 w-9 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors" title="View">
+                                <a href="{{ route('destinasi.show', $d->slug) }}" target="_blank" class="inline-flex items-center justify-center h-9 w-9 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors" title="Lihat">
                                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                 </a>
                                 <a href="{{ route('panel.destinasi.edit', $d) }}" class="inline-flex items-center justify-center h-9 w-9 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-600 transition-colors" title="Edit">

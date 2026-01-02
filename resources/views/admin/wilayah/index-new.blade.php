@@ -64,10 +64,10 @@
         <table class="w-full">
             <thead class="bg-gray-50 border-b border-gray-200">
                 <tr>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Area Name</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Wilayah</th>
                     <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Slug</th>
                     <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Destinasi</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Translations</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Terjemahan</th>
                     <th class="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Aksi</th>
                 </tr>
             </thead>
@@ -92,7 +92,7 @@
                         </td>
                         <td class="px-6 py-4">
                             <span class="admin-badge admin-badge-blue">
-                                {{ $wilayah->destinasi_count }} {{ Str::plural('destination', $wilayah->destinasi_count) }}
+                                {{ $wilayah->destinasi_count }} {{ $wilayah->destinasi_count == 1 ? 'destinasi' : 'destinasi' }}
                             </span>
                         </td>
                         <td class="px-6 py-4">
@@ -129,7 +129,7 @@
                                 <p class="mt-2 text-sm text-gray-600">Mulai dengan membuat wilayah wisata pertama Anda.</p>
                                 <a href="{{ route('panel.wilayah.create') }}" class="mt-6 inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
                                     <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                                    Add First Area
+                                    Tambah Wilayah Pertama
                                 </a>
                             </div>
                         </td>
